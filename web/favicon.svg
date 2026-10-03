@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <style>.b{stroke:#0d1f3a;fill:#0d1f3a}@media (prefers-color-scheme:dark){.b{stroke:#eeeef0;fill:#eeeef0}}</style>
+  <path class="b" d="M38 10.5H23C15.5 10.5 10.5 15.5 10.5 23V36C10.5 42.5 14.6 46.6 20 47.2" fill="none" stroke-width="8" stroke-linecap="round"/>
+  <path class="b" d="M13.5 43.5V56.2C13.5 57.4 14.8 58 15.7 57.3L26.8 48.6H31.5L24.4 41.7H16.5Z" stroke="none"/>
+  <path d="M28 25H51M32 34H46M37 42.5H41" stroke="#0a7cf6" stroke-width="6.5" stroke-linecap="round"/>
+</svg>

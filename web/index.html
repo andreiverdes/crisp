@@ -11,7 +11,7 @@
 <meta property="og:url" content="https://andreiverdes.github.io/crisp/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://andreiverdes.github.io/crisp/twitter-card.png">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b93f7' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M4 6h16M4 12h10M4 18h6'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="vendor/horizon.css">
 <style>
   html, body { margin: 0; }
@@ -64,6 +64,10 @@
   const H = window.HorizonUI, R = window.React, RD = window.ReactDOM, h = R.createElement;
   const { HorizonProvider, Card, Button, Badge, Stat, Icons, Terminal, Kbd, Divider, SegmentedControl, Tabs, TabPanel, InlineAlert, ProgressBar, StatusDot } = H;
   const GH = "https://github.com/andreiverdes/crisp";
+  const Logo = ({ size = 22 }) => h("svg", { viewBox: "0 0 64 64", width: size, height: size, fill: "none", "aria-hidden": true },
+    h("path", { d: "M38 10.5H23C15.5 10.5 10.5 15.5 10.5 23V36C10.5 42.5 14.6 46.6 20 47.2", stroke: "currentColor", strokeWidth: 8, strokeLinecap: "round" }),
+    h("path", { d: "M13.5 43.5V56.2C13.5 57.4 14.8 58 15.7 57.3L26.8 48.6H31.5L24.4 41.7H16.5Z", fill: "currentColor" }),
+    h("path", { d: "M28 25H51M32 34H46M37 42.5H41", stroke: "#0a7cf6", strokeWidth: 6.5, strokeLinecap: "round" }));
 
   const A = (props, ...kids) => h("a", { ...props, className: `text-hz-fg-muted ${props.className || ""}` }, ...kids);
   const Kicker = (t) => h("p", { className: "kicker text-hz-accent-fg" }, t);
@@ -75,7 +79,7 @@
   function Nav({ theme, setTheme }) {
     return h("nav", { className: "nav bg-hz-canvas hz-hairline-b", style: { background: "color-mix(in oklab, var(--color-hz-canvas) 85%, transparent)" } },
       h("div", { className: "wrap" },
-        h("a", { href: "#", className: "brand text-hz-fg" }, h(Icons.List, { size: 20, className: "text-hz-accent-fg" }), "CRISP"),
+        h("a", { href: "#", className: "brand text-hz-fg" }, h(Logo, { size: 24 }), "CRISP"),
         h("div", { className: "links" },
           A({ href: "#rules" }, "Rules"), A({ href: "#install" }, "Install"), A({ href: "benchmark/" }, "Benchmark"),
           A({ href: `${GH}/blob/main/CRISP.md`, className: "hide-sm" }, "Protocol"), A({ href: GH }, "GitHub"),
