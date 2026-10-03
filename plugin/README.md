@@ -49,4 +49,4 @@ Nothing. It is one `SKILL.md` with instructions, four prompt files, two referenc
 
 ## Source
 
-The protocol, the research behind each rule, and the benchmark harness live at [github.com/andreiverdes/crisp](https://github.com/andreiverdes/crisp). This repository is the plugin bundle built from it. Version {{VERSION}}, MIT.
+The protocol, the research behind each rule, and the benchmark harness live at [github.com/andreiverdes/crisp](https://github.com/andreiverdes/crisp). This repository is the plugin bundle built from it, published by [HorizonLoop](https://github.com/horizon-loop). Version {{VERSION}}, MIT.

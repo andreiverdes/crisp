@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assemble the standalone `crisp` plugin for Anthropic's directory into ../../crisp-plugin (a sibling checkout).
+"""Assemble the standalone `crisp` plugin for Anthropic's directory into ../crisp-plugin (sibling checkout of horizon-loop/crisp-plugin).
 
 The directory wants one plugin at the root of its own repo, every file inside the plugin folder,
 no binaries, no system files. This copies skills/crisp verbatim and writes the manifest, README,
@@ -32,9 +32,9 @@ def main():
         "displayName": "CRISP",
         "version": VERSION,
         "description": "Say the useful thing once, then stop. A writing protocol for LLM replies, specs, status updates, and agent messages: answer first, no filler, no repetition, plain words, structure only when it helps. Adds /crisp and 'crispify this'.",
-        "author": {"name": "Andrei Verdeș", "url": "https://github.com/andreiverdes"},
+        "author": {"name": "HorizonLoop", "url": "https://github.com/horizon-loop"},
         "homepage": "https://andreiverdes.github.io/crisp/",
-        "repository": "https://github.com/andreiverdes/crisp-plugin",
+        "repository": "https://github.com/horizon-loop/crisp-plugin",
         "license": "MIT",
         "keywords": ["writing", "concise", "style", "prompting", "agents", "token-efficiency"],
     }, indent=2, ensure_ascii=False) + "\n")
