@@ -45,5 +45,19 @@ def main():
     n = sum(1 for p in OUT.rglob("*") if p.is_file() and ".git" not in p.parts)
     print(f"{OUT}: {n} files, version {VERSION}")
 
+
+
+def build_zip():
+    """web/crisp-skill.zip: the skill folder as the Claude app's 'Upload a skill' expects (crisp/SKILL.md at the top)."""
+    import zipfile
+    dst = ROOT / "web" / "crisp-skill.zip"
+    with zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED) as z:
+        for p in sorted(SKILL.rglob("*")):
+            if p.is_file() and "__pycache__" not in p.parts and p.name != ".DS_Store":
+                z.write(p, pathlib.Path("crisp") / p.relative_to(SKILL))
+    print(f"{dst.relative_to(ROOT)}: {dst.stat().st_size // 1024} KB")
+
+
 if __name__ == "__main__":
     main()
+    build_zip()

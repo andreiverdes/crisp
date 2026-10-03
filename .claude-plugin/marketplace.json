@@ -1,0 +1,15 @@
+{
+  "name": "crisp",
+  "owner": { "name": "Andrei Verdeș", "url": "https://github.com/andreiverdes" },
+  "metadata": { "description": "CRISP: a writing protocol that makes Claude concise, relevant, intuitive and simple." },
+  "plugins": [
+    {
+      "name": "crisp",
+      "source": { "source": "github", "repo": "horizon-loop/crisp-plugin" },
+      "description": "Say the useful thing once, then stop. Adds /crisp and 'crispify this' to Claude: answer first, no filler, no repetition, plain words, structure only when it helps.",
+      "homepage": "https://andreiverdes.github.io/crisp/",
+      "license": "MIT",
+      "keywords": ["writing", "concise", "style", "prompting"]
+    }
+  ]
+}
