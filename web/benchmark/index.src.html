@@ -51,9 +51,18 @@
   </div>
 </div></section>
 
+<section style="padding:0 0 40px"><div class="wrap">
+  <p class="eyebrow">how we measured</p>
+  <div class="method">
+    <div><b>Words</b><span>Counted by splitting on whitespace.</span></div>
+    <div><b>Tokens</b><span>Estimated with OpenAI's tiktoken (o200k_base) on the answer text only, so both models are counted the same way.</span></div>
+    <div><b>Judges</b><span>Claude answers were judged by Claude Opus, GPT answers by GPT-6.1 Sol. The Anthropic-vs-OpenAI head-to-head is the only comparison where the judge (Claude Opus) didn't write either answer.</span></div>
+  </div>
+</div></section>
+
 <footer><div class="wrap">
-  <span>Words: whitespace split · Tokens: tiktoken o200k_base on response text · Judges share a vendor with their generator except the head-to-head</span>
-  <span><a href="../">Home</a> · <a href="https://github.com/andreiverdes/crisp">GitHub</a> · MIT</span>
+  <span>CRISP · Concise · Relevant · Intuitive · Simple · Protocol</span>
+  <span><a href="../">Home</a> · <a href="https://github.com/andreiverdes/crisp">GitHub</a> · <a href="https://github.com/andreiverdes/crisp/blob/main/CRISP.md">Protocol</a> · MIT</span>
 </div></footer>
 
 <script id="crisp-data" type="application/json">{{DATA}}</script>

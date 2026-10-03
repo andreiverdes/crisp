@@ -293,3 +293,8 @@ footer a:hover { color: var(--fg); }
 .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 @media (max-width: 760px) { .wide-chart { min-width: 760px; } }
 .grid2 > *, .card { min-width: 0; }
+.method { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.method div { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+.method b { display: block; font-size: 17px; font-weight: 800; margin-bottom: 4px; }
+.method span { color: var(--muted); font-size: 15px; }
+@media (max-width: 760px) { .method { grid-template-columns: 1fr; } }
