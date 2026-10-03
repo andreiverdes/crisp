@@ -30,6 +30,6 @@ HorizonUI is vendored from `claude-design/horizon-ui/ds-bundle` (the browser-glo
 
 `python3 site/hero.py` regenerates `web/hero-{dark,light}.svg` from `data.json`. Self-contained SVG (system fonts, no external refs) so GitHub renders it in the README; the `<picture>` block in `README.md` swaps on the viewer's color scheme.
 
-## Twitter card
+## Social image
 
-`python3 site/twitter.py` writes `web/twitter-card.svg` (1200×675). Rasterize at 2x in a headless browser to `web/twitter-card.png` (2400×1350, under 1 MB; X accepts up to 5 MB). Attach the PNG to the tweet, or point `twitter:image` at the raw GitHub URL.
+`web/og-image.png` (1200×675) is resized from `resources/twitter.png`. `site/build_home.py` stamps its content hash into the og:image URL, so link unfurlers re-fetch when it changes.
