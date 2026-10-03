@@ -146,26 +146,49 @@
 
 <section id="install"><div class="wrap">
   <p class="eyebrow">get it</p>
-  <h2>Install in a minute.</h2>
+  <h2>Install in a minute. No terminal needed.</h2>
+  <p class="sub">Works in the Claude desktop app, claude.ai, and Claude Code. Add it once and it follows your Claude account everywhere.</p>
+  <div class="paths">
+    <div class="path">
+      <div class="ph"><span class="num">A</span><div><b>Add as a plugin</b><span>Pro, Max, Team, Enterprise</span></div></div>
+      <ol>
+        <li>In Claude, click <b>Customize</b> in the left sidebar, then <b>Plugins</b>.</li>
+        <li>Click <b>Add</b> → <b>Add marketplace</b> → <b>Add from a repository</b>.</li>
+        <li>Type <code class="copy" data-copy="andreiverdes/crisp">andreiverdes/crisp</code> and confirm.</li>
+        <li>Open <b>Discover</b>, pick <b>CRISP</b>, click <b>Add</b>.</li>
+      </ol>
+      <p class="pnote">Updates arrive automatically.</p>
+    </div>
+    <div class="path">
+      <div class="ph"><span class="num">B</span><div><b>Upload as a skill</b><span>Any plan, including Free</span></div></div>
+      <ol>
+        <li><a class="dl" href="crisp-skill.zip" download>Download crisp-skill.zip</a></li>
+        <li>In Claude, click <b>Customize</b> → <b>Skills</b> → <b>+</b> → <b>Create skill</b> → <b>Upload a skill</b>.</li>
+        <li>Choose the ZIP. CRISP appears in your skills list, switched on.</li>
+      </ol>
+      <p class="pnote">Skills need <b>Code execution and file creation</b> on, under Settings → Capabilities.</p>
+    </div>
+    <div class="path then">
+      <div class="ph"><span class="num">✓</span><div><b>Then just ask</b><span>in any chat</span></div></div>
+      <div class="say"><code>/crisp</code><code>crispify this</code><code>make this crispier</code><code>/crisp 3</code></div>
+      <p class="pnote">One-click install from Claude's plugin directory is in review. <span class="hand blue">soon!</span></p>
+    </div>
+  </div>
+
+  <h3 class="sub-h">Prefer the terminal?</h3>
   <div class="install">
     <div class="term">
-      <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>CRISP</span></div>
+      <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>Claude Code</span></div>
 <pre><span class="k">INSTALL</span>
-<span class="p">$</span> claude plugins marketplace add andreiverdes/awesome-claude
-<span class="p">$</span> claude plugins install awesome-claude@awesome-claude
+<span class="p">$</span> claude plugins marketplace add andreiverdes/crisp
+<span class="p">$</span> claude plugins install crisp@crisp
 
-<span class="k">USE</span>
-<span class="u">&gt;</span> /crisp
-<span class="u">&gt;</span> crispify this
-<span class="u">&gt;</span> make this crispier
-
-<span class="k">OR IN ANY PROJECT</span>
+<span class="k">EVERY AGENT IN A REPO</span>
 <span class="p">$</span> python3 skills/crisp/scripts/install.py --command</pre>
     </div>
     <div class="ways">
-      <div class="way"><b>Claude Code</b><span>Two commands, then <code>/crisp</code> in every session.</span></div>
-      <div class="way"><b>Every agent in a repo</b><span><code>install.py</code> writes CRISP into <code>AGENTS.md</code> and <code>CLAUDE.md</code>. <code>--level crisp|minimal|full</code> picks the prompt size.</span></div>
-      <div class="way"><b>Any model</b><span>Paste one of the three prompts (80, 200, or 590 words) into a system prompt. <a class="blue" href="https://github.com/andreiverdes/crisp/tree/main/skills/crisp/prompts">Prompts →</a></span></div>
+      <div class="way"><b>Every agent in a repo</b><span><code>install.py</code> writes CRISP into <code>AGENTS.md</code> and <code>CLAUDE.md</code>, so Codex, Cursor, and Claude Code all follow it. <code>--level crisp|minimal|full</code> picks the prompt size.</span></div>
+      <div class="way"><b>Any other model</b><span>Paste one of the three prompts (80, 200, or 590 words) into a system prompt. <a class="blue" href="https://github.com/andreiverdes/crisp/tree/main/skills/crisp/prompts">Prompts →</a></span></div>
     </div>
   </div>
 </div></section>
@@ -200,5 +223,10 @@
   <span>CRISP · Concise · Relevant · Intuitive · Simple · Protocol</span>
   <span><a href="https://github.com/andreiverdes/crisp">GitHub</a> · <a href="https://github.com/andreiverdes/crisp/blob/main/CRISP.md">Protocol</a> · <a href="benchmark/">Benchmark</a> · <a href="https://github.com/andreiverdes/crisp/blob/main/LICENSE">MIT</a></span>
 </div></footer>
+<script>
+document.querySelectorAll("[data-copy]").forEach((el) => el.addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(el.dataset.copy); el.classList.add("done"); const o = el.textContent; el.textContent = "copied ✓"; setTimeout(() => { el.textContent = o; el.classList.remove("done"); }, 1400); } catch {}
+}));
+</script>
 </body>
 </html>

@@ -6,7 +6,7 @@
 
 | Want to… | Open |
 |---|---|
-| Install as a Claude Code skill | `claude plugins marketplace add andreiverdes/awesome-claude` then `claude plugins install awesome-claude@awesome-claude`; `/crisp` is then available in every session |
+| Install it (no terminal) | Claude app → **Customize** → **Plugins** → **Add** → **Add marketplace** → `andreiverdes/crisp`. Or upload [crisp-skill.zip](https://andreiverdes.github.io/crisp/crisp-skill.zip) under **Customize** → **Skills**. [Steps below](#install) |
 | Use it in a project | `python3 skills/crisp/scripts/install.py --command` from the project root (adds a CRISP block to `AGENTS.md`/`CLAUDE.md` and a `/crisp` slash command) |
 | Read the rules | `skills/crisp/SKILL.md` (one page) or `CRISP.md` section 7 and 22 |
 | Paste a prompt | `skills/crisp/prompts/crisp.md` (80 words), `crisp-minimal.md` (200), `crisp-full.md` (590) |
@@ -15,14 +15,35 @@
 
 ## Docs
 
-### Install as a Claude Code skill
+### Install
+
+CRISP installs from the Claude app, with no terminal. Whatever you add there follows your Claude account into the desktop app, claude.ai, and Claude Code (v2.1.273+, signed in with the same account).
+
+**A. As a plugin** (Pro, Max, Team, Enterprise)
+
+1. In Claude, click **Customize** in the left sidebar, then **Plugins**.
+2. Click **Add** → **Add marketplace** → **Add from a repository**.
+3. Type `andreiverdes/crisp` and confirm.
+4. Open **Discover**, pick **CRISP**, click **Add**. Updates arrive automatically.
+
+**B. As a skill** (any plan, including Free)
+
+1. Download [crisp-skill.zip](https://andreiverdes.github.io/crisp/crisp-skill.zip).
+2. In Claude, click **Customize** → **Skills** → **+** → **Create skill** → **Upload a skill**.
+3. Choose the ZIP. CRISP appears in your skills list, switched on.
+
+Skills need **Code execution and file creation** turned on (Settings → Capabilities). Uploaded skills don't auto-update; re-upload to get a new version.
+
+**C. From the terminal** (Claude Code)
 
 ```
-claude plugins marketplace add andreiverdes/awesome-claude
-claude plugins install awesome-claude@awesome-claude
+claude plugins marketplace add andreiverdes/crisp
+claude plugins install crisp@crisp
 ```
 
-`/crisp` is then available in every Claude Code session. `/crisp` applies CRISP to everything that follows; `crispify this`, `make this crispier`, and `run a CRISP pass` rewrite the text you give. `/crisp 1`, `/crisp 2`, `/crisp 3` set depth (see Levels).
+It is also part of the [awesome-claude](https://github.com/andreiverdes/awesome-claude) collection, if you already use that. One-click install from Claude's own plugin directory is in review.
+
+**Use it.** `/crisp` applies CRISP to everything that follows; `crispify this`, `make this crispier`, and `run a CRISP pass` rewrite the text you give. `/crisp 1`, `/crisp 2`, `/crisp 3` set depth (see Levels).
 
 ### Install into a project: `install.py`
 
@@ -30,7 +51,7 @@ Puts a CRISP block into the project's `AGENTS.md` and `CLAUDE.md` so every agent
 
 ```
 python3 skills/crisp/scripts/install.py            # from this repo
-python3 ~/.claude/plugins/marketplaces/awesome-claude/skills/crisp/scripts/install.py   # from the plugin
+python3 ~/.claude/plugins/marketplaces/crisp/skills/crisp/scripts/install.py   # if you installed the plugin
 ```
 
 | Flag | What it does | Default |

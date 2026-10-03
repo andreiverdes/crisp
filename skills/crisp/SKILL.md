@@ -85,7 +85,7 @@ Ideas before words: steps 2-3 come before step 6.
 
 ## Install into a project
 
-`scripts/install.py` puts a CRISP block into the project's `AGENTS.md` and `CLAUDE.md` so every agent in that repo replies in CRISP, with or without this skill. Run from the project root; from the plugin the script lives at `~/.claude/plugins/marketplaces/awesome-claude/skills/crisp/scripts/install.py`.
+`scripts/install.py` puts a CRISP block into the project's `AGENTS.md` and `CLAUDE.md` so every agent in that repo replies in CRISP, with or without this skill. Run from the project root; from the plugin the script lives at `~/.claude/plugins/marketplaces/crisp/skills/crisp/scripts/install.py` (or `marketplaces/awesome-claude/...` if installed from that collection).
 
 | Flag | Effect | Default |
 |---|---|---|
