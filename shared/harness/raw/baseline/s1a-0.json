@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s1a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What's the difference between git merge and git rebase, and when should I use each?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Both **merge** and **rebase** bring changes from one branch into another. The difference is how they represent that history.\n\n### `git merge`\n\nCombines the histories of two branches and usually creates a **merge commit**.\n\n```bash\ngit switch feature\ngit merge main\n```\n\nThe feature branch keeps its original commits, and the merge commit records where the histories came together. This preserves the history as it happened, including parallel work.\n\n**Use merge when:**\n- You want to preserve the shared branch’s history.\n- The branch has already been shared with others.\n- You’re integrating work into a team branch and want an explicit record of the integration.\n\n### `git rebase`\n\nReplays your branch’s commits on top of another branch, producing a **linear history**. The replayed commits have new IDs.\n\n```bash\ngit switch feature\ngit rebase main\n```\n\nThis makes it look as though your work started from the latest `main`.\n\n**Use rebase when:**\n- You want to update a private or local feature branch before merging it.\n- You prefer a clean, linear history.\n- You want to avoid extra merge commits in your project’s history.\n\n### Important caution\n\nRebasing rewrites commit history. **Avoid rebasing commits that other people may already have based work on**—it can make collaboration confusing and require force-pushing.\n\nA common workflow is to **rebase your private feature branch onto the latest `main`**, then **merge the feature branch into `main`** when it’s ready.",
+    "usage": {
+      "prompt_tokens": 24,
+      "completion_tokens": 321,
+      "total_tokens": 345,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

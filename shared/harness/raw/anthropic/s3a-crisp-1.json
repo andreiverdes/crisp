@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s3a-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "## Implementation plan\n\n1. **Inspect the API and existing infrastructure**\n   - Find the Express app setup, JWT middleware, route registration, error handling, and test conventions.\n   - Check whether the project already has a Redis client, Redis connection configuration, and shutdown handling. Reuse these rather than adding another client.\n   - Confirm that `req.user.id` is set before protected routes run, and identify any public routes that should not use this limit.\n\n2. **Add a per-user Redis rate limiter**\n   - Use the project’s existing Redis client. If none exists, add one using the project’s supported Redis library and configuration; fail startup if Redis is required but unavailable.\n   - Add limiter middleware configured for **100 requests per 60 seconds**, keyed by `req.user.id`.\n   - Apply it after JWT authentication so the key is always based on an authenticated user. Do not use IP address as a fallback.\n   - Use an atomic Redis operation or a well-tested Redis-backed limiter library so concurrent requests cannot exceed the limit through race conditions.\n   - Ensure the Redis key includes an application-specific prefix and a version, for example `api:rate-limit:v1:<userId>`. Set an expiry so inactive keys are removed.\n\n3. **Define request and failure behavior**\n   - Allow requests 1–100 in each window. Reject request 101 and later with status **429**.\n   - Include a `Retry-After` header with the number of whole seconds until the user can make another request; round up and never send less than `1`.\n   - Return the API’s standard error format, with a stable rate-limit error code or message.\n   - If Redis is unavailable, follow the API’s established dependency-failure policy. Do not silently fall back to process-local limiting, which would make limits inconsistent across instances.\n\n4. **Wire middleware into routes**\n   - Apply the limiter to authenticated API routes after JWT middleware.\n   - Preserve existing authentication behavior: unauthenticated requests should receive the current authentication response, not consume a user’s quota.\n   - Leave explicitly excluded routes, such as health checks, outside the limiter.\n\n5. **Add tests**\n   - Verify an authenticated user can make 100 requests and the 101st receives 429 with `Retry-After`.\n   - Verify the header is a positive integer and reflects the remaining window.\n   - Verify two users have independent quotas.\n   - Verify unauthenticated requests are rejected before rate limiting.\n   - Verify excluded routes are not limited.\n   - Verify Redis errors follow the chosen failure policy.\n   - Use a Redis test instance or an isolated test Redis database; ensure tests clean up limiter keys.\n\n6. **Document and validate**\n   - Document Redis configuration and the limit’s scope and behavior.\n   - Run the relevant unit and integration tests, then the full test suite and lint/type checks.\n   - Confirm in a multi-instance environment that requests from the same user share one Redis-backed quota.",
+    "usage": {
+      "prompt_tokens": 195,
+      "completion_tokens": 608,
+      "total_tokens": 803,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

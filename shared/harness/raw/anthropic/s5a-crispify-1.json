@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s5a-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\n**Recommendation: use Postgres `LISTEN/NOTIFY`**, assuming notifications are transient signals and the service can recover by checking its source of truth. At roughly 1,000 events/second, it’s a reasonable fit, and you already run Postgres. It avoids adding Kafka or routing notifications through another system.\n\n| Option | Delivery characteristics | Operational fit |\n|---|---|---|\n| **Postgres `LISTEN/NOTIFY`** | Notifications are not persisted or replayable. Listeners can miss them while disconnected; payloads are limited. | Simplest if Postgres is already available. Keep payloads small—often just an ID—and have consumers fetch current state from the database. |\n| **Redis Pub/Sub** | Also transient: subscribers disconnected at publish time miss messages. | A good alternative if Redis is already the natural notification path, but it does not provide stronger delivery guarantees than `NOTIFY`. |\n| **Kafka** | Durable, replayable, and designed for high-throughput event streams. | More operational complexity than warranted if occasional loss is acceptable and replay is not required. |\n\nA few caveats for `LISTEN/NOTIFY`:\n\n- Treat it as a **wake-up signal**, not the authoritative record of an event.\n- A listener should reconnect and, after reconnecting, check the database for work it may have missed.\n- If publishing must happen only when a database transaction commits, issue `NOTIFY` within that transaction.\n- Load-test your actual payload size and connection pattern; notifications are delivered to listening sessions, so a very large number of listeners can change the trade-off.\n\nChoose **Redis Pub/Sub instead** if your application already publishes and consumes notifications through Redis and you want to avoid coupling this path to Postgres. Choose **Kafka** only if you later need durable retention, replay, consumer offsets, or stronger delivery guarantees."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Recommendation: use Postgres `LISTEN/NOTIFY`** if notifications are transient and consumers can recover by checking the source of truth. At about 1,000 events/second, it’s a reasonable fit and avoids adding Kafka or another routing system.\n\n| Option | Delivery | Operational fit |\n|---|---|---|\n| **Postgres `LISTEN/NOTIFY`** | Not persisted or replayable. Listeners miss notifications while disconnected; payloads are limited. | Simplest if Postgres is already available. Send small payloads, often just an ID, and have consumers fetch current state from the database. |\n| **Redis Pub/Sub** | Transient; subscribers miss messages published while disconnected. | A good fit if Redis is already the notification path, but it offers no stronger delivery guarantees than `NOTIFY`. |\n| **Kafka** | Durable, replayable, and built for high-throughput event streams. | Adds operational complexity if occasional loss is acceptable and replay isn’t needed. |\n\nFor `LISTEN/NOTIFY`:\n\n- Treat notifications as **wake-up signals**, not authoritative event records.\n- On reconnect, have listeners check the database for missed work.\n- Issue `NOTIFY` inside the transaction if publishing must happen only after commit.\n- Load-test with your actual payload size and connection pattern. A very large listener count can change the trade-off.\n\nChoose **Redis Pub/Sub** if the application already uses Redis for notifications and you want to avoid coupling this path to Postgres. Choose **Kafka** if you need durable retention, replay, consumer offsets, or stronger delivery guarantees.",
+    "usage": {
+      "prompt_tokens": 550,
+      "completion_tokens": 333,
+      "total_tokens": 883,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

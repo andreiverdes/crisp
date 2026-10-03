@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s5b-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\nI’d recommend a **monorepo**, at least for now.\n\nWith six engineers and three closely related codebases, the main benefit is coordinating changes: an API-client change and its web or mobile updates can be reviewed, tested, and merged together. You also get one place for shared tooling, dependency updates, and CI rules. That usually outweighs the extra repository-management overhead at this team size.\n\nA practical layout might be:\n\n```text\napps/\n  web/\n  mobile/\npackages/\n  api-client/\n```\n\nKeep each app’s dependencies and release process appropriately independent. In particular, version and publish the API client deliberately if it has consumers outside these apps; sharing a repository doesn’t have to mean tightly coupling releases.\n\nChoose separate repos instead if the apps have substantially different access-control needs, release practices, tooling, or ownership—or if the shared client is a stable product used by many unrelated teams. Otherwise, start with the monorepo, and split later if concrete friction justifies it."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "I’d recommend a monorepo for now. With six engineers and three related codebases, it makes coordinated changes—such as an API-client update and its web or mobile changes—easier to review, test, and merge. It also centralizes shared tooling, dependency updates, and CI rules, which likely outweighs the repository overhead at this team size.\n\nA practical layout:\n\n```text\napps/\n  web/\n  mobile/\npackages/\n  api-client/\n```\n\nKeep app dependencies and release processes independent. If teams outside these apps use the API client, version and publish it deliberately; sharing a repository doesn’t require tightly coupling releases.\n\nUse separate repos if the apps need different access controls, release practices, tooling, or ownership, or if the client is a stable product used by many unrelated teams. Otherwise, start with a monorepo and split only if concrete friction justifies it.",
+    "usage": {
+      "prompt_tokens": 370,
+      "completion_tokens": 185,
+      "total_tokens": 555,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

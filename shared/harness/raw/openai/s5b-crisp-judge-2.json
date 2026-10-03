@@ -1,0 +1,69 @@
+{
+  "request": {
+    "id": "judge-openai-s5b-crisp-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6.1-sol",
+      "messages": [
+        {
+          "role": "user",
+          "content": "You are judging two answers to the same prompt. You do not know which is which. Judge only what is on the page.\n\nPROMPT GIVEN TO BOTH:\n<prompt>\nShould we use a monorepo or separate repos? Team of 6 engineers maintaining a web app, a mobile app, and a shared API client library used by both. Give a recommendation.\n</prompt>\n\nREQUIRED FACTS (an answer is complete only if it states each of these, in any wording):\nf1: gives one explicit recommendation\nf2: discusses how the shared client library is coordinated and versioned under each option (cross-cutting changes, version drift)\nf3: accounts for the team size (6 engineers) when weighing tooling, ownership, and scale costs\nf4: names at least one real cost of the recommended option\nf5: states when the other option would be the better choice   <!-- one line each: \"f1: <fact>\" -->\n\nANSWER A:\n<answer_a>\nUse a **monorepo** for the web app, mobile app, and shared API client.\n\nWith six engineers and a library used by both apps, a monorepo makes coordinated changes easier: update the API client and its consumers together, run checks across all three, and avoid version-publishing friction. It also gives the team one place to find code and configure CI.\n\nKeep the packages clearly separated, with explicit dependency boundaries—for example, `apps/web`, `apps/mobile`, and `packages/api-client`. Set up CI to run only the relevant tests and builds, and publish or version the client only if there’s a real need to consume it outside the repo.\n\nChoose separate repos instead if the apps have substantially different teams, release processes, access controls, or tooling—or if the API client is intended to be an independently maintained product. For your team as described, those costs likely outweigh the benefits.\n</answer_a>\n\nANSWER B:\n<answer_b>\n**Use a monorepo** for the web app, mobile app, and shared API client.\n\nWith six engineers and closely related projects, a monorepo makes it easier to change the client and its consumers together, coordinate releases, and share code and tooling. Keep clear boundaries between projects, and use workspace tooling to manage dependencies and run only the relevant tests and builds.\n\nChoose separate repos only if the apps have substantially different teams, release processes, access controls, or compliance requirements. Otherwise, the extra coordination and versioning overhead is unlikely to pay off.\n</answer_b>\n\nScore each answer 1-5 on each dimension. Use the whole scale.\n\n- correctness: 5 = no technical errors; 1 = materially wrong.\n- clarity: 5 = understood on first read; 1 = must be decoded.\n- ambiguity: 5 = nothing vague, every reference and condition is clear; 1 = vague terms, unclear references, hidden assumptions.\n- scanability: 5 = the key point and structure are findable in seconds, and formatting matches the content; 1 = the point is buried, or formatting is decorative or excessive.\n- relevance: 5 = everything serves the question; 1 = padding, generic advice, unasked tangents, restated question or context.\n- conversational: 5 = sounds like a competent colleague talking; 1 = robotic, bureaucratic, academic, or chatty filler (\"Sure!\", \"Great question\", \"In conclusion\").\n- completeness: 5 = everything the asker needs to act, nothing essential missing; 1 = key parts missing.\n\nThen, for each required fact, say whether each answer states it.\n\nThen note useful content that one answer has and the other lacks, beyond the required facts: anything a competent reader would want and could act on. Ignore padding, generic advice, and restated context. If nothing useful is missing from either, use an empty string.\n\nThen choose which answer a competent engineer would rather receive. Length is not a virtue or a flaw by itself; judge usefulness per word.\n\nReply with only a JSON object in this shape. All scores are integers 1-5. `preferred` is exactly one of \"A\", \"B\", \"tie\". Example values shown:\n\n```json\n{\n  \"A\": {\"correctness\": 4, \"clarity\": 3, \"ambiguity\": 4, \"scanability\": 3, \"relevance\": 3, \"conversational\": 3, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f4\"]},\n  \"B\": {\"correctness\": 4, \"clarity\": 5, \"ambiguity\": 4, \"scanability\": 5, \"relevance\": 5, \"conversational\": 4, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\"]},\n  \"useful_lost\": {\"A\": \"B explains the Retry-After calculation; A does not.\", \"B\": \"\"},\n  \"preferred\": \"B\",\n  \"notes\": \"one or two sentences: the decisive difference\"\n}\n```"
+        }
+      ],
+      "reasoning_effort": "high",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "{\n  \"A\": {\n    \"correctness\": 5,\n    \"clarity\": 4,\n    \"ambiguity\": 3,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 3,\n    \"facts_present\": [\"f1\", \"f3\", \"f5\"]\n  },\n  \"B\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 4,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 3,\n    \"facts_present\": [\"f1\", \"f3\", \"f5\"]\n  },\n  \"useful_lost\": {\n    \"A\": \"B explicitly recommends workspace tooling for dependency management.\",\n    \"B\": \"A provides a concrete directory layout: apps/web, apps/mobile, and packages/api-client.\"\n  },\n  \"preferred\": \"A\",\n  \"notes\": \"A offers more actionable setup guidance and a clearer client-publishing policy. Neither fully explains client coordination and version drift under both options or explicitly names a real cost of adopting the recommended monorepo.\"\n}",
+    "usage": {
+      "prompt_tokens": 1063,
+      "completion_tokens": 774,
+      "total_tokens": 1837,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 504
+      }
+    }
+  },
+  "parsed": {
+    "A": {
+      "correctness": 5,
+      "clarity": 4,
+      "ambiguity": 3,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 3,
+      "facts_present": [
+        "f1",
+        "f3",
+        "f5"
+      ]
+    },
+    "B": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 4,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 3,
+      "facts_present": [
+        "f1",
+        "f3",
+        "f5"
+      ]
+    },
+    "useful_lost": {
+      "A": "B explicitly recommends workspace tooling for dependency management.",
+      "B": "A provides a concrete directory layout: apps/web, apps/mobile, and packages/api-client."
+    },
+    "preferred": "A",
+    "notes": "A offers more actionable setup guidance and a clearer client-publishing policy. Neither fully explains client coordination and version drift under both options or explicitly names a real cost of adopting the recommended monorepo."
+  }
+}

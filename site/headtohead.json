@@ -1,0 +1,1734 @@
+{
+ "team": [
+  {
+   "winner": "anthropic",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 5
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 4,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "B notes that both approaches can produce the same final files and differ only in how history is represented.",
+    "openai": "A includes a before/merge/rebase commit diagram that makes the difference concrete, mentions the fast-forward case, and covers tidying local commits with rebase."
+   },
+   "notes": "Both cover all required facts. A's commit diagram makes the difference immediately concrete, and A is tighter and more precise. B hedges with 'usually' and 'straighter', and it ends with a closing line that adds little.",
+   "id": "s1a",
+   "sample": 0
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 5
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 4,
+     "conversational": 4,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "",
+    "openai": "A explicitly names the fast-forward case where no merge commit is created; B only says 'usually'."
+   },
+   "notes": "Both cover all five facts and both mention --force-with-lease. A does it in fewer words, names fast-forward explicitly, and has no repetition, whereas B's bullet lists and closing rule of thumb restate points already made.",
+   "id": "s1a",
+   "sample": 1
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 4,
+     "conversational": 4,
+     "completeness": 4
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B includes a before/after commit diagram and the common rebase-then-merge workflow. A has neither.",
+    "anthropic": "A notes that after rebasing a pushed branch you need `git push --force-with-lease`. B omits this."
+   },
+   "notes": "Both are correct and cover every required fact. B's diagram and its rebase-then-merge workflow give more insight per word than A's trivial command snippets. A's force-with-lease tip is its main unique value.",
+   "id": "s1a",
+   "sample": 2
+  },
+  {
+   "winner": "openai",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 4
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "anthropic": [
+     "f1",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B notes that True and False are also identity-checked singletons; A mentions only None.",
+    "anthropic": ""
+   },
+   "notes": "Neither answer mentions __eq__ or that classes can override equality. A says outright that `is` can 'appear to work by accident' on reused objects, which is the key interning warning. B's version of that warning is vaguer, and its True/False guidance is hedged with an unclear 'when identity is specifically intended'.",
+   "id": "s1b",
+   "sample": 0
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 4
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "anthropic": [
+     "f1",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B shows the positive case (`c = a; a is c` is True), which makes identity concrete. B also says accidental `is` matches can change across runs or implementations. A lacks both.",
+    "anthropic": ""
+   },
+   "notes": "Both are correct and concise, and neither mentions `__eq__` or that classes can override equality. B edges ahead by showing when `is` returns True and by stating that apparent matches from object reuse are implementation-dependent.",
+   "id": "s1b",
+   "sample": 1
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 3
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f4",
+     "f5"
+    ],
+    "anthropic": [
+     "f1",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B generalizes the `is` rule to singletons beyond None.",
+    "anthropic": "A's example includes `c = a`, showing a case where `is` returns True."
+   },
+   "notes": "Both are accurate and concise, and neither mentions __eq__ or overriding. B extends the `is` guidance to singletons generally, while A only mentions None. A's example does show the positive identity case.",
+   "id": "s1b",
+   "sample": 2
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 4
+    },
+    "openai": {
+     "correctness": 4,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "B explicitly contrasts 'once, not once per call', which sharpens the mental model slightly.",
+    "openai": "A ties the explanation directly to the observed output ('the second call sees \"a\"')."
+   },
+   "notes": "The two answers are nearly identical, and neither says the issue applies to all mutable defaults (dict, set). B's closing line 'This also lets callers pass in a list' implies a new capability the original already had, so it is slightly misleading; A's closing line is accurate.",
+   "id": "s2a",
+   "sample": 0
+  },
+  {
+   "winner": "tie",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 4
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "",
+    "openai": ""
+   },
+   "notes": "The two answers are nearly identical in explanation, fix and code. Neither says the pitfall applies to all mutable defaults such as dicts and sets. The wording differences (A names `items=[]` directly, B bolds 'once' and says 'every call') do not change usefulness.",
+   "id": "s2a",
+   "sample": 1
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 4
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B states plainly that a list passed in explicitly is still mutated in place. A presents passing a list as a benefit without saying it gets modified.",
+    "anthropic": ""
+   },
+   "notes": "The two answers are nearly identical, and neither says the pitfall applies to any mutable default (dict, set). B's last line is more precise: it says a passed-in list is mutated in place. A's 'This also lets you' wrongly suggests the fix adds a capability the original already had.",
+   "id": "s2a",
+   "sample": 2
+  },
+  {
+   "winner": "tie",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 5
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 4,
+     "conversational": 5,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "",
+    "openai": ""
+   },
+   "notes": "The two answers are nearly identical, with the same two fixes. B repeats the dict literal from the prompt, which makes its snippet runnable but restates context. A echoes the error's 'changes its size' wording. Neither difference is meaningful.",
+   "id": "s2b",
+   "sample": 0
+  },
+  {
+   "winner": "tie",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 5
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "useful_lost": {
+    "openai": "",
+    "anthropic": ""
+   },
+   "notes": "The two answers are essentially identical: same cause, same two fixes, same code. A repeats the dict initialization and labels the comprehension slightly more specifically. B ties its explanation directly to the 'changes size' wording of the error. Neither difference matters.",
+   "id": "s2b",
+   "sample": 1
+  },
+  {
+   "winner": "tie",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 5
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3"
+    ]
+   },
+   "useful_lost": {
+    "openai": "",
+    "anthropic": ""
+   },
+   "notes": "Both answers are essentially identical: the same cause, the same two fixes, and the same code. They differ only in how the first sentence is worded. B says outright that the dictionary is changed; A's 'deleting keys while iterating' implies it just as clearly.",
+   "id": "s2b",
+   "sample": 2
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 3,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 3,
+     "completeness": 3
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 4,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 3,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f6"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f6"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B aligns the key to a minute boundary (`rate-limit:user:<id>:<window-start>`) so all instances share the same window. It also floors Retry-After at 1, says to reuse the shared Redis client rather than create one per request, flags health checks for exclusion, and advises avoiding timing-sensitive sleeps in tests.",
+    "anthropic": "A includes a test that concurrent requests cannot exceed the limit."
+   },
+   "notes": "A calls its scheme a 'rolling' window, but INCR+EXPIRE on a single key is a fixed window that starts at the first request, so the label is technically wrong. B names a fixed window, embeds the window start in the key, and defines Retry-After precisely. Neither answer actually commits to fail-open or fail-closed.",
+   "id": "s3a",
+   "sample": 0
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 4,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 3,
+     "completeness": 3
+    },
+    "openai": {
+     "correctness": 4,
+     "clarity": 4,
+     "ambiguity": 2,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 3,
+     "completeness": 2
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f3"
+    ],
+    "openai": [
+     "f1",
+     "f3"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "B says to treat a missing req.user.id as an error rather than fall back to a shared key. It also says Redis errors must not be returned as 429s.",
+    "openai": "A gives a concrete key example (api:rate-limit:v1:<userId>) with expiry. It requires an atomic Redis operation to prevent concurrent overruns, gives a precise Retry-After rule (round up, minimum 1), forbids falling back to process-local limiting, and calls for a multi-instance check of the shared quota."
+   },
+   "notes": "Both defer the key decisions (algorithm, fail-open vs fail-closed) and both omit the window-reset test. A is more concrete: it gives a key scheme, requires atomicity, and states an exact Retry-After rounding rule, so a coding agent can act on it with fewer guesses.",
+   "id": "s3a",
+   "sample": 1
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 4,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 3,
+     "completeness": 3
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 3,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f6"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B makes a concrete default Redis-failure decision (fail closed with 503). It uses a window-timestamped key with expiry slightly longer than the window. It also tests that concurrent requests cannot exceed the limit, excludes health checks, and avoids sleeps by controlling the clock.",
+    "anthropic": "A tests that unauthenticated requests keep existing JWT behavior and that the reported Retry-After decreases over time."
+   },
+   "notes": "A sends the Redis-unavailable decision back to the API owner, which leaves a coding agent without a decision. B picks a concrete default (fail closed with 503), gives a precise windowed key scheme, and adds a concurrency test.",
+   "id": "s3a",
+   "sample": 2
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 2,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 4,
+     "completeness": 4
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B defines a key-name regex, uses the conventional last-assignment-wins rule for duplicate keys, says not to print a normal report on a file error, and has a dedicated exit-code table.",
+    "anthropic": "A handles the optional `export ` prefix, mentions decode errors, and includes worked examples (though its first one is wrong)."
+   },
+   "notes": "A's first worked example is wrong: `.env` lacks PORT, so the output should be 'Missing: PORT' with exit 1, not exit 0. Its second example ('if .env instead omits PORT') describes the same input, so a coding agent using these as test cases would be misled. B is fully consistent and slightly tighter on parsing and error rules.",
+   "id": "s3b",
+   "sample": 0
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 4,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 4,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B gives a concrete exit code (2) for usage and file errors. It handles the `export ` prefix, states that comparison is case-sensitive, says not to print values, and limits 'empty' to keys present in both files.",
+    "anthropic": "A reports invalid lines with file and line number, and treats duplicate keys as errors rather than silently merging them."
+   },
+   "notes": "B pins down the error exit code (2) and several parsing edge cases. A leaves the agent to choose a 'separate nonzero status' and doesn't say whether extra keys can also count as empty. B's output labels hardcode '.env' even when custom paths are given, a minor flaw.",
+   "id": "s3b",
+   "sample": 1
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 4,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B handles the `export ` prefix and surrounding quotes. It treats invalid command-line usage as exit 2 and says no report is printed on error. It fixes which error is reported first when both files fail.",
+    "anthropic": "A specifies `--help` behavior. It treats `KEY` lines without `=` as declared keys, which B ignores. It restricts 'empty' to keys present in both files."
+   },
+   "notes": "Both cover every required fact. B's parsing rules (export prefix, quote stripping, value trimming) and its error-path details match real-world .env files better, while A leaves whitespace-only values counted as non-empty.",
+   "id": "s3b",
+   "sample": 2
+  },
+  {
+   "winner": "openai",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 3,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 4,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6",
+     "f7"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6",
+     "f7"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "B puts the risk/blocker in its own labeled section, so the team lead sees it immediately. A buries it inside the migration bullet.",
+    "openai": ""
+   },
+   "notes": "Both answers contain every required fact, but neither collects the asks (Dana's review, DBA approval, SRE access) in one place. B wins narrowly because its separate Risk/blocker section makes the key escalation findable at a glance. A is tighter but has no heading for the completed work and buries the risk inside a bullet.",
+   "id": "s4a",
+   "sample": 0
+  },
+  {
+   "winner": "openai",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 4,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6",
+     "f7"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6",
+     "f7"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "",
+    "openai": ""
+   },
+   "notes": "Content is nearly identical. Both mention the dependencies (DBA approval, SRE access, Dana's review) but neither pulls them into an explicit asks section for the lead. B breaks next week into bullets, which scans faster than A's run-on sentence. B's 'need SRE access to get a production heap dump' is also clearer than A's slightly garbled 'SRE access to a production heap dump'.",
+   "id": "s4a",
+   "sample": 1
+  },
+  {
+   "winner": "tie",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 3,
+     "completeness": 4
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 3,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f7"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f7"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "",
+    "openai": ""
+   },
+   "notes": "The two answers are nearly word-for-word identical. Both bury the asks (DBA approval, SRE access, Dana's review) as conditions inside 'Next week' rather than calling them out as explicit asks of the lead. Both also stick to a day-by-day log instead of leading with blockers.",
+   "id": "s4a",
+   "sample": 2
+  },
+  {
+   "winner": "openai",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 5
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 4,
+     "ambiguity": 4,
+     "scanability": 3,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ],
+    "anthropic": [
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ]
+   },
+   "useful_lost": {
+    "openai": "",
+    "anthropic": "A gives the 14:05 deploy time and so the full timeline. It also includes a header and a 'Next steps' label, which make the update easier to scan."
+   },
+   "notes": "B leaves out the 14:05 deploy time, so the timeline is incomplete. It is also a block of plain paragraphs with no header. A includes every fact and puts the ask and the plan under a clearly labeled 'Next steps' section.",
+   "id": "s4b",
+   "sample": 0
+  },
+  {
+   "winner": "openai",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 4,
+     "clarity": 4,
+     "ambiguity": 4,
+     "scanability": 3,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 3
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "B gives the 14:05 deploy time, which shows the 7-minute gap before errors appeared. A omits it.",
+    "openai": ""
+   },
+   "notes": "A drops the 14:05 deploy time, so its timeline is incomplete. B has every fact, and its 'Next steps' label makes the ask and the plan easier to find.",
+   "id": "s4b",
+   "sample": 1
+  },
+  {
+   "winner": "openai",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 4,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 3,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 3
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "B gives the 14:05 deploy time, the affected endpoint (/api/orders), and the error-rate jump from 0.2% to 6%. A gives none of these.",
+    "openai": ""
+   },
+   "notes": "A leaves out the deploy time, the endpoint, and the error-rate magnitude. A also makes the redeploy look conditional on the pipeline check rather than on the migration. B is complete and precise, and its light bolded headers make the next steps easy to find.",
+   "id": "s4b",
+   "sample": 2
+  },
+  {
+   "winner": "openai",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 4,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 3,
+     "completeness": 3
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f5"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "B states that NOTIFY in a transaction is delivered only on commit. It says all three options handle 1k/s. It also suggests concrete recovery paths: refresh state on reconnect, Redis Streams, or an outbox. A has none of these.",
+    "openai": "A notes that LISTEN/NOTIFY ties delivery to database connections, and that a Redis outage itself drops messages. B does not."
+   },
+   "notes": "Both recommend Redis Pub/Sub, and both omit the 8 KB NOTIFY payload cap and Kafka's ordering guarantee. B gives more actionable guidance: a rate-sufficiency check, transactional semantics, and concrete fallbacks. A's closing paragraph confusingly groups Kafka with the 'Pub/Sub-style choices' and then recommends it.",
+   "id": "s5a",
+   "sample": 0
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 4,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 4,
+     "completeness": 5
+    },
+    "openai": {
+     "correctness": 4,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 4,
+     "completeness": 3
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f4",
+     "f5"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "",
+    "openai": "A notes that Postgres payloads are size-limited and that slow subscribers, not only disconnected ones, can miss Redis messages. It suggests sending an event ID so consumers can fetch current state. It recommends an outbox plus reconciliation if a missed event would leave systems permanently out of sync. B has none of this."
+   },
+   "notes": "Both recommend Redis Pub/Sub, but A covers more Postgres limits and gives an actionable event-ID/outbox pattern for handling loss. B misplaces loss tolerance on publishers rather than consumers. Neither mentions Kafka ordering.",
+   "id": "s5a",
+   "sample": 1
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 3,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 4,
+     "completeness": 3
+    },
+    "anthropic": {
+     "correctness": 4,
+     "clarity": 4,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 4,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f5"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B explains that Redis keeps notification load off the primary database. It also says to keep handlers fast and to treat reconnects as a window where events can be missed.",
+    "anthropic": "A suggests using NOTIFY as a 'work available' signal backed by a table, so listeners can recover after a disconnect."
+   },
+   "notes": "B recommends Redis Pub/Sub, the better fit, because it keeps 1k/s of fan-out off the primary database. A recommends Postgres and dismisses Redis as adding little. Neither states the ~8 KB NOTIFY payload cap or that each listener holds a database connection, and B's closing conditional is slightly muddled.",
+   "id": "s5a",
+   "sample": 2
+  },
+  {
+   "winner": "anthropic",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 3
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f3",
+     "f5"
+    ],
+    "openai": [
+     "f1",
+     "f3",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "B says to keep each app independently releasable with clear ownership and dependency boundaries. It also names the specific tooling capability to check: building and testing only what a change affects.",
+    "openai": "A covers the separate-repo side of the shared library: it notes you avoid coordinating library releases and dependency updates across repos. It also mentions that CI tests both apps against the same change."
+   },
+   "notes": "A covers how the shared client is coordinated under both options, including the release and dependency-update burden of separate repos; B only describes the monorepo side. Neither answer explicitly names a cost of the monorepo; both only imply one through their switch conditions.",
+   "id": "s5b",
+   "sample": 0
+  },
+  {
+   "winner": "openai",
+   "order": [
+    "openai",
+    "anthropic"
+   ],
+   "scores": {
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 5
+    },
+    "anthropic": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 3
+    }
+   },
+   "facts": {
+    "openai": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "anthropic": [
+     "f1",
+     "f2",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "openai": "B gives concrete setup advice: separate CI jobs and ownership rules per app, triggered only when relevant files change. B also notes that a monorepo avoids publishing overhead for the client. A lacks both.",
+    "anthropic": "A names the cost of the monorepo (extra tooling) and weighs it against the team size. A also advises keeping the client as its own package with its own tests and build checks. B lacks both."
+   },
+   "notes": "Both recommend a monorepo with similar reasoning. A explicitly names a cost (extra tooling) and weighs it against the six-person team size. B never states a downside of its recommendation. It only implies one through its CI advice.",
+   "id": "s5b",
+   "sample": 1
+  },
+  {
+   "winner": "openai",
+   "order": [
+    "anthropic",
+    "openai"
+   ],
+   "scores": {
+    "anthropic": {
+     "correctness": 4,
+     "clarity": 3,
+     "ambiguity": 3,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    },
+    "openai": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "anthropic": [
+     "f1",
+     "f2",
+     "f4",
+     "f5"
+    ],
+    "openai": [
+     "f1",
+     "f2",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "anthropic": "B recommends workspace tooling to manage dependencies and run only affected tests and builds. It also says outright that separate repos add coordination and versioning overhead.",
+    "openai": "A names the monorepo's cost explicitly: without boundaries, a change to one app forces building and testing everything. It also gives a concrete trigger for independent versioning: the client being released to consumers outside these apps."
+   },
+   "notes": "A names a real cost of the monorepo, but its final paragraph blurs independent package versioning with splitting into separate repos, so the alternative condition is unclear. B states plainly when separate repos win. Neither answer weighs the team size beyond mentioning it.",
+   "id": "s5b",
+   "sample": 2
+  }
+ ],
+ "ste": [
+  {
+   "winner": "crisp",
+   "order": [
+    "ste",
+    "crisp"
+   ],
+   "scores": {
+    "ste": {
+     "correctness": 4,
+     "clarity": 3,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 2,
+     "completeness": 4
+    },
+    "crisp": {
+     "correctness": 4,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "ste": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "crisp": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "ste": "",
+    "crisp": ""
+   },
+   "notes": "Both answers have essentially the same content, and both state that merge always creates a merge commit, never mentioning fast-forward. B opens with a summary that answers the question up front and reads naturally. A's stilted phrasing ('other persons', 'Merge... Merge...') and its odd closing offer make it harder to read.",
+   "id": "s1a"
+  },
+  {
+   "winner": "crisp",
+   "order": [
+    "crisp",
+    "ste"
+   ],
+   "scores": {
+    "crisp": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 4,
+     "conversational": 5,
+     "completeness": 5
+    },
+    "ste": {
+     "correctness": 5,
+     "clarity": 4,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 4,
+     "conversational": 3,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "crisp": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "ste": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "crisp": "",
+    "ste": ""
+   },
+   "notes": "Both answers give the same explanation, fix and notes. A says it in natural, compact prose. B breaks it into choppy, simplified sentences that read as robotic and add words without adding information.",
+   "id": "s2a"
+  },
+  {
+   "winner": "crisp",
+   "order": [
+    "ste",
+    "crisp"
+   ],
+   "scores": {
+    "ste": {
+     "correctness": 4,
+     "clarity": 3,
+     "ambiguity": 3,
+     "scanability": 3,
+     "relevance": 4,
+     "conversational": 2,
+     "completeness": 5
+    },
+    "crisp": {
+     "correctness": 4,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "ste": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ],
+    "crisp": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6"
+    ]
+   },
+   "useful_lost": {
+    "ste": "",
+    "crisp": ""
+   },
+   "notes": "Both answers have the same content and cover every required fact. A breaks it into choppy, repetitive sentences, such as \"In this case\" three times. It also opens Step 2 with an ambiguous \"sliding window or fixed window\" before recommending one. B states the same decisions more tightly and scans faster, and it lists RATE_LIMIT_FAIL_OPEN with the other config variables.",
+   "id": "s3a"
+  },
+  {
+   "winner": "crisp",
+   "order": [
+    "ste",
+    "crisp"
+   ],
+   "scores": {
+    "ste": {
+     "correctness": 3,
+     "clarity": 3,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 1,
+     "completeness": 5
+    },
+    "crisp": {
+     "correctness": 4,
+     "clarity": 5,
+     "ambiguity": 4,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 5,
+     "completeness": 4
+    }
+   },
+   "facts": {
+    "ste": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f6",
+     "f7"
+    ],
+    "crisp": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5",
+     "f7"
+    ]
+   },
+   "useful_lost": {
+    "ste": "",
+    "crisp": "A flags Dana's review of #412 as a blocker. B only mentions it as status and does not surface it as a dependency or ask."
+   },
+   "notes": "A is written in stilted, simplified present tense ('I fix a test that sometimes fails'). That reads robotically and misdescribes the webhook bug in its summary. B is concise, natural, and covers nearly everything, though it does not raise Dana's review as an ask and it asserts the Friday ETA was missed, which the notes do not state.",
+   "id": "s4a"
+  },
+  {
+   "winner": "crisp",
+   "order": [
+    "crisp",
+    "ste"
+   ],
+   "scores": {
+    "crisp": {
+     "correctness": 5,
+     "clarity": 5,
+     "ambiguity": 5,
+     "scanability": 5,
+     "relevance": 5,
+     "conversational": 4,
+     "completeness": 5
+    },
+    "ste": {
+     "correctness": 4,
+     "clarity": 4,
+     "ambiguity": 4,
+     "scanability": 4,
+     "relevance": 4,
+     "conversational": 2,
+     "completeness": 5
+    }
+   },
+   "facts": {
+    "crisp": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ],
+    "ste": [
+     "f1",
+     "f2",
+     "f3",
+     "f4",
+     "f5"
+    ]
+   },
+   "useful_lost": {
+    "crisp": "",
+    "ste": ""
+   },
+   "notes": "Both answers cover the same points. B rewrites A's content in choppy, robotic short sentences with some redundancy. It also garbles the PgBouncer point (\"uses connections from your pool and from PgBouncer\"). A says the same things more tightly and reads more naturally.",
+   "id": "s5a"
+  }
+ ],
+ "judges": {
+  "team": "anthropic/claude-opus-5-5",
+  "ste": "anthropic/claude-opus-5-5"
+ }
+}

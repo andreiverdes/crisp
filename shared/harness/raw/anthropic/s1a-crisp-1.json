@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s1a-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "What's the difference between git merge and git rebase, and when should I use each?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "`git merge` combines two branches by creating a merge commit (unless Git can fast-forward). `git rebase` moves your branch’s commits onto a new base, replaying them and creating new commit IDs.\n\nUse **merge** when you want to preserve the branch’s history and record where work joined. It’s a safe default for shared branches because it doesn’t rewrite existing commits.\n\nUse **rebase** to keep your branch’s history linear, often by updating a local feature branch with the latest target branch before merging it. Rebase rewrites commits, so avoid rebasing commits that others may already have based work on.\n\nExample:\n\n```bash\n# Merge the target branch into your feature branch\ngit switch feature\ngit merge main\n\n# Or replay feature commits on top of the latest main\ngit switch feature\ngit rebase main\n```\n\nBoth incorporate `main` into `feature`; merge records the join, while rebase makes the feature commits appear after `main`. After a rebase, pushing may require `git push --force-with-lease` if the branch was already pushed.",
+    "usage": {
+      "prompt_tokens": 150,
+      "completion_tokens": 227,
+      "total_tokens": 377,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

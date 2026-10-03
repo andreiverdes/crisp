@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s4b-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write a short incident update for the engineering channel from these notes.\n\ndeploy v2.14 went out 14:05. 14:12 error rate on /api/orders jumped from 0.2% to 6%. rolled back 14:20, errors back to normal 14:22. cause: the new orders query used a column that doesn't exist on the EU replica (migration only ran on US). about 400 failed order submissions during the window, customers saw a generic error, nobody was double-charged (payment happens after order create). fix: run the migration on EU, add a check in the deploy pipeline that migrations ran on all replicas before the app deploys. re-deploy planned tomorrow 10:00 after the migration. need: Priya to confirm the EU migration tonight."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Incident update — Orders API**\n\nDeploy v2.14 went out at 14:05. At 14:12, errors on `/api/orders` rose from 0.2% to 6%. We rolled back at 14:20, and errors returned to normal by 14:22.\n\nThe new orders query referenced a column missing from the EU replica; the migration had only run on the US replica. About 400 order submissions failed during the incident, and customers saw a generic error. No one was double-charged—payment happens after order creation.\n\n**Next steps:** Priya to confirm the EU migration tonight. We’ll add a deploy-pipeline check to verify migrations have run on all replicas before app deployment, then plan to redeploy tomorrow at 10:00 after the migration.",
+    "usage": {
+      "prompt_tokens": 273,
+      "completion_tokens": 169,
+      "total_tokens": 442,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

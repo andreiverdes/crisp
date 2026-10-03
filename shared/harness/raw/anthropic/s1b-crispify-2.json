@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s1b-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\n`==` asks whether two objects have equal **values**.  \n`is` asks whether they are the **same object** in memory.\n\n```python\na = [1, 2]\nb = [1, 2]\n\na == b  # True: same contents\na is b  # False: distinct list objects\n```\n\nIt matters when you need to check **identity**, most commonly against `None`:\n\n```python\nif result is None:\n    ...\n```\n\nUse `==` for ordinary value comparisons, such as strings, numbers, and lists. Use `is` when you specifically mean “this exact object”—for example, checking a sentinel object:\n\n```python\nMISSING = object()\n\nif value is MISSING:\n    ...\n```\n\nDon’t use `is` to compare strings or numbers. Python may reuse some objects internally, so identity can appear to work in some cases and fail in others. For example, use `x == 0`, not `x is 0`."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "`==` compares values; `is` checks whether two references point to the same object.\n\n```python\na = [1, 2]\nb = [1, 2]\n\na == b  # True: equal contents\na is b  # False: distinct list objects\n```\n\nUse `==` for value comparisons, such as strings, numbers, and lists. Use `is` when object identity matters, most commonly with `None` or a sentinel:\n\n```python\nif result is None:\n    ...\n\nMISSING = object()\n\nif value is MISSING:\n    ...\n```\n\nDon’t use `is` to compare strings or numbers. Python may reuse objects, so identity checks can appear to work inconsistently. Use `x == 0`, not `x is 0`.",
+    "usage": {
+      "prompt_tokens": 375,
+      "completion_tokens": 167,
+      "total_tokens": 542,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

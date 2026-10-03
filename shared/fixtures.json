@@ -1,0 +1,149 @@
+{
+  "schema": "crisp-bench/fixtures-v1",
+  "notes": "5 scenarios x 2 prompts. Prompts are sent verbatim as the only user message. required_facts derive from the question, not trivia; an answer is complete only if it states each fact in any wording.",
+  "scenarios": [
+    {
+      "id": "s1",
+      "title": "Technical Q&A",
+      "fixtures": [
+        {
+          "id": "s1a",
+          "prompt": "What's the difference between git merge and git rebase, and when should I use each?",
+          "required_facts": [
+            {"id": "f1", "text": "merge preserves the existing commits as they are; when the histories have diverged it adds a merge commit (otherwise it can fast-forward)"},
+            {"id": "f2", "text": "rebase rewrites your commits on top of the other branch, giving a linear history"},
+            {"id": "f3", "text": "do not rebase commits that others already have (shared/pushed branches)"},
+            {"id": "f4", "text": "rebase is for cleaning up or updating a local/feature branch before sharing"},
+            {"id": "f5", "text": "merge is for integrating shared branches or when the true history matters"}
+          ]
+        },
+        {
+          "id": "s1b",
+          "prompt": "In Python, what's the difference between `is` and `==`? When does it matter?",
+          "required_facts": [
+            {"id": "f1", "text": "`is` compares identity: whether both names refer to the same object"},
+            {"id": "f2", "text": "`==` compares value, via __eq__, which classes can override"},
+            {"id": "f3", "text": "use `is` for None and other sentinel/singleton objects"},
+            {"id": "f4", "text": "`is` can appear to work on small ints or short strings because of interning, but you must not rely on it"},
+            {"id": "f5", "text": "use `==` for value comparisons"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "title": "Debugging",
+      "fixtures": [
+        {
+          "id": "s2a",
+          "prompt": "This Python prints ['a'] then ['a', 'b'], but I expected ['a'] then ['b']. Why, and how do I fix it?\n\n```python\ndef add_item(item, items=[]):\n    items.append(item)\n    return items\n\nprint(add_item(\"a\"))\nprint(add_item(\"b\"))\n```",
+          "required_facts": [
+            {"id": "f1", "text": "default argument values are evaluated once, when the function is defined"},
+            {"id": "f2", "text": "every call without items reuses the same list object, so appends accumulate"},
+            {"id": "f3", "text": "fix: default to None and create a new list inside the function"},
+            {"id": "f4", "text": "shows corrected code"},
+            {"id": "f5", "text": "applies to any mutable default (list, dict, set)"}
+          ]
+        },
+        {
+          "id": "s2b",
+          "prompt": "I get `RuntimeError: dictionary changed size during iteration` from this. How do I fix it?\n\n```python\ncounts = {\"a\": 0, \"b\": 2, \"c\": 0}\nfor k in counts:\n    if counts[k] == 0:\n        del counts[k]\n```",
+          "required_facts": [
+            {"id": "f1", "text": "cause: deleting keys mutates the dict while the loop is iterating over it"},
+            {"id": "f2", "text": "gives a valid fix that avoids mutating during iteration, e.g. iterate over a snapshot (list(counts) / list(counts.items())) or build a new dict with a comprehension"},
+            {"id": "f3", "text": "shows corrected code"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "title": "Spec / implementation plan for a coding agent",
+      "fixtures": [
+        {
+          "id": "s3a",
+          "prompt": "Write an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan.",
+          "required_facts": [
+            {"id": "f1", "text": "the rate-limit middleware runs after the JWT middleware, keyed on req.user.id"},
+            {"id": "f2", "text": "names the counting algorithm and Redis key scheme (e.g. fixed window with INCR + EXPIRE per user per minute, or sliding window)"},
+            {"id": "f3", "text": "429 response includes Retry-After computed from the window's remaining time"},
+            {"id": "f4", "text": "handles the INCR/EXPIRE race: Lua script, MULTI/EXEC transaction, or an algorithm where a missed EXPIRE cannot break limiting (e.g. the key name embeds the window timestamp)"},
+            {"id": "f5", "text": "states what happens when Redis is unavailable (fail open or fail closed) as a decision"},
+            {"id": "f6", "text": "lists tests: under limit passes, 101st request gets 429 with Retry-After, counter resets after the window"}
+          ]
+        },
+        {
+          "id": "s3b",
+          "prompt": "Write a spec for a small CLI tool called `envcheck`. It compares a `.env.example` file against a `.env` file and reports keys that are missing from `.env`, keys that are extra in `.env`, and keys that are present but empty. Exit code 0 if nothing is missing, 1 otherwise. A coding agent will implement it from your spec.",
+          "required_facts": [
+            {"id": "f1", "text": "inputs: paths to the example file and the env file, with defaults .env.example and .env"},
+            {"id": "f2", "text": "parse rules: KEY=VALUE lines; blank lines and # comments are ignored"},
+            {"id": "f3", "text": "report has three categories: missing, extra, empty"},
+            {"id": "f4", "text": "exit 0 when nothing is missing, 1 when any key is missing; extra and empty do not change the exit code"},
+            {"id": "f5", "text": "behavior when an input file does not exist (error message and a distinct non-zero exit code)"},
+            {"id": "f6", "text": "output format is specified (what is printed, and what is printed when everything is fine)"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "title": "Status update from raw notes",
+      "fixtures": [
+        {
+          "id": "s4a",
+          "prompt": "Write a weekly status update for my team lead from these notes.\n\nmon: fixed flaky checkout test (race in cart cleanup), merged. tue: started payment-retry work, found stripe webhook retries were hitting us twice because the idempotency key wasn't being stored - fixed, PR #412 open waiting on review from Dana. wed: on-call, two pages, both the same memory leak in image-resizer, restarted it both times, root cause not found yet, suspect the sharp version bump from last week. thu: pairing with Lee on the search index migration, 60% of tables moved, ETA friday but blocked on DBA approval for the new index on orders.created_at. fri: cleanup, docs. next week: finish payment retry if #412 lands, image-resizer leak investigation (need a heap dump from prod - need SRE access), search migration if DBA approves. risk: if the DBA approval slips the migration slips a week.",
+          "required_facts": [
+            {"id": "f1", "text": "flaky checkout test fixed and merged"},
+            {"id": "f2", "text": "Stripe webhook double-processing fixed; PR #412 waiting on Dana's review"},
+            {"id": "f3", "text": "image-resizer memory leak caused two pages; root cause unknown; sharp version bump suspected"},
+            {"id": "f4", "text": "search index migration 60% done, blocked on DBA approval for the orders.created_at index"},
+            {"id": "f5", "text": "next week: payment retry, leak investigation, migration"},
+            {"id": "f6", "text": "asks: DBA approval, SRE access for a prod heap dump, Dana's review"},
+            {"id": "f7", "text": "risk: if DBA approval slips, the migration slips a week"}
+          ]
+        },
+        {
+          "id": "s4b",
+          "prompt": "Write a short incident update for the engineering channel from these notes.\n\ndeploy v2.14 went out 14:05. 14:12 error rate on /api/orders jumped from 0.2% to 6%. rolled back 14:20, errors back to normal 14:22. cause: the new orders query used a column that doesn't exist on the EU replica (migration only ran on US). about 400 failed order submissions during the window, customers saw a generic error, nobody was double-charged (payment happens after order create). fix: run the migration on EU, add a check in the deploy pipeline that migrations ran on all replicas before the app deploys. re-deploy planned tomorrow 10:00 after the migration. need: Priya to confirm the EU migration tonight.",
+          "required_facts": [
+            {"id": "f1", "text": "timeline: deploy 14:05, errors from 14:12, rollback 14:20, recovered 14:22"},
+            {"id": "f2", "text": "impact: about 400 failed order submissions, no double charges"},
+            {"id": "f3", "text": "cause: new orders query used a column missing on the EU replica because the migration only ran on US"},
+            {"id": "f4", "text": "fix: run the migration on EU and add a pipeline check that migrations ran on all replicas before deploy"},
+            {"id": "f5", "text": "next: redeploy tomorrow 10:00 after the migration"},
+            {"id": "f6", "text": "ask: Priya to confirm the EU migration tonight"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "title": "Comparison and recommendation",
+      "fixtures": [
+        {
+          "id": "s5a",
+          "prompt": "Compare Postgres LISTEN/NOTIFY, Redis Pub/Sub, and Kafka for a notification service handling about 1,000 events per second, where losing an occasional event is acceptable and we already run Postgres and Redis. Recommend one.",
+          "required_facts": [
+            {"id": "f1", "text": "gives one explicit recommendation"},
+            {"id": "f2", "text": "Redis Pub/Sub is fire-and-forget with no persistence, which is acceptable given the stated loss tolerance"},
+            {"id": "f3", "text": "Kafka adds durability, replay and ordering but is new infrastructure with real operational cost; more than this use case needs"},
+            {"id": "f4", "text": "Postgres LISTEN/NOTIFY has limits: payload size cap (~8 KB), each listener holds a connection, and load lands on the database"},
+            {"id": "f5", "text": "the reasoning ties to the stated constraints: 1k events/sec, loss acceptable, Postgres and Redis already running"}
+          ]
+        },
+        {
+          "id": "s5b",
+          "prompt": "Should we use a monorepo or separate repos? Team of 6 engineers maintaining a web app, a mobile app, and a shared API client library used by both. Give a recommendation.",
+          "required_facts": [
+            {"id": "f1", "text": "gives one explicit recommendation"},
+            {"id": "f2", "text": "discusses how the shared client library is coordinated and versioned under each option (cross-cutting changes, version drift)"},
+            {"id": "f3", "text": "accounts for the team size (6 engineers) when weighing tooling, ownership, and scale costs"},
+            {"id": "f4", "text": "names at least one real cost of the recommended option"},
+            {"id": "f5", "text": "states when the other option would be the better choice"}
+          ]
+        }
+      ]
+    }
+  ]
+}

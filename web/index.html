@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRISP · Say the useful thing once, then stop</title>
+<meta name="description" content="CRISP is a writing protocol for humans and LLMs: Concise, Relevant, Intuitive, Simple, Protocol. Ten checkable rules, a /crisp slash command, and a benchmark: 47% fewer tokens, 21 of 30 blind pairings won.">
+<meta property="og:title" content="CRISP · Say the useful thing once, then stop">
+<meta property="og:description" content="A writing protocol for humans and LLMs. 47% fewer tokens, 21/30 blind pairings won, 97% of required facts kept.">
+<meta property="og:image" content="https://andreiverdes.github.io/crisp/twitter-card.png">
+<meta property="og:url" content="https://andreiverdes.github.io/crisp/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://andreiverdes.github.io/crisp/twitter-card.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b93f7' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M4 6h16M4 12h10M4 18h6'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="vendor/horizon.css">
+<style>
+  html, body { margin: 0; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  .nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.02em; font-size: 17px; }
+  .links { display: flex; gap: 22px; font-size: 14px; align-items: center; }
+  .hero { padding: 88px 0 56px; position: relative; overflow: hidden; }
+  .hero::before { content: ""; position: absolute; inset: -40% -20% auto; height: 120%; background: radial-gradient(55% 50% at 50% 0%, color-mix(in oklab, var(--color-hz-accent) 16%, transparent), transparent 70%); pointer-events: none; }
+  .hero .wrap { position: relative; display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+  h1 { font-size: 58px; line-height: 1.06; letter-spacing: -0.04em; font-weight: 750; margin: 0 0 18px; }
+  h1 em { font-style: normal; color: var(--color-hz-accent); }
+  .lede { font-size: 18.5px; max-width: 520px; margin: 0 0 26px; line-height: 1.5; }
+  .cta { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 36px; }
+  section { padding: 76px 0; }
+  .kicker { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 650; margin: 0 0 10px; }
+  h2 { font-size: 34px; letter-spacing: -0.03em; line-height: 1.15; margin: 0 0 12px; font-weight: 700; }
+  .sub { font-size: 16.5px; max-width: 640px; margin: 0 0 32px; line-height: 1.5; }
+  .g2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .feat { display: grid; grid-template-columns: 1fr 1.25fr; gap: 48px; align-items: center; }
+  .feat p { margin: 0 0 12px; line-height: 1.5; }
+  .rules { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 32px; }
+  .rule { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 14px 0; }
+  .rule b { display: block; font-weight: 650; margin-bottom: 2px; }
+  .final { text-align: center; padding: 88px 0; }
+  .final .sub { margin: 0 auto 26px; }
+  .final .cta { justify-content: center; }
+  footer { padding: 26px 0; font-size: 13px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .mono { font-family: var(--font-hz-mono); }
+  .pre { white-space: pre-wrap; font-family: var(--font-hz-mono); font-size: 12.5px; line-height: 1.65; margin: 0; }
+  .del { text-decoration: line-through; text-decoration-color: var(--color-hz-danger); opacity: .75; }
+  @media (max-width: 900px) {
+    h1 { font-size: 40px; } .hero { padding: 52px 0 40px; }
+    .hero .wrap, .feat, .g2, .g3, .rules { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .hide-sm { display: none; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="vendor/react.js"></script>
+<script src="vendor/horizon.js"></script>
+<script>
+(() => {
+  const H = window.HorizonUI, R = window.React, RD = window.ReactDOM, h = R.createElement;
+  const { HorizonProvider, Card, Button, Badge, Stat, Icons, Terminal, Kbd, Divider, SegmentedControl, Tabs, TabPanel, InlineAlert, ProgressBar, StatusDot } = H;
+  const GH = "https://github.com/andreiverdes/crisp";
+
+  const A = (props, ...kids) => h("a", { ...props, className: `text-hz-fg-muted ${props.className || ""}` }, ...kids);
+  const Kicker = (t) => h("p", { className: "kicker text-hz-accent-fg" }, t);
+  const Sub = (...kids) => h("p", { className: "sub text-hz-fg-muted" }, ...kids);
+  const Pre = (kids, cls = "") => h("pre", { className: `pre ${cls}` }, ...kids);
+  const K = (s) => h("span", { className: "text-hz-accent-fg" }, s);
+  const C = (s) => h("span", { className: "text-hz-fg-subtle" }, s);
+
+  function Nav({ theme, setTheme }) {
+    return h("nav", { className: "nav bg-hz-canvas hz-hairline-b", style: { background: "color-mix(in oklab, var(--color-hz-canvas) 85%, transparent)" } },
+      h("div", { className: "wrap" },
+        h("a", { href: "#", className: "brand text-hz-fg" }, h(Icons.List, { size: 20, className: "text-hz-accent-fg" }), "CRISP"),
+        h("div", { className: "links" },
+          A({ href: "#rules" }, "Rules"), A({ href: "#install" }, "Install"), A({ href: "benchmark/" }, "Benchmark"),
+          A({ href: `${GH}/blob/main/CRISP.md`, className: "hide-sm" }, "Protocol"), A({ href: GH }, "GitHub"),
+          h(SegmentedControl, { "aria-label": "Theme", size: "sm", value: theme, onValueChange: setTheme, options: [{ value: "dark", label: "", icon: h(Icons.Moon) }, { value: "light", label: "", icon: h(Icons.Sun) }] }))));
+  }
+
+  function Hero() {
+    return h("header", { className: "hero" },
+      h("div", { className: "wrap" },
+        h("div", null,
+          h("h1", { className: "text-hz-fg" }, "Say the useful thing once,", h("br"), "then ", h("em", null, "stop"), "."),
+          h("p", { className: "lede text-hz-fg-muted" }, "CRISP is a writing protocol for humans and LLMs. Ten checkable rules that turn a chatty model into a competent engineer talking to another one. Works as a slash command, a system prompt, or a verb: “crispify this.”"),
+          h("div", { className: "cta" },
+            h("a", { href: "#install" }, h(Button, { variant: "accent", size: "lg", leading: h(Icons.Terminal) }, "Install in Claude Code")),
+            h("a", { href: "benchmark/" }, h(Button, { variant: "secondary", size: "lg", leading: h(Icons.BarChart) }, "See the benchmark")),
+            h("a", { href: GH }, h(Button, { variant: "ghost", size: "lg", leading: h(Icons.GitBranch) }, "GitHub")))),
+        h(Terminal, { cwd: "~/api", prompt: "❯", tabs: ["claude"], lines: [
+          { text: "/crisp", prompt: true },
+          { text: "CRISP on for the rest of this session.", tone: "muted" },
+          { text: "" },
+          { text: "why does my nightly job take 40 min after the pg16 upgrade?", prompt: true },
+          { text: "" },
+          { text: "Start with planner statistics: pg_upgrade doesn't carry them" },
+          { text: "over, so the planner is working blind. Run" },
+          { text: "vacuumdb --all --analyze-in-stages and rerun the job.", tone: "info" },
+          { text: "" },
+          { text: "If it's still slow, find the statement: enable pg_stat_statements," },
+          { text: "sort by total_exec_time, and EXPLAIN (ANALYZE, BUFFERS) the top one." },
+          { text: "Look for a seq scan where an index scan used to be." },
+          { text: "" },
+          { text: "Then diff postgresql.conf against the old one: a new major" },
+          { text: "resets work_mem, random_page_cost, and jit." },
+          { text: "" },
+          { text: "284 words · same answer without CRISP: 405", tone: "success" }] })),
+      h("div", { className: "wrap" },
+        h("div", { className: "stats" },
+          h(Card, { title: null, description: null }, h(Stat, { label: "tokens vs no prompt", value: "−47%", delta: null, tone: "success" })),
+          h(Card, { title: null, description: null }, h(Stat, { label: "blind pairings won", value: "21 / 30", delta: null, tone: "accent" })),
+          h(Card, { title: null, description: null }, h(Stat, { label: "required facts kept", value: "97%", delta: null })),
+          h(Card, { title: null, description: null }, h(Stat, { label: "tokens vs ASD-STE100", value: "−30%", delta: null, tone: "success" })))));
+  }
+
+  function What() {
+    const card = (icon, title, items) => h(Card, { title: h("span", { className: "flex items-center gap-2" }, h(icon, { size: 18, className: "text-hz-accent-fg" }), title), description: null },
+      h("ul", { className: "text-hz-sm text-hz-fg-muted", style: { margin: 0, padding: 0, listStyle: "none" } }, ...items.map((t, i) => h("li", { key: i, className: i ? "hz-hairline-t" : "", style: { padding: "7px 0" } }, t))));
+    return h("section", { id: "what" }, h("div", { className: "wrap" },
+      Kicker("What it is"),
+      h("h2", null, "Five words, ten rules, one pass."),
+      Sub("CRISP stands for Concise, Relevant, Intuitive, Simple, Protocol. It is a protocol because every rule has a yes/no check, so a human or a model can tell whether a piece of writing complies."),
+      h("div", { className: "g3" },
+        card(Icons.List, "Stops the blabbering", ["No “Great question”, “Here’s a breakdown”, “I hope this helps”", "No restated question, no preview, no closing summary", "Every sentence changes what the reader knows, does, or decides"]),
+        card(Icons.ListChecks, "Structures for scanning", ["Answer first; details second; depth only if it prevents a mistake", "Prose by default; lists, tables, headings only when they aid scanning", "No bullets for reasoning, no bold everywhere, no emoji"]),
+        card(Icons.Minus, "Cuts tokens, not meaning", ["Compress ideas before words; stop before it turns cryptic", "Keep code, corrections, risks, and real uncertainty", "Vague words become a number, a name, a condition, or “unknown”"]))));
+  }
+
+  function BeforeAfter() {
+    return h("section", { className: "bg-hz-panel hz-hairline-t hz-hairline-b" }, h("div", { className: "wrap" },
+      h("div", { className: "feat" },
+        h("div", null,
+          Kicker("Before / after"),
+          h("h2", null, "Same facts. Half the words."),
+          h("p", { className: "text-hz-fg-muted" }, "A typical model answer opens with praise, lists every possible cause, adds advice nobody asked for, and closes with an offer. CRISP answers the question."),
+          h("div", { className: "flex flex-col gap-2", style: { marginTop: 16 } },
+            ...["Likely cause first, then how to check, then the fix", "Numbered only because the steps are ordered", "Nothing the reader needs was cut"].map((t, i) => h("div", { key: i, className: "flex items-center gap-2 text-hz-sm" }, h(StatusDot, { status: "success" }), t)))),
+        h("div", { className: "flex flex-col gap-3" },
+          h(Card, { title: h("span", { className: "flex items-center gap-2" }, h(Badge, { tone: "danger", variant: "soft", size: "sm" }, "BEFORE"), h("span", { className: "mono text-hz-xs text-hz-fg-subtle" }, "154 words")), description: null, padding: "sm" },
+            Pre([h("span", { className: "del" }, "Great question! Infinite re-render loops are a common issue that many React developers encounter, and there are a number of potential causes. Let's break this down.\n\nPossible causes: missing dependency array · state updates inside the effect · unstable dependencies …\nRecommended fixes: add a dependency array · memoize with useMemo and useCallback · don't mutate state directly …\n\nIt's also worth noting that you should always consider adding cleanup functions. I hope this helps! If you share your code, I'd be happy to take a closer look.")], "text-hz-fg-subtle")),
+          h(Card, { title: h("span", { className: "flex items-center gap-2" }, h(Badge, { tone: "success", variant: "soft", size: "sm" }, "CRISP"), h("span", { className: "mono text-hz-xs text-hz-fg-subtle" }, "80 words · −48%")), description: null, padding: "sm" },
+            Pre(["Most likely your effect has no dependency array, so it runs after every render, and its ", K("setState"), " triggers the next render.\n\n1. Check the ", K("useEffect"), " call. If it has no second argument, add one: ", K("useEffect(() => {...}, [])"), ".\n2. If it already has an array and still loops, look for an object or function in it that is created inline in the component body. It gets a new identity on every render.\n3. Wrap that value in ", K("useMemo"), " or ", K("useCallback"), "."], "text-hz-fg"))))));
+  }
+
+  const RULES = [["Answer first", "The first sentence is the answer, decision, result, or ask."], ["Say it once", "No preview, recap, restated question, or restated shared context."], ["Keep what changes action", "Delete any sentence whose removal breaks nothing."], ["Plain words, same words", "Common verbs; one term per concept, reused exactly; no intensifiers without a measurement."], ["Name the actor, state the condition", "“If X, do Y.” “X failed because Y.”"], ["Replace vague with checkable", "Soon, appropriate, usually, etc. become a number, a name, a condition, or “unknown”."], ["Structure is earned", "Prose by default; numbers for sequence, bullets for parallel items, tables for shared attributes, headings only at real topic boundaries."], ["Short is not cryptic", "Keep code, corrections of wrong premises, risks, real uncertainty. No telegraphese."], ["Sound like a colleague", "Contractions fine; no flattery, ceremony, apology, moralizing, or ritual hedges. Disagree plainly."], ["Stop", "No closing summary, no “let me know”."]];
+  function Rules() {
+    return h("section", { id: "rules" }, h("div", { className: "wrap" },
+      Kicker("The protocol"),
+      h("h2", null, "Ten rules. Each one has a check."),
+      Sub("Priorities when they conflict: no ambiguity, then easy to understand, easy to scan, relevant, conversational, simple, concise, few tokens. Precision is never traded for length. ", h("a", { href: `${GH}/blob/main/CRISP.md`, className: "text-hz-accent-fg" }, "Full protocol with reasons, examples, and research →")),
+      h("div", { className: "rules" }, ...RULES.map(([b, s], i) => h("div", { key: i, className: "rule hz-hairline-t" }, h("span", { className: "mono text-hz-sm text-hz-accent-fg", style: { paddingTop: 3 } }, String(i + 1).padStart(2, "0")), h("div", null, h("b", null, b), h("span", { className: "text-hz-sm text-hz-fg-muted" }, s)))))));
+  }
+
+  function Levels() {
+    const lv = (n, tag, body) => h(Card, { title: h("span", { className: "flex items-center gap-2" }, h("span", { className: "mono text-hz-accent-fg" }, `/crisp ${n}`), h(Badge, { tone: "neutral", variant: "outline", size: "sm" }, tag)), description: null }, h("p", { className: "text-hz-sm text-hz-fg-muted", style: { margin: 0, lineHeight: 1.6 } }, ...body));
+    return h("section", { id: "levels", className: "bg-hz-panel hz-hairline-t hz-hairline-b" }, h("div", { className: "wrap" },
+      Kicker("Levels"),
+      h("h2", null, "Same rules, three depths."),
+      Sub("Levels change how much is included, never how well it is written."),
+      h("div", { className: "g3" },
+        lv(1, "compact", [h("b", { className: "text-hz-fg" }, "Use Redis, with a TTL on each session key.")]),
+        lv(2, "default", [h("b", { className: "text-hz-fg" }, "Use Redis, with a TTL on each session key."), " Set ", K("maxmemory-policy volatile-ttl"), " so eviction only removes keys that have a TTL."]),
+        lv(3, "detailed", [h("b", { className: "text-hz-fg" }, "Use Redis, with a TTL on each session key:"), " sessions are small, short-lived, and read on every request. Set ", K("maxmemory-policy volatile-ttl"), " so eviction only removes keys that have a TTL. If you don't run Redis yet, Postgres works. Risk: a Redis restart without persistence logs everyone out."]))));
+  }
+
+  function Install() {
+    const step = (n, title, desc, lines) => h(Card, { title: h("span", { className: "flex items-center gap-2" }, h("span", { className: "mono text-hz-xs text-hz-accent-fg" }, n), title), description: desc },
+      h(Terminal, { cwd: "~", prompt: "$", lines }));
+    return h("section", { id: "install" }, h("div", { className: "wrap" },
+      Kicker("Install"),
+      h("h2", null, "Three ways in. Pick one."),
+      h("div", { className: "g3", style: { marginTop: 28 } },
+        step("01", "Claude Code plugin", "Adds /crisp to every session via the awesome-claude marketplace.", [
+          { text: "claude plugins marketplace add andreiverdes/awesome-claude", prompt: true },
+          { text: "claude plugins install awesome-claude@awesome-claude", prompt: true },
+          { text: "✓ /crisp available in the next session", tone: "success" }]),
+        step("02", "In a project", "Writes a CRISP block into AGENTS.md and CLAUDE.md, and a /crisp command. Works with or without the plugin.", [
+          { text: "python3 skills/crisp/scripts/install.py --command", prompt: true },
+          { text: "AGENTS.md: updated", tone: "muted" }, { text: "CLAUDE.md: updated", tone: "muted" }, { text: ".claude/commands/crisp.md: written", tone: "muted" },
+          { text: "--level crisp|minimal|full   --check   --remove", tone: "info" }]),
+        step("03", "Any model", "Three sizes of the same behaviour. Drop one into any system prompt.", [
+          { text: "ls skills/crisp/prompts/", prompt: true },
+          { text: "crisp.md           80 words", tone: "muted" }, { text: "crisp-minimal.md  200 words", tone: "muted" }, { text: "crisp-full.md     590 words", tone: "muted" }]))));
+  }
+
+  function Bench() {
+    const bar = (label, v, tone, text) => h("div", { className: "flex items-center gap-3 text-hz-sm" }, h("span", { style: { width: 150, flex: "none" } }, label), h("div", { style: { flex: 1 } }, h(ProgressBar, { value: v, max: 100, tone, label: null, "aria-label": label, size: "sm" })), h("span", { className: "mono text-hz-fg-muted", style: { width: 70, textAlign: "right" } }, text));
+    return h("section", { id: "bench", className: "bg-hz-panel hz-hairline-t hz-hairline-b" }, h("div", { className: "wrap" },
+      h("div", { className: "feat" },
+        h("div", null,
+          Kicker("Benchmark"),
+          h("h2", null, "Tested blind, not assumed."),
+          h("p", { className: "text-hz-fg-muted" }, "Ten prompts across five scenarios, three samples each, judged pairwise against a model with no system prompt. Required facts per prompt were fixed before the run. Two generator/judge lanes, and a head-to-head against a second team's build of the same spec."),
+          h("a", { href: "benchmark/" }, h(Button, { variant: "accent", leading: h(Icons.BarChart) }, "Open the dashboard"))),
+        h(Card, { title: "Tokens per answer, Claude Sonnet 5.5", description: "30 samples, tiktoken estimate" },
+          h("div", { className: "flex flex-col gap-3" },
+            bar("Baseline, no prompt", 100, "ink", "706 tok"), bar("ASD-STE100 rewrite", 100, "danger", "+13%"), bar("Crispify (rewrite)", 80, "accent", "−20%"), bar("/crisp (direct)", 53, "success", "−47%"),
+            h(Divider), bar("Wins vs baseline", 70, "accent", "21 / 30"), bar("Facts kept", 97, "accent", "97%"))))));
+  }
+
+  function Final() {
+    return h("section", { className: "final" }, h("div", { className: "wrap" },
+      h("h2", null, "Your next answer deserves fewer words."),
+      Sub("Install it, type ", h(Kbd, { keys: ["/crisp"], size: "sm" }), ", and read the difference."),
+      h("div", { className: "cta" },
+        h("a", { href: "#install" }, h(Button, { variant: "accent", size: "lg" }, "Install in Claude Code")),
+        h("a", { href: `${GH}/blob/main/skills/crisp/SKILL.md` }, h(Button, { variant: "secondary", size: "lg" }, "Read the skill")))));
+  }
+
+  function Footer() {
+    return h("footer", { className: "hz-hairline-t text-hz-fg-subtle" }, h("div", { className: "wrap" },
+      h("span", null, "CRISP · Concise · Relevant · Intuitive · Simple · Protocol"),
+      h("span", null, A({ href: GH }, "GitHub"), " · ", A({ href: `${GH}/blob/main/CRISP.md` }, "Protocol"), " · ", A({ href: "benchmark/" }, "Benchmark"), " · ", A({ href: "https://github.com/andreiverdes/awesome-claude" }, "awesome-claude"), " · MIT")));
+  }
+
+  function App() {
+    const [theme, setTheme] = R.useState(localStorage.getItem("crisp-theme") || (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"));
+    R.useEffect(() => localStorage.setItem("crisp-theme", theme), [theme]);
+    return h(HorizonProvider, { theme },
+      h("div", { className: "bg-hz-canvas text-hz-fg font-hz-sans", style: { minHeight: "100vh" } },
+        h(Nav, { theme, setTheme }), h(Hero), h(What), h(BeforeAfter), h(Rules), h(Levels), h(Install), h(Bench), h(Final), h(Footer)));
+  }
+  RD.createRoot(document.getElementById("root")).render(h(App));
+})();
+</script>
+</body>
+</html>

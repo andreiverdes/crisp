@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s5b-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "Should we use a monorepo or separate repos? Team of 6 engineers maintaining a web app, a mobile app, and a shared API client library used by both. Give a recommendation."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Use a **monorepo** for the web app, mobile app, and shared API client library.\n\nWith 6 engineers and only 3 closely related codebases, the shared client is easier to change when all projects live together: one pull request can update the client and both apps, and CI can test them against the same change. You also avoid coordinating library releases and dependency updates across repos.\n\nKeep clear project boundaries inside the repo, with separate build and test jobs. Use separate repos only if the apps need different access controls, release processes, or teams—or if the monorepo’s tooling and CI become a real bottleneck.",
+    "usage": {
+      "prompt_tokens": 171,
+      "completion_tokens": 132,
+      "total_tokens": 303,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s5a-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "Compare Postgres LISTEN/NOTIFY, Redis Pub/Sub, and Kafka for a notification service handling about 1,000 events per second, where losing an occasional event is acceptable and we already run Postgres and Redis. Recommend one."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Recommendation: use Postgres `LISTEN`/`NOTIFY`** for this workload, assuming notifications are lightweight and occasional loss is acceptable.\n\n| Option | Fit for your case | Main trade-off |\n|---|---|---|\n| **Postgres `LISTEN`/`NOTIFY`** | Simple, no new infrastructure, and around 1,000 events/sec is often reasonable when payloads are small and listeners are few. | Notifications aren’t durable: disconnected listeners miss them. Keep payloads small, and benchmark against your database’s workload. |\n| **Redis Pub/Sub** | Also lightweight and lossy, and you already run Redis. A good choice if notification traffic should stay separate from Postgres. | Messages are lost by disconnected subscribers; it adds little over Postgres unless Redis is already the natural route for this traffic. |\n| **Kafka** | Best when you need durable retention, replay, consumer groups, or room to scale event processing substantially. | More operational complexity than this use case appears to justify. |\n\nUse `NOTIFY` to signal that work is available, not as a durable event log. If listeners must recover after disconnects, write events to a table or use a durable queue; neither Postgres `NOTIFY` nor Redis Pub/Sub provides replay.",
+    "usage": {
+      "prompt_tokens": 156,
+      "completion_tokens": 268,
+      "total_tokens": 424,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

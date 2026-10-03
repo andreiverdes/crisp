@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s1a-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "What's the difference between git merge and git rebase, and when should I use each?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**`git merge` combines histories; `git rebase` rewrites a branch’s history.**\n\nSuppose your branch and `main` have both moved forward:\n\n- **Merge:** joins the two lines of history with a merge commit (unless Git can fast-forward). It preserves the existing commits and makes the branching history visible.\n- **Rebase:** replays your branch’s commits on top of the latest `main`, creating new commit IDs. The result is a more linear history.\n\n### Use merge when\n- You’re integrating a shared branch and want to preserve its history.\n- You don’t want to rewrite commits others may already have based work on.\n- You want the merge itself recorded.\n\n```bash\ngit switch my-branch\ngit merge main\n```\n\n### Use rebase when\n- You’re updating your own local feature branch and want a linear history.\n- You’re comfortable resolving conflicts as commits are replayed.\n\n```bash\ngit switch my-branch\ngit rebase main\n```\n\n**Rule of thumb:** Rebase your own unpublished work; merge shared or published work. Rebasing changes commit IDs, so avoid rebasing commits that teammates may already have pulled. After rebasing a branch you’ve pushed, updating the remote usually requires `git push --force-with-lease`—use that only when appropriate.",
+    "usage": {
+      "prompt_tokens": 126,
+      "completion_tokens": 276,
+      "total_tokens": 402,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s3a-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "# Implementation plan\n\n1. **Inspect the existing API**\n   - Find the Express app setup, JWT middleware, route mounting order, and error-response conventions.\n   - Check whether the project already has a Redis client, configuration pattern, and tests that can be extended.\n   - Confirm that authenticated routes receive a valid `req.user.id` before their handlers run.\n\n2. **Add Redis-backed rate-limit middleware**\n   - Reuse the existing Redis client or add one using the project’s established configuration and lifecycle. Do not create a new connection per request.\n   - Add middleware for a fixed limit of **100 requests per user per 60-second window**.\n   - Use a Redis key that is namespaced and unambiguously includes the user ID, such as `rate-limit:user:<userId>`. Avoid logging or exposing the ID unnecessarily.\n   - Implement the counter update atomically—for example, with a Redis script that increments the key and sets its 60-second expiry on the first request. Do not use separate, race-prone increment and expiry operations.\n   - Treat the first 100 requests in a window as allowed; reject subsequent requests. Define the window boundary and expiry behavior consistently in tests.\n   - On rejection, return HTTP **429** and a `Retry-After` header with the number of seconds remaining until that user’s window resets. Use a positive integer, rounding up if needed. Follow the API’s existing error-response format; do not call `next()` for rejected requests.\n   - Keep the limit scoped by user, not IP. Ensure the middleware runs after JWT authentication so `req.user.id` is available.\n\n3. **Mount the middleware**\n   - Apply it to the intended authenticated API routes, after JWT middleware and before route handlers.\n   - Do not rate-limit public routes or unrelated traffic unless the existing route structure makes that scope explicit.\n\n4. **Handle Redis failures deliberately**\n   - Follow the service’s established availability policy for Redis-dependent middleware. If none exists, clarify with the API owner whether requests should fail closed or proceed when Redis is unavailable; document and test the chosen behavior.\n   - Log operational errors without exposing tokens, user data, or Redis credentials in responses.\n\n5. **Add tests**\n   - Verify that requests from one user are allowed up to 100 times, and the next request receives 429 with a valid `Retry-After` header.\n   - Verify that two different user IDs have independent limits.\n   - Verify that the counter resets after the 60-second window and that the reported retry time decreases appropriately.\n   - Verify middleware ordering: unauthenticated requests follow existing JWT behavior, and authenticated requests are keyed by `req.user.id`.\n   - Test the chosen Redis-failure behavior and any error-response conventions.\n\n6. **Finish and document**\n   - Run the relevant unit, integration, and lint checks.\n   - Document the limit, window, Redis configuration, and failure policy in the project’s appropriate operational or API documentation.",
+    "usage": {
+      "prompt_tokens": 171,
+      "completion_tokens": 609,
+      "total_tokens": 780,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

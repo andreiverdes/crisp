@@ -1,0 +1,75 @@
+{
+  "request": {
+    "id": "judge-openai-s3b-crispify-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6.1-sol",
+      "messages": [
+        {
+          "role": "user",
+          "content": "You are judging two answers to the same prompt. You do not know which is which. Judge only what is on the page.\n\nPROMPT GIVEN TO BOTH:\n<prompt>\nWrite a spec for a small CLI tool called `envcheck`. It compares a `.env.example` file against a `.env` file and reports keys that are missing from `.env`, keys that are extra in `.env`, and keys that are present but empty. Exit code 0 if nothing is missing, 1 otherwise. A coding agent will implement it from your spec.\n</prompt>\n\nREQUIRED FACTS (an answer is complete only if it states each of these, in any wording):\nf1: inputs: paths to the example file and the env file, with defaults .env.example and .env\nf2: parse rules: KEY=VALUE lines; blank lines and # comments are ignored\nf3: report has three categories: missing, extra, empty\nf4: exit 0 when nothing is missing, 1 when any key is missing; extra and empty do not change the exit code\nf5: behavior when an input file does not exist (error message and a distinct non-zero exit code)\nf6: output format is specified (what is printed, and what is printed when everything is fine)   <!-- one line each: \"f1: <fact>\" -->\n\nANSWER A:\n<answer_a>\n# `envcheck` Specification\n\n## Purpose\n\n`envcheck` compares the variable names in `.env.example` with those in `.env`. It reports:\n\n- **Missing keys:** listed in `.env.example`, but not in `.env`.\n- **Extra keys:** listed in `.env`, but not in `.env.example`.\n- **Empty keys:** listed in `.env` with an empty value.\n\n## Invocation\n\n```text\nenvcheck [--example PATH] [--env PATH]\n```\n\nDefaults:\n\n- `--example`: `.env.example`\n- `--env`: `.env`\n\nPaths are relative to the current working directory unless absolute. Do not modify either file.\n\n## Parsing\n\nRead files as UTF-8, one logical entry per line.\n\n- Ignore blank lines and lines whose first non-whitespace character is `#`.\n- For other lines, use the text before the first `=` as the key, trimming surrounding whitespace.\n- Lines without `=` are ignored.\n- A key is empty or invalid if it is blank after trimming; ignore such lines.\n- For `.env`, the value is the text after the first `=`, with surrounding whitespace trimmed. A value is empty if that result is empty. Quotes are not stripped: `KEY=\"\"` is **not** empty.\n- Compare keys exactly and case-sensitively.\n- If a key appears more than once in a file, treat it as one key. For `.env`, it is empty if any occurrence has an empty value.\n\n## Output\n\nPrint a summary to standard output. List keys in each category in sorted order, one per line. Omit categories with no keys.\n\nExample:\n\n```text\nMissing keys:\n  API_URL\nExtra keys:\n  DEBUG\nEmpty keys:\n  TOKEN\n```\n\nIf there are no missing, extra, or empty keys, print:\n\n```text\nAll environment keys are present and non-empty.\n```\n\n## Exit codes\n\n- **0:** No keys are missing from `.env`. Extra or empty keys alone do not change the exit code.\n- **1:** One or more keys from `.env.example` are missing from `.env`.\n- **2:** A file cannot be read, or command-line arguments are invalid. Print a diagnostic to standard error.\n\nA successfully read empty file is valid and contains no keys.\n</answer_a>\n\nANSWER B:\n<answer_b>\n# `envcheck` Specification\n\n## Purpose\n\n`envcheck` compares the variable names in `.env.example` and `.env`, reporting:\n\n- **Missing keys:** in `.env.example` but not `.env`.\n- **Extra keys:** in `.env` but not `.env.example`.\n- **Empty keys:** in `.env` with an empty value.\n\n## Invocation\n\n```text\nenvcheck [--example PATH] [--env PATH]\n```\n\nDefaults: `--example` is `.env.example`; `--env` is `.env`. Paths are relative to the current working directory unless absolute. Neither file is modified.\n\n## Parsing\n\nRead files as UTF-8, with one logical entry per line.\n\n- Ignore blank lines and lines whose first non-whitespace character is `#`.\n- Ignore lines without `=`.\n- For other lines, take the text before the first `=` as the key and trim surrounding whitespace. Ignore keys that are blank after trimming.\n- In `.env`, take the text after the first `=` as the value and trim surrounding whitespace. The value is empty if nothing remains. Do not strip quotes: `KEY=\"\"` is **not** empty.\n- Compare keys exactly and case-sensitively. Treat duplicate keys as one key; in `.env`, a key is empty if any occurrence has an empty value.\n\n## Output\n\nPrint a summary to standard output. List keys alphabetically within each category, one per line, and omit categories with no keys.\n\n```text\nMissing keys:\n  API_URL\nExtra keys:\n  DEBUG\nEmpty keys:\n  TOKEN\n```\n\nIf there are no missing, extra, or empty keys, print:\n\n```text\nAll environment keys are present and non-empty.\n```\n\n## Exit codes\n\n- **0:** No keys are missing from `.env`. Extra or empty keys do not affect the exit code.\n- **1:** One or more keys from `.env.example` are missing from `.env`.\n- **2:** A file cannot be read or command-line arguments are invalid. Print a diagnostic to standard error.\n\nA successfully read empty file is valid and contains no keys.\n</answer_b>\n\nScore each answer 1-5 on each dimension. Use the whole scale.\n\n- correctness: 5 = no technical errors; 1 = materially wrong.\n- clarity: 5 = understood on first read; 1 = must be decoded.\n- ambiguity: 5 = nothing vague, every reference and condition is clear; 1 = vague terms, unclear references, hidden assumptions.\n- scanability: 5 = the key point and structure are findable in seconds, and formatting matches the content; 1 = the point is buried, or formatting is decorative or excessive.\n- relevance: 5 = everything serves the question; 1 = padding, generic advice, unasked tangents, restated question or context.\n- conversational: 5 = sounds like a competent colleague talking; 1 = robotic, bureaucratic, academic, or chatty filler (\"Sure!\", \"Great question\", \"In conclusion\").\n- completeness: 5 = everything the asker needs to act, nothing essential missing; 1 = key parts missing.\n\nThen, for each required fact, say whether each answer states it.\n\nThen note useful content that one answer has and the other lacks, beyond the required facts: anything a competent reader would want and could act on. Ignore padding, generic advice, and restated context. If nothing useful is missing from either, use an empty string.\n\nThen choose which answer a competent engineer would rather receive. Length is not a virtue or a flaw by itself; judge usefulness per word.\n\nReply with only a JSON object in this shape. All scores are integers 1-5. `preferred` is exactly one of \"A\", \"B\", \"tie\". Example values shown:\n\n```json\n{\n  \"A\": {\"correctness\": 4, \"clarity\": 3, \"ambiguity\": 4, \"scanability\": 3, \"relevance\": 3, \"conversational\": 3, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f4\"]},\n  \"B\": {\"correctness\": 4, \"clarity\": 5, \"ambiguity\": 4, \"scanability\": 5, \"relevance\": 5, \"conversational\": 4, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\"]},\n  \"useful_lost\": {\"A\": \"B explains the Retry-After calculation; A does not.\", \"B\": \"\"},\n  \"preferred\": \"B\",\n  \"notes\": \"one or two sentences: the decisive difference\"\n}\n```"
+        }
+      ],
+      "reasoning_effort": "high",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "{\n  \"A\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 5,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 5,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\", \"f5\", \"f6\"]\n  },\n  \"B\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 5,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 5,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\", \"f5\", \"f6\"]\n  },\n  \"useful_lost\": {\n    \"A\": \"\",\n    \"B\": \"\"\n  },\n  \"preferred\": \"tie\",\n  \"notes\": \"Both provide equivalent, implementation-ready specifications covering all required facts, including unreadable files, output formatting, and exit-code semantics. B compresses some wording, but neither offers a meaningful advantage in clarity or actionable content.\"\n}",
+    "usage": {
+      "prompt_tokens": 1762,
+      "completion_tokens": 418,
+      "total_tokens": 2180,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 147
+      }
+    }
+  },
+  "parsed": {
+    "A": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 5,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 5,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ]
+    },
+    "B": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 5,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 5,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ]
+    },
+    "useful_lost": {
+      "A": "",
+      "B": ""
+    },
+    "preferred": "tie",
+    "notes": "Both provide equivalent, implementation-ready specifications covering all required facts, including unreadable files, output formatting, and exit-code semantics. B compresses some wording, but neither offers a meaningful advantage in clarity or actionable content."
+  }
+}

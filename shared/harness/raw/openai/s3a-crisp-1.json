@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s3a-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "# Implementation plan\n\n1. **Inspect the existing API**\n   - Find the Express app setup, JWT middleware, route registration, error-handling conventions, and test framework.\n   - Confirm the JWT middleware sets a stable user identifier at `req.user.id` before protected routes run.\n   - Check how the project manages environment variables and Redis connections. Reuse its existing patterns where possible.\n\n2. **Choose and configure the Redis-backed limiter**\n   - Use a maintained Express-compatible rate-limiting library with a Redis store, or an existing project implementation.\n   - Configure Redis using the project’s established connection settings. Avoid creating a separate Redis client if the project already provides one.\n   - Set the limit to **100 requests per user per 60-second window**.\n   - Use `req.user.id` as the limiter key so different users have independent limits. Do not key by IP.\n   - Ensure keys are namespaced for this API and limit, to avoid collisions with other Redis data.\n\n3. **Add middleware in the correct order**\n   - Apply the limiter to the intended authenticated API routes, after JWT authentication has populated `req.user.id` and before the route handlers run.\n   - Do not apply it to public routes unless explicitly required.\n   - Handle a missing user ID as an authentication or configuration error; never silently fall back to a shared key that could rate-limit unrelated users.\n\n4. **Return the required 429 response**\n   - When a user exceeds the limit, respond with HTTP **429 Too Many Requests** and a `Retry-After` header indicating the number of seconds until that user can make another request.\n   - Verify the header is a positive, accurate value derived from the limiter’s reset time, with rounding appropriate for a seconds-based header.\n   - Match the API’s existing error response format where possible. Do not include sensitive Redis or implementation details.\n\n5. **Define Redis failure behavior**\n   - Follow the project’s reliability policy for Redis outages. Make the choice explicit: fail open (allow requests) or fail closed (reject requests), and log or monitor failures without exposing sensitive information.\n   - Ensure Redis errors are not accidentally returned as 429 responses.\n\n6. **Add tests**\n   - Verify an authenticated user can make 100 requests within the window and the 101st receives 429 with `Retry-After`.\n   - Verify two users have independent limits.\n   - Verify the limiter uses `req.user.id` and runs after JWT authentication.\n   - Verify public routes remain unaffected if the limiter is scoped only to authenticated routes.\n   - Verify the response format and `Retry-After` value.\n   - Test the chosen behavior when Redis is unavailable.\n\n7. **Update configuration and documentation**\n   - Document any Redis configuration required to run the API and tests.\n   - Document the per-user limit and Redis outage behavior.\n   - Run the project’s formatter, lint checks, and relevant tests; add or update integration-test setup for Redis as needed.",
+    "usage": {
+      "prompt_tokens": 171,
+      "completion_tokens": 609,
+      "total_tokens": 780,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

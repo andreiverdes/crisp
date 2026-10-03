@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s3a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "## Implementation plan\n\n### 1. Inspect the existing API setup\n- Find where Express middleware is registered, how routes are mounted, and how errors/responses are formatted.\n- Identify the Redis client and its conventions for connection, key naming, and error handling. Reuse existing infrastructure; do not create a second client.\n- Confirm that JWT middleware sets `req.user.id` and runs before the routes to be limited.\n- Check the project’s test framework and dependency versions.\n\n### 2. Add a Redis-backed per-user limiter\n- Implement a limiter middleware (or configure the project’s existing rate-limit package) with a **100-request limit per user per rolling 60-second window**.\n- Use `req.user.id` as the identity. Ensure the Redis key includes a stable namespace, such as `rate-limit:user:<id>`, so it cannot collide with unrelated keys.\n- Make counting and expiration atomic across application instances—for example, use a Redis Lua script that increments the key and sets its expiry on the first request. Avoid separate, race-prone increment and expiry operations.\n- Define and document the exact counting behavior: the first 100 requests in the window are allowed; request 101 is rejected.\n- Calculate the wait until the window resets and return it as an integer number of seconds, rounded up to at least 1.\n\n### 3. Register middleware in the correct order\n- Register the limiter after JWT authentication has populated `req.user.id` and before the protected routes it should cover.\n- Apply it to the intended API routes consistently. Do not accidentally limit health checks or public routes unless that is desired.\n- Decide how to handle requests reaching the limiter without a user ID: authentication should normally reject these first; if not, fail safely rather than treating all such requests as one user.\n\n### 4. Return the limit response\n- For requests over the limit, respond with HTTP **429 Too Many Requests**.\n- Include `Retry-After` with the calculated number of seconds until the user can make another request.\n- Match the API’s existing response format, for example a JSON error body with a stable code such as `RATE_LIMIT_EXCEEDED`.\n- Do not invoke downstream route handlers for rejected requests.\n\n### 5. Handle Redis failures deliberately\n- Follow the project’s availability policy for Redis outages. Choose and document whether to fail closed (reject requests) or fail open (allow requests), and make the behavior explicit in code.\n- Log or report Redis errors without exposing internal details in API responses.\n\n### 6. Add tests\n- Unit-test the limiter’s boundary behavior: requests 1–100 pass, request 101 returns 429, and the rejection includes a valid `Retry-After`.\n- Verify separate user IDs have independent limits.\n- Verify the window expires and a user can make requests again afterward.\n- Verify the middleware runs after authentication and before protected handlers.\n- Test the chosen Redis-failure behavior and the response format.\n- Use a real Redis test instance or a suitable Redis test setup to verify atomic counting and expiry semantics.\n\n### 7. Validate and document\n- Run the relevant test suite, linting, and type checks.\n- Document the limit, window semantics, Redis dependency, and failure policy in the API or operations documentation.\n- Ensure deployment configuration provides the Redis connection settings required by the existing client.",
+    "usage": {
+      "prompt_tokens": 69,
+      "completion_tokens": 683,
+      "total_tokens": 752,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

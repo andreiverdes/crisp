@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s1a-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "What's the difference between git merge and git rebase, and when should I use each?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Both **merge** and **rebase** bring changes from one branch into another, but they record the project history differently.\n\n- **`git merge`** combines the branches and usually creates a *merge commit*. It preserves the original branch history, including where work split and came back together.\n- **`git rebase`** moves your branch’s commits so they appear to start from the latest commit on another branch. This makes history look linear, but rewrites those commits (giving them new IDs).\n\n### Example\n\nIf you’re working on `feature` while `main` advances:\n\n```bash\n# Merge main into feature\ngit switch feature\ngit merge main\n```\n\n```bash\n# Rebase feature onto main\ngit switch feature\ngit rebase main\n```\n\n### When to use each\n\n**Use merge when:**\n- You want to preserve the actual history of how branches came together.\n- The branch is shared with others, or its commits have already been published.\n- You want the safer option that doesn’t rewrite existing commits.\n\n**Use rebase when:**\n- You want a cleaner, linear history before integrating your work.\n- Your feature branch is private or only you are using it.\n- You’re comfortable resolving conflicts and updating the rewritten branch.\n\n**Rule of thumb:** Don’t rebase commits other people may already depend on. For a shared branch, merge is usually safer. After rebasing a branch you’ve pushed, updating the remote may require `git push --force-with-lease`; use that carefully.",
+    "usage": {
+      "prompt_tokens": 126,
+      "completion_tokens": 317,
+      "total_tokens": 443,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

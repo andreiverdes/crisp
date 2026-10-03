@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s4b-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write a short incident update for the engineering channel from these notes.\n\ndeploy v2.14 went out 14:05. 14:12 error rate on /api/orders jumped from 0.2% to 6%. rolled back 14:20, errors back to normal 14:22. cause: the new orders query used a column that doesn't exist on the EU replica (migration only ran on US). about 400 failed order submissions during the window, customers saw a generic error, nobody was double-charged (payment happens after order create). fix: run the migration on EU, add a check in the deploy pipeline that migrations ran on all replicas before the app deploys. re-deploy planned tomorrow 10:00 after the migration. need: Priya to confirm the EU migration tonight."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "v2.14 caused elevated order submission errors from 14:12 to 14:22. We rolled back at 14:20; error rates returned to normal by 14:22.\n\nThe new orders query used a column missing from the EU replica because the migration had only run on US. About 400 submissions failed with a generic error. No customers were double-charged; payment occurs after order creation.\n\nPriya: please confirm the EU migration is complete tonight. We’ll add a deploy-pipeline check to verify migrations ran on all replicas, then plan to redeploy tomorrow at 10:00.",
+    "usage": {
+      "prompt_tokens": 297,
+      "completion_tokens": 129,
+      "total_tokens": 426,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

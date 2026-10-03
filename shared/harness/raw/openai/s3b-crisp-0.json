@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s3b-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write a spec for a small CLI tool called `envcheck`. It compares a `.env.example` file against a `.env` file and reports keys that are missing from `.env`, keys that are extra in `.env`, and keys that are present but empty. Exit code 0 if nothing is missing, 1 otherwise. A coding agent will implement it from your spec."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "# `envcheck` specification\n\n## Purpose\n\n`envcheck` compares the variable names in a `.env.example` file with those in a `.env` file. It reports:\n\n- **Missing** keys: in `.env.example` but not in `.env`\n- **Extra** keys: in `.env` but not in `.env.example`\n- **Empty** keys: in `.env` with an empty value\n\n## Invocation\n\n```text\nenvcheck [--example PATH] [--env PATH]\n```\n\nDefaults:\n\n- `--example`: `.env.example`\n- `--env`: `.env`\n\nPaths are relative to the current working directory unless absolute. The tool reads files only; it does not modify them.\n\n## Parsing\n\nFor each file:\n\n1. Read it as UTF-8 text, allowing a final line without a newline.\n2. Process each line independently.\n3. Ignore blank lines and lines whose first non-whitespace character is `#`.\n4. Ignore an optional `export ` prefix, followed by optional whitespace.\n5. For other lines, use the text before the first `=` as the key, trimming surrounding whitespace. Lines without `=` do not define a key and are ignored.\n6. Treat keys as case-sensitive. Compare keys exactly after trimming.\n7. For `.env`, a key is empty if the text after the first `=` is empty or consists only of whitespace. Do not treat quotes or comments specially: for example, `KEY=\"\"` is non-empty.\n\nIf a key appears more than once in a file, treat it as one key for comparisons. For empty-key reporting, report a key if **any** of its assignments in `.env` has an empty value.\n\n## Output\n\nOn successful parsing, print one line for each non-empty result category, in this order:\n\n```text\nMissing: KEY1, KEY2\nExtra: KEY3\nEmpty: KEY4\n```\n\nWithin each category, sort keys lexicographically. Omit categories with no results. If there are no results, print:\n\n```text\nAll environment keys are present and non-empty.\n```\n\nWrite reports to standard output.\n\n## Exit status\n\n- Exit `0` if there are no missing keys.\n- Exit `1` if one or more keys are missing.\n- Extra or empty keys alone do not change the exit status.\n- If a file cannot be read or decoded, print a concise error to standard error and exit with a nonzero status other than `0` or `1` (use `2`).\n\n## Examples\n\nGiven `.env.example`:\n\n```dotenv\nAPI_KEY=\nPORT=3000\n```\n\nand `.env`:\n\n```dotenv\nAPI_KEY=secret\nDEBUG=true\n```\n\nOutput:\n\n```text\nExtra: DEBUG\n```\n\nExit status: `0`.\n\nIf `.env` instead omits `PORT`:\n\n```text\nMissing: PORT\nExtra: DEBUG\n```\n\nExit status: `1`.",
+    "usage": {
+      "prompt_tokens": 184,
+      "completion_tokens": 610,
+      "total_tokens": 794,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

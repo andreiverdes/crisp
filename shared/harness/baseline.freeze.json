@@ -1,0 +1,10 @@
+{
+  "inputs": {
+    "fixtures.json": "2ab7363af349fcece53b64f42f9282f60c876783505a428f91ebcbcb68ecdd76",
+    "rubric.md": "5bdce06ee7c1a51aecf26e6f0e078f8be802d20bf63e575aa2013695696ec4b2"
+  },
+  "generator": "openai-codex/gpt-6-luna",
+  "reasoning": "low",
+  "temperature": null,
+  "samples_per_fixture": 3
+}

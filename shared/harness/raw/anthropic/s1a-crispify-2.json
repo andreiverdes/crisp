@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s1a-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\nBoth `git merge` and `git rebase` integrate changes from one branch into another. The difference is how they represent that integration in history.\n\n### `git merge`: preserve the branch history\n\nIf you’re on `main` and run:\n\n```bash\ngit merge feature\n```\n\nGit combines the branches, usually by creating a **merge commit**. The history shows that the work happened on separate branches and where they came together.\n\n**Use merge when:**\n- You want to preserve the full, shared history of a branch.\n- The branch is already used by teammates or pushed for others to rely on.\n- You’re integrating completed work and want a clear record of the integration.\n\n### `git rebase`: replay commits onto a new base\n\nIf you’re on `feature` and run:\n\n```bash\ngit rebase main\n```\n\nGit replays the feature branch’s commits on top of the latest `main` commits. This creates a **linear history**, but the replayed commits get new IDs.\n\n**Use rebase when:**\n- You want a cleaner, linear history.\n- You’re updating your own local feature branch before merging it.\n- You want to tidy up commits before sharing them.\n\n### Practical rule\n\n- **Rebase your own, unshared work** to keep it current or clean up its history.\n- **Merge shared work** to avoid rewriting commits that others may already have based their work on.\n\nRebasing public or shared commits can cause trouble: teammates may have to reconcile their histories. If you do rebase commits that were already pushed, you’ll typically need to push with `--force-with-lease`, and should coordinate first.\n\nIn short: **merge preserves history; rebase rewrites it into a linear sequence.**"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "`git merge` and `git rebase` both integrate one branch into another, but represent the integration differently.\n\n### Merge: preserve branch history\n\nOn `main`, run:\n\n```bash\ngit merge feature\n```\n\nGit combines the branches, usually with a merge commit. The history shows where the branches split and came together.\n\nUse merge when you want to preserve shared history, integrate completed work, or avoid rewriting commits teammates may depend on.\n\n### Rebase: replay commits onto a new base\n\nOn `feature`, run:\n\n```bash\ngit rebase main\n```\n\nGit replays the feature commits on top of the latest `main` commits. The result is linear history, but replayed commits get new IDs.\n\nUse rebase to update or tidy your own, unshared feature branch before merging or sharing it.\n\n### Rule of thumb\n\nRebase your own, unshared work. Merge shared work. Rebasing public commits can force teammates to reconcile their histories. If you rebase commits that were already pushed, you’ll typically need `git push --force-with-lease`; coordinate first.\n\n**Merge preserves branch history; rebase rewrites it as a linear sequence.**",
+    "usage": {
+      "prompt_tokens": 528,
+      "completion_tokens": 244,
+      "total_tokens": 772,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

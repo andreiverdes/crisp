@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s3a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "# Implementation plan: per-user rate limiting\n\n## Goal\n\nLimit each authenticated user to **100 requests per rolling 60-second window**. Store counters in Redis so limits are shared across API instances. Requests over the limit must receive **HTTP 429** with a `Retry-After` header.\n\n## Steps\n\n1. **Inspect the existing API**\n   - Find the Express app setup, JWT middleware, route mounting, error handling, and test conventions.\n   - Identify where `req.user.id` becomes available. Apply the limiter after JWT authentication so it can key requests by user ID.\n   - Check whether the project already has a Redis client or rate-limiting package. Reuse established dependencies and configuration where practical.\n\n2. **Configure Redis**\n   - Reuse the existing Redis connection if available; otherwise add a Redis client using the project’s conventions.\n   - Read connection settings from environment/configuration, not hard-coded values.\n   - Follow the project’s startup and shutdown patterns for connecting and closing the client.\n\n3. **Implement the limiter**\n   - Add middleware that uses a Redis-backed counter with a **60-second rolling window** for each user.\n   - Use a namespaced key such as `rate-limit:user:<user-id>`.\n   - Increment the counter and set its expiry atomically (for example, with a Redis Lua script). Ensure concurrent requests cannot create inconsistent counts or reset the window.\n   - Allow counts 1–100. For counts above 100, respond with status **429** and a `Retry-After` header in **seconds**, rounded up to the remaining window time.\n   - Do not call `next()` for an over-limit request.\n   - Return a concise response body consistent with the API’s existing error format.\n   - Do not trust a client-supplied user ID; use only `req.user.id`. Treat a missing ID as an authentication/setup error, not as a shared limiter bucket.\n\n4. **Mount the middleware**\n   - Apply it to the intended authenticated API routes after JWT authentication.\n   - Avoid limiting public routes unless the existing API requirements indicate they should be included.\n   - Preserve existing authorization, routing, and error-handling behavior.\n\n5. **Handle Redis failures deliberately**\n   - Follow the API’s established availability policy. If none exists, choose and document whether Redis errors fail open or fail closed; do not silently bypass the limiter.\n   - Log operational failures without exposing credentials or sensitive user data in responses.\n\n6. **Add tests**\n   - Verify requests 1–100 for a user are allowed and request 101 returns 429 with `Retry-After`.\n   - Verify the counter expires and the user can make requests again after the window.\n   - Verify different users have independent limits.\n   - Verify concurrent requests do not exceed the limit due to race conditions.\n   - Verify middleware ordering ensures the JWT-populated `req.user.id` is used.\n   - Test the chosen Redis-failure behavior and the response format.\n\n7. **Document and validate**\n   - Document the Redis configuration, limit, window, route coverage, and Redis-failure policy.\n   - Run the relevant tests, linting, and type checks; add or update integration tests using a Redis test instance or an appropriate test double.",
+    "usage": {
+      "prompt_tokens": 171,
+      "completion_tokens": 668,
+      "total_tokens": 839,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

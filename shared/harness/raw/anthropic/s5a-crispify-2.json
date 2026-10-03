@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s5a-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\n**Recommendation: use Redis Pub/Sub**, assuming the service can tolerate losing messages while a subscriber is disconnected and doesn’t need replay or delivery guarantees.\n\nAt roughly **1,000 events/second**, all three are capable in many ordinary deployments; the deciding factor is the delivery model and operational cost.\n\n| Option | Delivery behavior | Fit for this service |\n|---|---|---|\n| **Postgres `LISTEN`/`NOTIFY`** | Notifications are transient: a disconnected listener misses them. Notifications issued inside a transaction are delivered only after commit. | Convenient if events are closely tied to database changes, but it couples notification traffic to the database. At this rate, monitor database load and keep payloads small. |\n| **Redis Pub/Sub** | Transient: subscribers that are disconnected or unable to keep up miss messages. | A natural fit for best-effort notifications when Redis is already running. Simple and decoupled from database transactions. |\n| **Kafka** | Persists events and supports replay, consumer offsets, and independent consumer groups. | Strong choice when you need durable delivery, replay, or multiple independent consumers, but likely more infrastructure and operational overhead than this requirement justifies. |\n\nUse **Redis Pub/Sub** for the straightforward best-effort path. Keep the event payloads small, monitor subscriber disconnects and Redis health, and make consumers safe to handle duplicates if your application can produce them through its own retry logic.\n\nChoose **Postgres `LISTEN`/`NOTIFY`** instead if notifications are specifically a signal that committed database state changed, and keeping that mechanism inside Postgres is valuable. Choose **Kafka** if “occasional loss is acceptable” stops being true, or you need replay, durable buffering, or multiple independently managed consumers."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Recommendation: use Redis Pub/Sub** if the service can tolerate losing messages while subscribers are disconnected and doesn’t need replay or delivery guarantees.\n\nAt roughly **1,000 events/second**, all three options can handle the load in many ordinary deployments. Choose based on delivery requirements and operational cost.\n\n| Option | Delivery behavior | Fit |\n|---|---|---|\n| **Postgres `LISTEN`/`NOTIFY`** | Transient: disconnected listeners miss notifications. Notifications issued in a transaction are delivered only after commit. | Useful when events track database changes, but adds notification load to the database. Monitor load and keep payloads small. |\n| **Redis Pub/Sub** | Transient: disconnected or slow subscribers can miss messages. | A simple, database-independent choice for best-effort notifications when Redis is already running. |\n| **Kafka** | Persists events; supports replay, consumer offsets, and independent consumer groups. | Choose when you need durable delivery, replay, or multiple independent consumers. It usually adds more infrastructure and operational overhead. |\n\nFor the best-effort path, use **Redis Pub/Sub**. Keep payloads small, monitor subscriber disconnects and Redis health, and make consumers safe to handle duplicates if application retries can produce them.\n\nUse **Postgres `LISTEN`/`NOTIFY`** when notifications signal committed database changes and keeping the mechanism in Postgres matters. Use **Kafka** when message loss is no longer acceptable or you need replay, durable buffering, or independently managed consumers.",
+    "usage": {
+      "prompt_tokens": 528,
+      "completion_tokens": 313,
+      "total_tokens": 841,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

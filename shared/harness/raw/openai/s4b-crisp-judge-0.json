@@ -1,0 +1,73 @@
+{
+  "request": {
+    "id": "judge-openai-s4b-crisp-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6.1-sol",
+      "messages": [
+        {
+          "role": "user",
+          "content": "You are judging two answers to the same prompt. You do not know which is which. Judge only what is on the page.\n\nPROMPT GIVEN TO BOTH:\n<prompt>\nWrite a short incident update for the engineering channel from these notes.\n\ndeploy v2.14 went out 14:05. 14:12 error rate on /api/orders jumped from 0.2% to 6%. rolled back 14:20, errors back to normal 14:22. cause: the new orders query used a column that doesn't exist on the EU replica (migration only ran on US). about 400 failed order submissions during the window, customers saw a generic error, nobody was double-charged (payment happens after order create). fix: run the migration on EU, add a check in the deploy pipeline that migrations ran on all replicas before the app deploys. re-deploy planned tomorrow 10:00 after the migration. need: Priya to confirm the EU migration tonight.\n</prompt>\n\nREQUIRED FACTS (an answer is complete only if it states each of these, in any wording):\nf1: timeline: deploy 14:05, errors from 14:12, rollback 14:20, recovered 14:22\nf2: impact: about 400 failed order submissions, no double charges\nf3: cause: new orders query used a column missing on the EU replica because the migration only ran on US\nf4: fix: run the migration on EU and add a pipeline check that migrations ran on all replicas before deploy\nf5: next: redeploy tomorrow 10:00 after the migration\nf6: ask: Priya to confirm the EU migration tonight   <!-- one line each: \"f1: <fact>\" -->\n\nANSWER A:\n<answer_a>\n**Incident update — Orders API**\n\nDeploy v2.14 went out at 14:05. At 14:12, errors on `/api/orders` rose from 0.2% to 6%. We rolled back at 14:20, and errors returned to normal by 14:22.\n\nThe new orders query referenced a column missing from the EU replica; the migration had only run on the US replica. About 400 order submissions failed during the incident, and customers saw a generic error. No one was double-charged—payment happens after order creation.\n\n**Next steps:** Priya to confirm the EU migration tonight. We’ll add a deploy-pipeline check to verify migrations have run on all replicas before app deployment, then plan to redeploy tomorrow at 10:00 after the migration.\n</answer_a>\n\nANSWER B:\n<answer_b>\n**Incident update — v2.14**\n\nv2.14 deployed at 14:05. At 14:12, errors on `/api/orders` rose from 0.2% to 6%. We rolled back at 14:20, and error rates returned to normal by 14:22.\n\nThe new orders query referenced a column missing from the EU replica because the migration had only run on US. About 400 order submissions failed; customers saw a generic error. No customers were double-charged, as payment occurs after order creation.\n\n**Next steps:** Priya to confirm the EU migration is complete tonight. We’ll add a deployment check to verify migrations have run on all replicas before app deployment. Re-deploy is planned for tomorrow at 10:00, after the migration.\n</answer_b>\n\nScore each answer 1-5 on each dimension. Use the whole scale.\n\n- correctness: 5 = no technical errors; 1 = materially wrong.\n- clarity: 5 = understood on first read; 1 = must be decoded.\n- ambiguity: 5 = nothing vague, every reference and condition is clear; 1 = vague terms, unclear references, hidden assumptions.\n- scanability: 5 = the key point and structure are findable in seconds, and formatting matches the content; 1 = the point is buried, or formatting is decorative or excessive.\n- relevance: 5 = everything serves the question; 1 = padding, generic advice, unasked tangents, restated question or context.\n- conversational: 5 = sounds like a competent colleague talking; 1 = robotic, bureaucratic, academic, or chatty filler (\"Sure!\", \"Great question\", \"In conclusion\").\n- completeness: 5 = everything the asker needs to act, nothing essential missing; 1 = key parts missing.\n\nThen, for each required fact, say whether each answer states it.\n\nThen note useful content that one answer has and the other lacks, beyond the required facts: anything a competent reader would want and could act on. Ignore padding, generic advice, and restated context. If nothing useful is missing from either, use an empty string.\n\nThen choose which answer a competent engineer would rather receive. Length is not a virtue or a flaw by itself; judge usefulness per word.\n\nReply with only a JSON object in this shape. All scores are integers 1-5. `preferred` is exactly one of \"A\", \"B\", \"tie\". Example values shown:\n\n```json\n{\n  \"A\": {\"correctness\": 4, \"clarity\": 3, \"ambiguity\": 4, \"scanability\": 3, \"relevance\": 3, \"conversational\": 3, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f4\"]},\n  \"B\": {\"correctness\": 4, \"clarity\": 5, \"ambiguity\": 4, \"scanability\": 5, \"relevance\": 5, \"conversational\": 4, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\"]},\n  \"useful_lost\": {\"A\": \"B explains the Retry-After calculation; A does not.\", \"B\": \"\"},\n  \"preferred\": \"B\",\n  \"notes\": \"one or two sentences: the decisive difference\"\n}\n```"
+        }
+      ],
+      "reasoning_effort": "high",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "{\n  \"A\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 4,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 4,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f5\", \"f6\"]\n  },\n  \"B\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 4,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 4,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f5\", \"f6\"]\n  },\n  \"useful_lost\": {\n    \"A\": \"\",\n    \"B\": \"\"\n  },\n  \"preferred\": \"tie\",\n  \"notes\": \"Both are concise, readable, and substantively equivalent. Both imply an EU migration through the confirmation request and redeploy condition, but neither explicitly states the action to run it, so neither fully states f4 despite including the pipeline check.\"\n}",
+    "usage": {
+      "prompt_tokens": 1263,
+      "completion_tokens": 717,
+      "total_tokens": 1980,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 450
+      }
+    }
+  },
+  "parsed": {
+    "A": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 4,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 4,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f5",
+        "f6"
+      ]
+    },
+    "B": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 4,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 4,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f5",
+        "f6"
+      ]
+    },
+    "useful_lost": {
+      "A": "",
+      "B": ""
+    },
+    "preferred": "tie",
+    "notes": "Both are concise, readable, and substantively equivalent. Both imply an EU migration through the confirmation request and redeploy condition, but neither explicitly states the action to run it, so neither fully states f4 despite including the pipeline check."
+  }
+}

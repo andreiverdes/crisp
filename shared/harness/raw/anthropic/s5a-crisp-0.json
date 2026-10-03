@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s5a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "Compare Postgres LISTEN/NOTIFY, Redis Pub/Sub, and Kafka for a notification service handling about 1,000 events per second, where losing an occasional event is acceptable and we already run Postgres and Redis. Recommend one."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Recommend Redis Pub/Sub** for this service, assuming notifications are transient and clients can tolerate missed events. At 1,000 events/s, it is a straightforward fit, and you already run Redis. It delivers to currently connected subscribers with low latency, but does not store or replay messages; a disconnect can lose notifications.\n\n| Option | Delivery behavior | Fit and tradeoff |\n|---|---|---|\n| **Postgres LISTEN/NOTIFY** | Notifications are transient and reach sessions listening when the notification is delivered. | No added system, but couples delivery to database connections and adds load to Postgres. Use it if notifications are already tightly tied to database transactions and volume is modest. |\n| **Redis Pub/Sub** | Transient delivery to currently connected subscribers; no replay or acknowledgment. | Simple and low-latency for best-effort notifications. A Redis outage or subscriber disconnect can lose messages. |\n| **Kafka** | Persists events and lets consumers resume from offsets. | Best when loss is unacceptable, replay is needed, or consumers need independent progress. Adds operational and implementation cost that occasional-loss requirements do not justify. |\n\nIf a missed event must eventually be recovered, none of these Pub/Sub-style choices is sufficient as configured: use a durable queue or log such as Kafka, or persist notifications in Postgres and let consumers track progress.",
+    "usage": {
+      "prompt_tokens": 180,
+      "completion_tokens": 279,
+      "total_tokens": 459,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

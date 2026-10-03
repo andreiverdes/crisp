@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s2b-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "I get `RuntimeError: dictionary changed size during iteration` from this. How do I fix it?\n\n```python\ncounts = {\"a\": 0, \"b\": 2, \"c\": 0}\nfor k in counts:\n    if counts[k] == 0:\n        del counts[k]\n```"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Deleting keys changes the dictionary while you’re iterating over it. Iterate over a separate list of keys instead:\n\n```python\ncounts = {\"a\": 0, \"b\": 2, \"c\": 0}\n\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr build a new dictionary:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```",
+    "usage": {
+      "prompt_tokens": 172,
+      "completion_tokens": 102,
+      "total_tokens": 274,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

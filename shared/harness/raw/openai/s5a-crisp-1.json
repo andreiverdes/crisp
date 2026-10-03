@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s5a-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "Compare Postgres LISTEN/NOTIFY, Redis Pub/Sub, and Kafka for a notification service handling about 1,000 events per second, where losing an occasional event is acceptable and we already run Postgres and Redis. Recommend one."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Recommendation: use Redis Pub/Sub** for this notification service, assuming it doesn’t need replay or delivery to consumers that are temporarily offline.\n\n| Option | Delivery behavior | Operational fit |\n|---|---|---|\n| **Postgres LISTEN/NOTIFY** | Notifications aren’t durable; disconnected listeners miss them. | Convenient if events originate in Postgres, but couples notifications to database connections and workload. |\n| **Redis Pub/Sub** | Fire-and-forget; subscribers miss messages while disconnected. | A natural fit for best-effort notifications, and you already run Redis. |\n| **Kafka** | Durable, replayable event log with consumer offsets. | More capability and operational overhead than occasional-loss notifications require. |\n\nAt roughly **1,000 events per second**, Redis Pub/Sub is a reasonable choice for lightweight notifications. Keep the message payloads small, and make sure publishers can tolerate occasional missed notifications.\n\nChoose **Kafka** instead if you later need replay, durable buffering, or independent consumers that must catch up after downtime. Choose **Postgres LISTEN/NOTIFY** if the notifications are tightly tied to database changes and you want to avoid introducing Redis into that path.",
+    "usage": {
+      "prompt_tokens": 156,
+      "completion_tokens": 243,
+      "total_tokens": 399,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

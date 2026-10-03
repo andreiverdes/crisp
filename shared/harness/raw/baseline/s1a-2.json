@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s1a-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What's the difference between git merge and git rebase, and when should I use each?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Both `git merge` and `git rebase` integrate changes from one branch into another. The difference is how they represent that integration in history.\n\n### `git merge`: preserve the branch history\n\nIf you’re on `main` and run:\n\n```bash\ngit merge feature\n```\n\nGit combines the branches, usually by creating a **merge commit**. The history shows that the work happened on separate branches and where they came together.\n\n**Use merge when:**\n- You want to preserve the full, shared history of a branch.\n- The branch is already used by teammates or pushed for others to rely on.\n- You’re integrating completed work and want a clear record of the integration.\n\n### `git rebase`: replay commits onto a new base\n\nIf you’re on `feature` and run:\n\n```bash\ngit rebase main\n```\n\nGit replays the feature branch’s commits on top of the latest `main` commits. This creates a **linear history**, but the replayed commits get new IDs.\n\n**Use rebase when:**\n- You want a cleaner, linear history.\n- You’re updating your own local feature branch before merging it.\n- You want to tidy up commits before sharing them.\n\n### Practical rule\n\n- **Rebase your own, unshared work** to keep it current or clean up its history.\n- **Merge shared work** to avoid rewriting commits that others may already have based their work on.\n\nRebasing public or shared commits can cause trouble: teammates may have to reconcile their histories. If you do rebase commits that were already pushed, you’ll typically need to push with `--force-with-lease`, and should coordinate first.\n\nIn short: **merge preserves history; rebase rewrites it into a linear sequence.**",
+    "usage": {
+      "prompt_tokens": 24,
+      "completion_tokens": 364,
+      "total_tokens": 388,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "request": {
+    "id": "judge-anthropic-s1a-crispify-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6.1-sol",
+      "messages": [
+        {
+          "role": "user",
+          "content": "You are judging two answers to the same prompt. You do not know which is which. Judge only what is on the page.\n\nPROMPT GIVEN TO BOTH:\n<prompt>\nWhat's the difference between git merge and git rebase, and when should I use each?\n</prompt>\n\nREQUIRED FACTS (an answer is complete only if it states each of these, in any wording):\nf1: merge preserves the existing commits as they are; when the histories have diverged it adds a merge commit (otherwise it can fast-forward)\nf2: rebase rewrites your commits on top of the other branch, giving a linear history\nf3: do not rebase commits that others already have (shared/pushed branches)\nf4: rebase is for cleaning up or updating a local/feature branch before sharing\nf5: merge is for integrating shared branches or when the true history matters   <!-- one line each: \"f1: <fact>\" -->\n\nANSWER A:\n<answer_a>\n`git merge` and `git rebase` both bring changes from one branch into another, but they produce different commit histories.\n\n### `git merge`\n\nCombines two branches, creating a merge commit unless Git can fast-forward.\n\n```bash\ngit switch main\ngit merge feature\n```\n\n- Preserves existing commits and shows where the branches joined.\n- Usually safer for shared branches because it doesn’t rewrite history.\n\n### `git rebase`\n\nReplays your branch’s commits on top of another branch.\n\n```bash\ngit switch feature\ngit rebase main\n```\n\n- Creates new commit IDs for the replayed commits.\n- Produces a more linear history.\n- Rewrites history, which can disrupt collaborators if they’ve based work on those commits.\n\n### Which should I use?\n\n- **Merge** a feature branch into a shared branch, or when you want to preserve how the work was integrated.\n- **Rebase** your private feature branch onto the latest `main`, or tidy commits before sharing them.\n- **Don’t rebase commits others may depend on.** If you rebase a published branch, coordinate with collaborators and often push with `git push --force-with-lease`.\n\nA common workflow is to rebase a private feature branch onto the latest `main`, then merge it when it’s ready.\n</answer_a>\n\nANSWER B:\n<answer_b>\nBoth `git merge` and `git rebase` bring changes from one branch into another, but they do it differently—and produce different history.\n\n### `git merge`\nCombines two branches with a **merge commit** (unless Git can fast-forward).\n\n```bash\ngit switch main\ngit merge feature\n```\n\n- Keeps the original branch history intact.\n- Makes it clear when branches were joined.\n- Is usually the safer choice for shared branches, since it doesn’t rewrite existing commits.\n\n### `git rebase`\nMoves your branch’s commits so they appear to start from the tip of another branch.\n\n```bash\ngit switch feature\ngit rebase main\n```\n\n- Creates new commit IDs for the rebased commits.\n- Often produces a more linear, easier-to-read history.\n- Rewrites history, so commits that were already shared can cause trouble for collaborators.\n\n### Which should I use?\n\n- **Use merge** to bring a feature branch into a shared branch, or when you want to preserve the exact history of how work was integrated.\n- **Use rebase** to update your own local feature branch with the latest changes from `main`, or to tidy up commits before sharing them.\n- **Avoid rebasing commits other people may already have based work on.** If you do rebase a published branch, coordinating with collaborators—and often using `git push --force-with-lease`—is necessary.\n\nA common workflow is to rebase a private feature branch onto the latest `main`, then merge it when it’s ready.\n</answer_b>\n\nScore each answer 1-5 on each dimension. Use the whole scale.\n\n- correctness: 5 = no technical errors; 1 = materially wrong.\n- clarity: 5 = understood on first read; 1 = must be decoded.\n- ambiguity: 5 = nothing vague, every reference and condition is clear; 1 = vague terms, unclear references, hidden assumptions.\n- scanability: 5 = the key point and structure are findable in seconds, and formatting matches the content; 1 = the point is buried, or formatting is decorative or excessive.\n- relevance: 5 = everything serves the question; 1 = padding, generic advice, unasked tangents, restated question or context.\n- conversational: 5 = sounds like a competent colleague talking; 1 = robotic, bureaucratic, academic, or chatty filler (\"Sure!\", \"Great question\", \"In conclusion\").\n- completeness: 5 = everything the asker needs to act, nothing essential missing; 1 = key parts missing.\n\nThen, for each required fact, say whether each answer states it.\n\nThen note useful content that one answer has and the other lacks, beyond the required facts: anything a competent reader would want and could act on. Ignore padding, generic advice, and restated context. If nothing useful is missing from either, use an empty string.\n\nThen choose which answer a competent engineer would rather receive. Length is not a virtue or a flaw by itself; judge usefulness per word.\n\nReply with only a JSON object in this shape. All scores are integers 1-5. `preferred` is exactly one of \"A\", \"B\", \"tie\". Example values shown:\n\n```json\n{\n  \"A\": {\"correctness\": 4, \"clarity\": 3, \"ambiguity\": 4, \"scanability\": 3, \"relevance\": 3, \"conversational\": 3, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f4\"]},\n  \"B\": {\"correctness\": 4, \"clarity\": 5, \"ambiguity\": 4, \"scanability\": 5, \"relevance\": 5, \"conversational\": 4, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\"]},\n  \"useful_lost\": {\"A\": \"B explains the Retry-After calculation; A does not.\", \"B\": \"\"},\n  \"preferred\": \"B\",\n  \"notes\": \"one or two sentences: the decisive difference\"\n}\n```"
+        }
+      ],
+      "reasoning_effort": "high",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "{\n  \"A\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 5,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 5,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\", \"f5\"]\n  },\n  \"B\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 5,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 5,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\", \"f5\"]\n  },\n  \"useful_lost\": {\n    \"A\": \"\",\n    \"B\": \"\"\n  },\n  \"preferred\": \"tie\",\n  \"notes\": \"Both clearly state all required facts and provide the same actionable extras: command examples, new commit IDs after rebasing, coordination and force-with-lease guidance, and a typical workflow. Their wording differences do not materially change usefulness.\"\n}",
+    "usage": {
+      "prompt_tokens": 1346,
+      "completion_tokens": 481,
+      "total_tokens": 1827,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 216
+      }
+    }
+  },
+  "parsed": {
+    "A": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 5,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 5,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5"
+      ]
+    },
+    "B": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 5,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 5,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5"
+      ]
+    },
+    "useful_lost": {
+      "A": "",
+      "B": ""
+    },
+    "preferred": "tie",
+    "notes": "Both clearly state all required facts and provide the same actionable extras: command examples, new commit IDs after rebasing, coordination and force-with-lease guidance, and a typical workflow. Their wording differences do not materially change usefulness."
+  }
+}

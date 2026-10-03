@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s3a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "## Implementation plan\n\n1. **Inspect the API’s middleware and Redis setup**\n   - Find where Express routes are registered and where JWT authentication sets `req.user.id`.\n   - Find the existing Redis client, connection lifecycle, configuration, and test conventions. Reuse the shared Redis client; do not create a new client per request.\n   - Confirm whether any routes should be excluded, such as health checks or public endpoints.\n\n2. **Add a per-user rate-limit middleware**\n   - Create middleware that runs **after JWT authentication** and before protected route handlers.\n   - Use a Redis-backed fixed window of 60 seconds, with a limit of 100 requests per user per window.\n   - Build Redis keys with a dedicated namespace and the authenticated user ID, such as `rate-limit:user:<id>:<window-start>`. Align the window start to a minute boundary so all API instances use the same window.\n   - Increment the key atomically. Set its 60-second expiry only when it is first created; use a Lua script or equivalent atomic Redis operation to avoid races between incrementing and setting expiry.\n   - If `req.user.id` is missing, do not create a shared or anonymous user bucket. Follow the API’s existing authentication behavior and ensure this middleware is not used in place of authentication.\n   - On Redis errors, follow the service’s established policy. Do not silently allow unlimited requests unless that is the intended availability policy; log the failure without exposing Redis details to clients.\n\n3. **Return the rate-limit response**\n   - Allow requests while the count is at most 100.\n   - For counts above 100, return HTTP `429 Too Many Requests` and do not call `next()`.\n   - Set `Retry-After` to the number of seconds until the current minute window resets, rounded up and never less than 1.\n   - If the API already defines an error response format, use it. Otherwise return a small JSON error body, for example `{\"error\":\"Too many requests\"}`.\n\n4. **Register the middleware**\n   - Apply it to the intended authenticated routes, after JWT middleware and before their handlers.\n   - Verify that route groups and mounted routers preserve this ordering. Do not apply it to excluded routes.\n\n5. **Add tests**\n   - Test that requests 1–100 for one user proceed and request 101 receives a 429 with a valid `Retry-After`.\n   - Test that two user IDs have independent limits.\n   - Test that the counter resets after the window expires.\n   - Test middleware ordering and behavior when the user ID is missing.\n   - Test Redis failure behavior according to the chosen policy.\n   - Use the project’s Redis test setup or a controllable Redis mock; avoid timing-sensitive sleeps where possible.\n\n6. **Document and verify**\n   - Document the limit, window, Redis key behavior, and Redis failure policy in the project’s API or operations documentation.\n   - Run the relevant unit and integration tests, plus the project’s lint and type checks.",
+    "usage": {
+      "prompt_tokens": 195,
+      "completion_tokens": 619,
+      "total_tokens": 814,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

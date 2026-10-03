@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s5a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Compare Postgres LISTEN/NOTIFY, Redis Pub/Sub, and Kafka for a notification service handling about 1,000 events per second, where losing an occasional event is acceptable and we already run Postgres and Redis. Recommend one."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Recommendation: use Redis Pub/Sub** for this service, assuming notifications are transient and subscribers can tolerate missing events.\n\nAt roughly **1,000 events/second**, all three options can handle the rate in a suitably provisioned setup. The deciding factor is the delivery guarantee and operational cost:\n\n| Option | Delivery behavior | Fit here |\n|---|---|---|\n| **Postgres LISTEN/NOTIFY** | Ephemeral: listeners that are disconnected miss notifications. Notifications are delivered after the transaction commits, and payloads are limited in size. | Viable for modest, database-adjacent signaling, but makes Postgres do extra work and couples notification traffic to the database. |\n| **Redis Pub/Sub** | Ephemeral: subscribers disconnected at publish time miss messages. Low-latency fan-out with little setup. | **Best fit:** Redis is already available, and occasional loss is acceptable. |\n| **Kafka** | Durable, replayable log with consumer offsets and stronger recovery options. | More capability and operational overhead than you need if losing occasional events is acceptable. |\n\nUse Redis Pub/Sub if the messages are **best-effort signals**—for example, “refresh this view”—rather than the only record of important business actions. Keep authoritative data in Postgres, and have consumers recover or refresh state when they reconnect.\n\nIf you later need replay, reliable processing, or per-consumer delivery tracking, switch to a durable mechanism such as Kafka, or a Redis Streams-based design.",
+    "usage": {
+      "prompt_tokens": 54,
+      "completion_tokens": 306,
+      "total_tokens": 360,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

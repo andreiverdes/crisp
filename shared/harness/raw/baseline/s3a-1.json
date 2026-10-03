@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s3a-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "## Implementation plan\n\n1. **Inspect the existing API**\n   - Locate the Express app setup, JWT authentication middleware, route registration, and error-handling middleware.\n   - Check the existing Redis client setup and conventions for configuration, logging, and tests.\n   - Confirm that protected routes run after the JWT middleware and that `req.user.id` is available there.\n\n2. **Add or reuse a Redis client**\n   - Reuse the application’s shared Redis client if one exists. Otherwise, create one using the project’s existing configuration and lifecycle conventions.\n   - Read the Redis connection settings from environment/configuration; do not hard-code credentials.\n   - Ensure startup handles Redis connection failures according to the project’s operational policy. Do not silently fall back to unbounded traffic if Redis is unavailable.\n\n3. **Implement per-user rate-limit middleware**\n   - Add middleware that uses `req.user.id` as the rate-limit key, namespaced to avoid collisions (for example, `rate-limit:user:<id>`).\n   - Use a fixed 60-second window with a maximum of 100 requests per user. Make the increment and window assignment atomic in Redis, using a Lua script or an equivalent atomic Redis operation. Ensure the key receives a 60-second expiry when its counter is first created.\n   - Define whether requests 1–100 are allowed and request 101 is rejected. Apply the same rule consistently.\n   - If `req.user.id` is missing, do not create a shared “undefined user” bucket. Treat this as an authentication/ordering error consistent with the API’s conventions.\n\n4. **Return the required response when limited**\n   - When the count exceeds 100, return HTTP `429 Too Many Requests` and do not call `next()`.\n   - Set `Retry-After` to the number of whole seconds remaining in the current window, rounded up to at least 1.\n   - Use the API’s existing error-response format where possible, with a clear rate-limit message.\n   - Optionally include standard limit/remaining/reset headers if consistent with existing API conventions; `Retry-After` is required.\n\n5. **Apply middleware in the correct order**\n   - Mount the limiter after JWT authentication so it can use `req.user.id`.\n   - Apply it to the intended protected API routes. Avoid accidentally limiting public routes or applying it twice through overlapping mounts.\n   - Confirm that all routes intended to share a user quota use the same Redis key namespace and window.\n\n6. **Handle Redis errors deliberately**\n   - Follow the service’s established dependency-failure policy. If no policy exists, fail closed with a service-unavailable response rather than bypassing the limit.\n   - Log Redis failures without logging tokens or other sensitive user data.\n   - Ensure an error is not mistakenly returned as a 429; 429 should represent an exceeded quota only.\n\n7. **Add tests**\n   - Unit-test the limiter for counts below, at, and above the 100-request limit.\n   - Verify that different user IDs have independent counters.\n   - Verify `Retry-After` is present, positive, and based on the remaining window when a request is rejected.\n   - Test that the counter expires after 60 seconds and that concurrent increments cannot exceed the limit incorrectly.\n   - Test middleware ordering/behavior with authenticated and missing-user requests, plus the chosen Redis-failure behavior.\n   - Use a real Redis test instance or a suitable test Redis implementation for atomicity and expiry behavior; avoid relying solely on mocks for those guarantees.\n\n8. **Document and validate**\n   - Document any new Redis configuration and the rate-limit behavior.\n   - Run the relevant unit/integration tests, linting, and type checks.\n   - Verify a local or staging sequence: 100 requests for one user are accepted, the 101st receives 429 with `Retry-After`, and another user remains unaffected.",
+    "usage": {
+      "prompt_tokens": 69,
+      "completion_tokens": 791,
+      "total_tokens": 860,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

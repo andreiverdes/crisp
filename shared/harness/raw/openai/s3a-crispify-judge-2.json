@@ -1,0 +1,74 @@
+{
+  "request": {
+    "id": "judge-openai-s3a-crispify-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6.1-sol",
+      "messages": [
+        {
+          "role": "user",
+          "content": "You are judging two answers to the same prompt. You do not know which is which. Judge only what is on the page.\n\nPROMPT GIVEN TO BOTH:\n<prompt>\nWrite an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan.\n</prompt>\n\nREQUIRED FACTS (an answer is complete only if it states each of these, in any wording):\nf1: the rate-limit middleware runs after the JWT middleware, keyed on req.user.id\nf2: names the counting algorithm and Redis key scheme (e.g. fixed window with INCR + EXPIRE per user per minute, or sliding window)\nf3: 429 response includes Retry-After computed from the window's remaining time\nf4: handles the INCR/EXPIRE race: Lua script, MULTI/EXEC transaction, or an algorithm where a missed EXPIRE cannot break limiting (e.g. the key name embeds the window timestamp)\nf5: states what happens when Redis is unavailable (fail open or fail closed) as a decision\nf6: lists tests: under limit passes, 101st request gets 429 with Retry-After, counter resets after the window   <!-- one line each: \"f1: <fact>\" -->\n\nANSWER A:\n<answer_a>\n# Implementation plan: per-user Redis rate limiting\n\n## Goal\n\nLimit authenticated users to **100 requests per rolling 60-second window**. Identify users using `req.user.id`, store counters in Redis, and respond to excess requests with **HTTP 429** and a `Retry-After` header.\n\n## 1. Inspect the existing API\n\n- Find the Express app setup, JWT authentication middleware, route registration, and error-handling middleware.\n- Check how Redis is configured and accessed. Reuse the existing client and configuration if available; otherwise, add Redis configuration following the project’s conventions.\n- Identify which routes require authentication and where middleware runs relative to route handlers.\n- Check existing rate-limiting packages and test patterns before adding dependencies.\n\n## 2. Implement the limiter\n\nAdd a reusable Express middleware that:\n\n1. Reads the authenticated user ID from `req.user.id`. Mount it **after JWT authentication** on the routes it should protect.\n2. Uses a Redis key scoped to the user and limiter, such as `rate-limit:user:<userId>`.\n3. Atomically increments the counter and sets its expiration to 60 seconds on the first request. Use a Redis operation or script that avoids races between incrementing and setting the expiry.\n4. Allows requests while the count is at most 100.\n5. For requests above 100, responds without calling `next()`:\n   - Status: `429`\n   - JSON body using the project’s standard error format\n   - `Retry-After`: integer seconds until the current window expires, rounded up to at least 1\n6. Sets the `Retry-After` header only on rejected requests unless project conventions specify otherwise.\n\nChoose and document the intended window semantics. A fixed window starting with the user’s first request is suitable for this implementation; do not accidentally reset the window on every request.\n\n## 3. Handle Redis failures deliberately\n\nUse the API’s existing Redis failure policy if one exists. Otherwise, make the behavior explicit in code and tests. For an API availability-oriented default, log Redis errors and allow the request through; do not silently treat Redis failures as an exceeded limit. Keep error handling compatible with the Redis client version and Express version in use.\n\n## 4. Mount middleware\n\n- Apply the limiter after JWT authentication so `req.user.id` is present.\n- Apply it only to authenticated routes covered by the requirement. Avoid accidentally limiting public endpoints or counting unauthenticated requests as one shared user.\n- Confirm that requests rejected by the limiter do not reach route handlers.\n\n## 5. Tests\n\nAdd or update tests covering:\n\n- Requests 1 through 100 for a user are allowed; request 101 is rejected with status 429 and a valid `Retry-After` header.\n- The counter expires after 60 seconds and the user can make requests again.\n- Two different user IDs have independent limits.\n- The limiter runs after authentication and uses `req.user.id`.\n- Rejected requests do not invoke downstream handlers.\n- Redis errors follow the chosen failure policy.\n- The `Retry-After` value is an integer of at least 1 and reflects the remaining window time.\n\nUse a mocked Redis client or the project’s integration-test Redis setup, consistent with existing tests.\n\n## 6. Verify\n\n- Run the relevant unit and integration tests, then the project’s full test and lint/type-check commands.\n- Confirm the implementation uses atomic counter/expiry behavior with the installed Redis client.\n- Document the configured limit and Redis dependency in the project’s usual configuration or operational documentation.\n</answer_a>\n\nANSWER B:\n<answer_b>\n# Implementation plan: per-user Redis rate limiting\n\n## Goal\n\nLimit each authenticated user to **100 requests per rolling 60-second window**, identified by `req.user.id`. Store counters in Redis. Reject excess requests with **HTTP 429** and a `Retry-After` header.\n\n## 1. Inspect the API\n\n- Locate the Express app, JWT authentication, route registration, and error handling.\n- Check the Redis client and configuration. Reuse them if available; otherwise, follow project conventions.\n- Identify authenticated routes and middleware order.\n- Check existing rate-limiting dependencies and test patterns before adding packages.\n\n## 2. Implement the limiter\n\nCreate reusable Express middleware that:\n\n- Reads `req.user.id` and runs **after JWT authentication**.\n- Uses a Redis key scoped to the user and limiter, such as `rate-limit:user:<userId>`.\n- Atomically increments the counter and sets a 60-second expiry on the first request, avoiding races between increment and expiry.\n- Allows requests 1–100. For requests above 100, responds without calling `next()`:\n  - Status `429`\n  - JSON body in the project’s standard error format\n  - `Retry-After` set to the integer seconds remaining in the window, rounded up to at least 1\n- Sets `Retry-After` only on rejected requests unless project conventions differ.\n\nUse a **fixed window beginning with the user’s first request**. Do not reset its expiry on every request.\n\n## 3. Handle Redis failures\n\nFollow the API’s existing Redis failure policy. If none exists, make the behavior explicit in code and tests. For an availability-oriented default, log Redis errors and allow the request through; do not treat Redis failures as exceeded limits. Ensure error handling matches the installed Redis client and Express versions.\n\n## 4. Mount the middleware\n\nApply the limiter after JWT authentication and only to the authenticated routes covered by the requirement. Do not limit public endpoints or count unauthenticated requests under a shared user. Confirm rejected requests never reach route handlers.\n\n## 5. Test\n\nCover the following:\n\n- Requests 1–100 are allowed; request 101 receives `429` and a valid `Retry-After`.\n- The counter expires after 60 seconds, allowing requests again.\n- Different user IDs have independent limits.\n- The limiter runs after authentication and uses `req.user.id`.\n- Rejected requests do not invoke downstream handlers.\n- Redis errors follow the chosen failure policy.\n- `Retry-After` is an integer of at least 1 and reflects the remaining window.\n\nUse a mocked Redis client or the project’s integration-test Redis setup, consistent with existing tests.\n\n## 6. Verify and document\n\nRun relevant unit and integration tests, then the full test, lint, and type-check commands. Confirm the installed Redis client supports the atomic counter-and-expiry operation. Document the limit and Redis dependency in the project’s usual configuration or operational documentation.\n</answer_b>\n\nScore each answer 1-5 on each dimension. Use the whole scale.\n\n- correctness: 5 = no technical errors; 1 = materially wrong.\n- clarity: 5 = understood on first read; 1 = must be decoded.\n- ambiguity: 5 = nothing vague, every reference and condition is clear; 1 = vague terms, unclear references, hidden assumptions.\n- scanability: 5 = the key point and structure are findable in seconds, and formatting matches the content; 1 = the point is buried, or formatting is decorative or excessive.\n- relevance: 5 = everything serves the question; 1 = padding, generic advice, unasked tangents, restated question or context.\n- conversational: 5 = sounds like a competent colleague talking; 1 = robotic, bureaucratic, academic, or chatty filler (\"Sure!\", \"Great question\", \"In conclusion\").\n- completeness: 5 = everything the asker needs to act, nothing essential missing; 1 = key parts missing.\n\nThen, for each required fact, say whether each answer states it.\n\nThen note useful content that one answer has and the other lacks, beyond the required facts: anything a competent reader would want and could act on. Ignore padding, generic advice, and restated context. If nothing useful is missing from either, use an empty string.\n\nThen choose which answer a competent engineer would rather receive. Length is not a virtue or a flaw by itself; judge usefulness per word.\n\nReply with only a JSON object in this shape. All scores are integers 1-5. `preferred` is exactly one of \"A\", \"B\", \"tie\". Example values shown:\n\n```json\n{\n  \"A\": {\"correctness\": 4, \"clarity\": 3, \"ambiguity\": 4, \"scanability\": 3, \"relevance\": 3, \"conversational\": 3, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f4\"]},\n  \"B\": {\"correctness\": 4, \"clarity\": 5, \"ambiguity\": 4, \"scanability\": 5, \"relevance\": 5, \"conversational\": 4, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\"]},\n  \"useful_lost\": {\"A\": \"B explains the Retry-After calculation; A does not.\", \"B\": \"\"},\n  \"preferred\": \"B\",\n  \"notes\": \"one or two sentences: the decisive difference\"\n}\n```"
+        }
+      ],
+      "reasoning_effort": "high",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "{\n  \"A\": {\n    \"correctness\": 4,\n    \"clarity\": 4,\n    \"ambiguity\": 3,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 4,\n    \"completeness\": 4,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\", \"f5\", \"f6\"]\n  },\n  \"B\": {\n    \"correctness\": 4,\n    \"clarity\": 4,\n    \"ambiguity\": 3,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 4,\n    \"completeness\": 3,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f5\", \"f6\"]\n  },\n  \"useful_lost\": {\n    \"A\": \"\",\n    \"B\": \"\"\n  },\n  \"preferred\": \"A\",\n  \"notes\": \"A explicitly offers a Redis script to avoid the increment/expiry race; B requires atomicity without identifying a mechanism that provides it. Both incorrectly describe the goal as a rolling window while specifying a fixed window beginning with the user's first request.\"\n}",
+    "usage": {
+      "prompt_tokens": 2194,
+      "completion_tokens": 949,
+      "total_tokens": 3143,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 678
+      }
+    }
+  },
+  "parsed": {
+    "A": {
+      "correctness": 4,
+      "clarity": 4,
+      "ambiguity": 3,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 4,
+      "completeness": 4,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ]
+    },
+    "B": {
+      "correctness": 4,
+      "clarity": 4,
+      "ambiguity": 3,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 4,
+      "completeness": 3,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f5",
+        "f6"
+      ]
+    },
+    "useful_lost": {
+      "A": "",
+      "B": ""
+    },
+    "preferred": "A",
+    "notes": "A explicitly offers a Redis script to avoid the increment/expiry race; B requires atomicity without identifying a mechanism that provides it. Both incorrectly describe the goal as a rolling window while specifying a fixed window beginning with the user's first request."
+  }
+}

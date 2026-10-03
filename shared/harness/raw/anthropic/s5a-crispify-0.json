@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s5a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\n**Recommendation: use Redis Pub/Sub** for this service, assuming notifications are transient and subscribers can tolerate missing events.\n\nAt roughly **1,000 events/second**, all three options can handle the rate in a suitably provisioned setup. The deciding factor is the delivery guarantee and operational cost:\n\n| Option | Delivery behavior | Fit here |\n|---|---|---|\n| **Postgres LISTEN/NOTIFY** | Ephemeral: listeners that are disconnected miss notifications. Notifications are delivered after the transaction commits, and payloads are limited in size. | Viable for modest, database-adjacent signaling, but makes Postgres do extra work and couples notification traffic to the database. |\n| **Redis Pub/Sub** | Ephemeral: subscribers disconnected at publish time miss messages. Low-latency fan-out with little setup. | **Best fit:** Redis is already available, and occasional loss is acceptable. |\n| **Kafka** | Durable, replayable log with consumer offsets and stronger recovery options. | More capability and operational overhead than you need if losing occasional events is acceptable. |\n\nUse Redis Pub/Sub if the messages are **best-effort signals**—for example, “refresh this view”—rather than the only record of important business actions. Keep authoritative data in Postgres, and have consumers recover or refresh state when they reconnect.\n\nIf you later need replay, reliable processing, or per-consumer delivery tracking, switch to a durable mechanism such as Kafka, or a Redis Streams-based design."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Recommendation: use Redis Pub/Sub** if notifications are transient and subscribers can tolerate missed events.\n\nAt about **1,000 events/second**, all three options can handle the load with suitable provisioning. Choose based on delivery guarantees and operational cost:\n\n| Option | Delivery behavior | Fit |\n|---|---|---|\n| **Postgres LISTEN/NOTIFY** | Ephemeral: disconnected listeners miss notifications. Notifications arrive after the transaction commits, and payloads have a size limit. | Works for modest, database-adjacent signaling, but adds work to Postgres and couples notification traffic to the database. |\n| **Redis Pub/Sub** | Ephemeral: subscribers disconnected when a message is published miss it. Provides low-latency fan-out with little setup. | **Best fit:** Redis is already available, and occasional loss is acceptable. |\n| **Kafka** | Durable, replayable log with consumer offsets and stronger recovery options. | Adds capability and operational overhead you don’t need if occasional loss is acceptable. |\n\nUse Redis Pub/Sub for **best-effort signals**, such as “refresh this view,” not as the only record of important business actions. Keep authoritative data in Postgres, and have consumers recover or refresh state after reconnecting.\n\nIf you later need replay, reliable processing, or per-consumer delivery tracking, use a durable mechanism such as Kafka or Redis Streams.",
+    "usage": {
+      "prompt_tokens": 470,
+      "completion_tokens": 284,
+      "total_tokens": 754,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

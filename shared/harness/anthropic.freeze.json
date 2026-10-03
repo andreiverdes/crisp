@@ -1,0 +1,15 @@
+{
+  "inputs": {
+    "fixtures.json": "2ab7363af349fcece53b64f42f9282f60c876783505a428f91ebcbcb68ecdd76",
+    "rubric.md": "5bdce06ee7c1a51aecf26e6f0e078f8be802d20bf63e575aa2013695696ec4b2",
+    "prompts/anthropic/crisp.md": "2b1ee69ee5baa9613a6253dd3bdffc007e36e435578633f901fea320c112bafd",
+    "prompts/anthropic/crispify.md": "ca3fc139cc19fdeb56615662a717ea444dccc8314914ea178bc438c6ad44d8a8"
+  },
+  "baseline_sha256": "dd882a994feeeda103eb20fffdb98b7132d8f7bf5a4097d84b7af10a8dfa7d82",
+  "generator": "openai-codex/gpt-6-luna",
+  "judge": "openai-codex/gpt-6.1-sol",
+  "generator_reasoning": "low",
+  "judge_reasoning": "high",
+  "temperature": null,
+  "samples_per_fixture": 3
+}

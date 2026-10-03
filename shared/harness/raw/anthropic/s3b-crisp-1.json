@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s3b-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write a spec for a small CLI tool called `envcheck`. It compares a `.env.example` file against a `.env` file and reports keys that are missing from `.env`, keys that are extra in `.env`, and keys that are present but empty. Exit code 0 if nothing is missing, 1 otherwise. A coding agent will implement it from your spec."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "# `envcheck` specification\n\n## Purpose\n\n`envcheck` compares variable names in `.env.example` with those in `.env`. It reports:\n\n- **Missing:** in `.env.example`, but not in `.env`.\n- **Extra:** in `.env`, but not in `.env.example`.\n- **Empty:** in both files, but set to an empty value in `.env`.\n\n## Command line\n\n```text\nenvcheck [--example PATH] [--env PATH]\n```\n\nDefaults:\n\n- `--example`: `.env.example`\n- `--env`: `.env`\n\nPaths are relative to the current working directory unless absolute. Each option may appear at most once. An unknown option, a missing option value, or a repeated option is a usage error: print an error to stderr and exit `2`.\n\n## Parsing\n\nRead both files as UTF-8 text. If either file cannot be read or decoded, print the path and error to stderr and exit `2`.\n\nFor each line:\n\n1. Remove leading and trailing whitespace.\n2. Ignore the line if it is empty or starts with `#`.\n3. If the line starts with `export `, remove that prefix and trim whitespace again.\n4. Split at the first `=`.\n5. Use the trimmed text before `=` as the key. Ignore lines with no `=` or an empty key.\n6. Treat everything after the first `=` as the value and trim surrounding whitespace.\n\nValues are not expanded, unquoted, or interpreted as shell syntax. A value is empty when its trimmed text is empty; for example, `KEY=`, `KEY=   `, and `KEY=\"\"` are **not** all equivalent: the first two are empty, while `KEY=\"\"` is nonempty.\n\nIf a key appears more than once in a file, treat it as one key. For `.env`, the key is empty if any occurrence has an empty value.\n\n## Comparison and output\n\nCompare keys exactly and case-sensitively.\n\nWrite results to stdout in this order, omitting any category with no entries:\n\n```text\nMissing in .env: KEY_A, KEY_B\nExtra in .env: KEY_C\nEmpty in .env: KEY_D\n```\n\nSort keys lexicographically within each category. If there are no missing, extra, or empty keys, print:\n\n```text\n.env matches .env.example\n```\n\nDo not print values.\n\n## Exit status\n\n- `0`: no missing keys. Extra or empty keys do not change this status.\n- `1`: one or more keys are missing from `.env`.\n- `2`: usage, file-read, or file-decoding error.",
+    "usage": {
+      "prompt_tokens": 208,
+      "completion_tokens": 550,
+      "total_tokens": 758,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

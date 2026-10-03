@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s1b-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "In Python, what's the difference between `is` and `==`? When does it matter?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "`==` checks **equality**: whether two objects have the same value.\n\n`is` checks **identity**: whether two names refer to the very same object.\n\n```python\na = [1, 2]\nb = [1, 2]\nc = a\n\na == b  # True: same contents\na is b  # False: different list objects\na is c  # True: both refer to the same object\n```\n\nIt matters most when you need to know whether something is the exact same object—not just equal to it. For example, use `is` to check for `None`:\n\n```python\nif result is None:\n    ...\n```\n\nFor ordinary value comparisons, use `==`. Don’t use `is` to compare numbers or strings: Python may reuse some objects internally, so identity can appear to work sometimes but isn’t a reliable value comparison.",
+    "usage": {
+      "prompt_tokens": 128,
+      "completion_tokens": 189,
+      "total_tokens": 317,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s5b-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "Should we use a monorepo or separate repos? Team of 6 engineers maintaining a web app, a mobile app, and a shared API client library used by both. Give a recommendation."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Use a **monorepo** for the web app, mobile app, and shared API client.\n\nFor a six-person team, the coordination benefits usually outweigh the extra tooling: engineers can update the client and both apps in one change, review related work together, and keep shared types and contracts in sync. It also makes cross-app changes and consistent CI easier.\n\nKeep the API client as a clearly versioned package within the repo, with its own tests and build checks. Separate repos make more sense if the client needs an independent release cycle or access controls, or if the apps are owned and deployed by substantially separate teams.",
+    "usage": {
+      "prompt_tokens": 147,
+      "completion_tokens": 128,
+      "total_tokens": 275,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

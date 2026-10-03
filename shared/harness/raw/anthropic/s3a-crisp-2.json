@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s3a-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "## Implementation plan\n\n1. **Inspect the API and runtime setup**\n   - Find the Express app setup, JWT middleware, route registration, error handling, and existing Redis client or Redis configuration.\n   - Confirm `req.user.id` is available before protected routes run. Identify any routes that should be excluded, such as health checks.\n   - Check the installed Redis client and its version; use the project’s existing client rather than adding another one.\n\n2. **Add a Redis-backed rate limiter**\n   - Add middleware that runs after JWT authentication and before the routes it limits.\n   - For each request, increment a Redis counter keyed by user ID and the current one-minute window. Use a key such as `rate-limit:<userId>:<windowStart>`, where `windowStart` is the current Unix time rounded down to a minute.\n   - Set the key’s expiry to slightly longer than the window. Make increment and expiry atomic, using a Redis transaction or Lua script, so concurrent requests cannot leave a counter without an expiry.\n   - Allow requests while the counter is at or below 100. Reject requests above 100.\n\n3. **Handle rejected requests**\n   - Return HTTP `429 Too Many Requests` with a JSON error body matching the API’s existing response format.\n   - Set `Retry-After` to the number of whole seconds until the current one-minute window ends, rounded up and with a minimum of 1.\n   - Do not call `next()` for rejected requests.\n\n4. **Handle Redis failures deliberately**\n   - Follow the API’s existing availability policy for infrastructure failures. If none exists, fail closed: return a `503 Service Unavailable` rather than bypassing the limit.\n   - Log the Redis error without logging tokens or other sensitive request data.\n\n5. **Wire up and configure**\n   - Apply the middleware to the intended authenticated routes, after JWT middleware. Ensure unauthenticated requests do not consume a per-user quota.\n   - Use a configurable Redis connection from the existing environment/configuration system. Document any required Redis settings.\n\n6. **Test**\n   - Verify a user’s first 100 requests in a window succeed and the 101st returns 429 with a valid `Retry-After`.\n   - Verify different user IDs have independent limits, and a new window allows requests again.\n   - Verify concurrent requests cannot exceed the limit due to race conditions.\n   - Verify Redis failures follow the chosen policy, and excluded routes remain unaffected.\n   - Use a test Redis instance or the project’s established Redis test strategy; avoid relying on timing-sensitive sleeps where the clock can be controlled.",
+    "usage": {
+      "prompt_tokens": 195,
+      "completion_tokens": 534,
+      "total_tokens": 729,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

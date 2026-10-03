@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-label="CRISP: say the useful thing once, as clearly as possible, then stop.">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#58a6ff" stop-opacity=".18"/><stop offset=".6" stop-color="#58a6ff" stop-opacity="0"/></linearGradient>
+    <radialGradient id="glow" cx="0.85" cy="0.15" r="0.6"><stop offset="0" stop-color="#3fb950" stop-opacity=".10"/><stop offset="1" stop-color="#3fb950" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="675" fill="#0d1117"/>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect width="1200" height="675" fill="url(#glow)"/>
+
+  <text x="72" y="128" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="84" font-weight="800" letter-spacing="-3.5" fill="#e6edf3">CRISP</text>
+  <text x="72" y="166" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15" letter-spacing="2.6" fill="#9da7b3">CONCISE · RELEVANT · INTUITIVE · SIMPLE · PROTOCOL</text>
+
+  <text x="72" y="248" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="34" font-weight="650" letter-spacing="-1" fill="#e6edf3">Say the useful thing once,</text>
+  <text x="72" y="290" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="34" font-weight="650" letter-spacing="-1" fill="#e6edf3">as clearly as possible, then stop.</text>
+  <text x="72" y="336" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" fill="#9da7b3">A writing protocol for humans and LLMs. One engineer talking to another.</text>
+  <text x="72" y="362" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" fill="#9da7b3">System prompt, slash command, or a verb: “crispify this.”</text>
+
+  <line x1="72" y1="490" x2="660" y2="490" stroke="#30363d"/>
+  <text x="72" y="540" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="-0.8" fill="#3fb950">−47%</text><text x="72" y="564" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#9da7b3">tokens vs baseline</text><text x="222" y="540" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="-0.8" fill="#58a6ff">21/30</text><text x="222" y="564" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#9da7b3">blind pairings won</text><text x="372" y="540" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="-0.8" fill="#e6edf3">97%</text><text x="372" y="564" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#9da7b3">facts kept</text><text x="522" y="540" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="-0.8" fill="#3fb950">−30%</text><text x="522" y="564" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#9da7b3">tokens vs ASD-STE100</text>
+
+  <rect x="708" y="140" width="420" height="400" rx="14" fill="#161b22" stroke="#30363d"/>
+  <text x="732" y="186" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" letter-spacing="1.6" fill="#f85149">BEFORE · 43 WORDS</text>
+  <text x="732" y="212" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#6e7681">Great question! There are a few</text>
+<line x1="732" y1="208" x2="975.35" y2="208" stroke="#6e7681" stroke-width="1" opacity=".55"/>
+<text x="732" y="232" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#6e7681">different ways you could approach</text>
+<line x1="732" y1="228" x2="991.05" y2="228" stroke="#6e7681" stroke-width="1" opacity=".55"/>
+<text x="732" y="252" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#6e7681">this, but generally speaking, the</text>
+<line x1="732" y1="248" x2="991.05" y2="248" stroke="#6e7681" stroke-width="1" opacity=".55"/>
+<text x="732" y="272" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#6e7681">best option in most cases would</text>
+<line x1="732" y1="268" x2="975.35" y2="268" stroke="#6e7681" stroke-width="1" opacity=".55"/>
+<text x="732" y="292" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#6e7681">probably be to look into using a</text>
+<line x1="732" y1="288" x2="983.2" y2="288" stroke="#6e7681" stroke-width="1" opacity=".55"/>
+<text x="732" y="312" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#6e7681">connection pool. I hope this helps,</text>
+<line x1="732" y1="308" x2="1006.75" y2="308" stroke="#6e7681" stroke-width="1" opacity=".55"/>
+<text x="732" y="332" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#6e7681">let me know if you have any questions!</text>
+<line x1="732" y1="328" x2="1030.3" y2="328" stroke="#6e7681" stroke-width="1" opacity=".55"/>
+  <line x1="732" y1="364" x2="1104" y2="346" stroke="#30363d"/>
+  <text x="732" y="396" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="700" letter-spacing="1.6" fill="#3fb950">CRISP · 16 WORDS</text>
+  <text x="732" y="422" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#e6edf3">Use a connection pool. Opening a</text>
+<text x="732" y="442" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#e6edf3">connection per request exhausts the</text>
+<text x="732" y="462" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#e6edf3">database's connection limit under</text>
+<text x="732" y="482" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#e6edf3">load.</text>
+  <text x="1104" y="518" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12" fill="#9da7b3">−63% words · nothing lost</text>
+
+  <text x="72" y="632" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" fill="#6e7681">github.com/andreiverdes/crisp</text>
+  <text x="1128" y="632" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" fill="#6e7681">Claude Sonnet 5.5 · 10 prompts × 3 samples · blind-judged</text>
+</svg>

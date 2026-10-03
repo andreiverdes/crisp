@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s5b-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Should we use a monorepo or separate repos? Team of 6 engineers maintaining a web app, a mobile app, and a shared API client library used by both. Give a recommendation."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Use a **monorepo**, unless the web app, mobile app, and API client are owned or released very independently.\n\nFor a six-engineer team, the shared client creates meaningful coordination costs across repositories: changes often need matching updates, synchronized pull requests, and version bumps. In a monorepo, one change can update the client and both apps together, and shared tooling and review practices are easier to maintain.\n\nA practical structure might be:\n\n```text\napps/\n  web/\n  mobile/\npackages/\n  api-client/\n```\n\nKeep clear package boundaries: each app should depend on the API client through an explicit package interface, with its own tests and build configuration. Use CI to run checks only for affected packages where possible, and make releases independently if the apps or client need different release schedules.\n\nChoose separate repos instead if the client is a stable product consumed by other teams or external users, or if access controls, compliance, or substantially different release processes require separation. Otherwise, start with the monorepo; you can split a package out later if a real need emerges.",
+    "usage": {
+      "prompt_tokens": 45,
+      "completion_tokens": 222,
+      "total_tokens": 267,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

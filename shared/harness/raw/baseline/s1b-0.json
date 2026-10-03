@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s1b-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "In Python, what's the difference between `is` and `==`? When does it matter?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "`==` checks whether two values are equal. `is` checks whether two references point to the **same object**.\n\n```python\na = [1, 2]\nb = [1, 2]\n\na == b  # True: the lists have equal contents\na is b  # False: they are different list objects\n```\n\nThey can both be true when two names refer to the same object:\n\n```python\na = [1, 2]\nb = a\n\na == b  # True\na is b  # True\n```\n\nUse `==` for ordinary value comparisons. Use `is` when object identity matters—most commonly to check for `None`:\n\n```python\nif result is None:\n    ...\n```\n\nDon’t use `is` to compare numbers, strings, or other values. Python may reuse some objects internally, so identity results can be surprising and aren’t a substitute for equality.",
+    "usage": {
+      "prompt_tokens": 26,
+      "completion_tokens": 197,
+      "total_tokens": 223,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

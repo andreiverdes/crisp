@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s2b-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "I get `RuntimeError: dictionary changed size during iteration` from this. How do I fix it?\n\n```python\ncounts = {\"a\": 0, \"b\": 2, \"c\": 0}\nfor k in counts:\n    if counts[k] == 0:\n        del counts[k]\n```"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Deleting a key while iterating over the dictionary changes its size. Iterate over a snapshot of the keys instead:\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr build a new dictionary:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```",
+    "usage": {
+      "prompt_tokens": 196,
+      "completion_tokens": 82,
+      "total_tokens": 278,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

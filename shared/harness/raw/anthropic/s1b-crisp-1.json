@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s1b-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "In Python, what's the difference between `is` and `==`? When does it matter?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "`==` checks whether two objects have equal values. `is` checks whether they are the same object.\n\n```python\na = [1, 2]\nb = [1, 2]\n\na == b  # True: same contents\na is b  # False: different list objects\n\nc = a\na is c  # True: c refers to the same object as a\n```\n\nUse `==` for value comparisons. Use `is` when identity matters—most commonly to check for `None`:\n\n```python\nif result is None:\n    ...\n```\n\nDon’t use `is` to compare strings, numbers, or other values. Python may reuse objects in some cases, so `a is b` can appear true for equal values and change across runs or implementations.",
+    "usage": {
+      "prompt_tokens": 152,
+      "completion_tokens": 168,
+      "total_tokens": 320,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s1a-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "What's the difference between git merge and git rebase, and when should I use each?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Both `git merge` and `git rebase` bring changes from one branch into another, but they do it differently—and produce different history.\n\n### `git merge`\nCombines two branches with a **merge commit** (unless Git can fast-forward).\n\n```bash\ngit switch main\ngit merge feature\n```\n\n- Keeps the original branch history intact.\n- Makes it clear when branches were joined.\n- Is usually the safer choice for shared branches, since it doesn’t rewrite existing commits.\n\n### `git rebase`\nMoves your branch’s commits so they appear to start from the tip of another branch.\n\n```bash\ngit switch feature\ngit rebase main\n```\n\n- Creates new commit IDs for the rebased commits.\n- Often produces a more linear, easier-to-read history.\n- Rewrites history, so commits that were already shared can cause trouble for collaborators.\n\n### Which should I use?\n\n- **Use merge** to bring a feature branch into a shared branch, or when you want to preserve the exact history of how work was integrated.\n- **Use rebase** to update your own local feature branch with the latest changes from `main`, or to tidy up commits before sharing them.\n- **Avoid rebasing commits other people may already have based work on.** If you do rebase a published branch, coordinating with collaborators—and often using `git push --force-with-lease`—is necessary.\n\nA common workflow is to rebase a private feature branch onto the latest `main`, then merge it when it’s ready.",
+    "usage": {
+      "prompt_tokens": 24,
+      "completion_tokens": 315,
+      "total_tokens": 339,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

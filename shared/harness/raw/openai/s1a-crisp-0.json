@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s1a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "What's the difference between git merge and git rebase, and when should I use each?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**`git merge` combines histories; `git rebase` rewrites one history to place it after another.**\n\nSuppose your branch and `main` have both moved forward:\n\n- **Merge:** `git merge main` joins the two histories, usually with a merge commit. Existing commits keep their IDs. This makes the branch structure visible.\n- **Rebase:** `git rebase main` replays your branch’s commits on top of `main`, creating new commit IDs. The result is usually a straighter, linear history.\n\n### When to use each\n\n- **Use merge** to integrate shared branches, preserve the record of how work came together, or avoid rewriting commits others may have based work on.\n- **Use rebase** to update your own local feature branch and keep history linear, especially before merging it into a shared branch.\n\n**Rule of thumb:** Don’t rebase commits that others may already have pulled or built on; rewriting them can disrupt their work. Rebasing your own unpublished commits is generally fine.\n\nBoth approaches can produce the same final files; they differ in how they represent the history.",
+    "usage": {
+      "prompt_tokens": 126,
+      "completion_tokens": 231,
+      "total_tokens": 357,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

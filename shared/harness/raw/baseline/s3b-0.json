@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s3b-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a spec for a small CLI tool called `envcheck`. It compares a `.env.example` file against a `.env` file and reports keys that are missing from `.env`, keys that are extra in `.env`, and keys that are present but empty. Exit code 0 if nothing is missing, 1 otherwise. A coding agent will implement it from your spec."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "# `envcheck` specification\n\n## Purpose\n\n`envcheck` compares the variable names in `.env.example` with those in `.env`. It reports:\n\n- **Missing keys:** listed in `.env.example` but not in `.env`\n- **Extra keys:** listed in `.env` but not in `.env.example`\n- **Empty keys:** present in `.env` with an empty value\n\n## Invocation\n\n```text\nenvcheck [--example PATH] [--env PATH]\n```\n\nDefaults:\n\n- `--example`: `.env.example`\n- `--env`: `.env`\n\nPaths are relative to the current working directory unless absolute.\n\n## Input parsing\n\nRead each file as UTF-8 text, one assignment per line. Ignore blank lines and lines whose first non-whitespace character is `#`.\n\nFor other lines:\n\n1. Trim leading and trailing whitespace.\n2. If the line begins with `export `, remove that prefix and trim again.\n3. Split at the first `=`.\n4. The trimmed text before `=` is the key; the text after it is the value.\n5. Ignore lines with no `=` or an empty key.\n\nCompare keys exactly and case-sensitively. Do not expand variables, interpret quotes, or otherwise transform values. A value is empty if it is empty after trimming whitespace; thus `KEY=`, `KEY=   `, and `KEY=\"\"` count as empty, while `KEY=\" \"` does not.\n\nIf a key appears more than once in a file, treat it as present once. For the `.env` file, consider the key empty if **any** of its assignments has an empty value.\n\n## Output\n\nPrint each non-empty category to standard output, in this order:\n\n```text\nMissing keys:\n  KEY\n\nExtra keys:\n  KEY\n\nEmpty keys:\n  KEY\n```\n\nSort keys lexicographically within each category. Omit categories with no keys. If there are no findings, print:\n\n```text\nNo issues found.\n```\n\n## Exit status\n\n- `0` if no keys are missing, including when there are extra or empty keys.\n- `1` if one or more keys are missing.\n- For file-read or other operational errors, print a useful message to standard error and exit with a nonzero status other than `0`. Do not report such errors as ordinary key findings.",
+    "usage": {
+      "prompt_tokens": 82,
+      "completion_tokens": 488,
+      "total_tokens": 570,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

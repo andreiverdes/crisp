@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s2b-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\nYou’re deleting entries while iterating over the dictionary itself. Iterate over a snapshot of its keys instead:\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr, more simply, build a new dictionary:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Don’t delete entries while iterating over the dictionary. Iterate over a snapshot of its keys:\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr build a filtered dictionary:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```",
+    "usage": {
+      "prompt_tokens": 249,
+      "completion_tokens": 79,
+      "total_tokens": 328,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

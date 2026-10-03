@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s1b-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\n`==` checks **equality**: whether two values are considered equivalent.\n\n`is` checks **identity**: whether two names refer to the exact same object.\n\n```python\na = [1, 2]\nb = [1, 2]\n\na == b  # True: same contents\na is b  # False: distinct list objects\n```\n\nIt matters when you need to know whether something is the *same object*, not just an equal one—for example, with singletons such as `None`:\n\n```python\nif value is None:\n    ...\n```\n\nUse `==` for ordinary value comparisons. Use `is` mainly for `None` (and other intentional singleton checks). Don’t rely on `is` to compare strings or numbers: Python may reuse some objects, so identity results can vary."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "`==` compares values; `is` checks whether two names refer to the same object.\n\n```python\na = [1, 2]\nb = [1, 2]\n\na == b  # True: equal contents\na is b  # False: distinct objects\n```\n\nUse `==` for value comparisons and `is` for `None` or other intentional singleton checks:\n\n```python\nif value is None:\n    ...\n```\n\nDon’t use `is` to compare strings or numbers. Python may reuse objects, so identity results can vary.",
+    "usage": {
+      "prompt_tokens": 338,
+      "completion_tokens": 120,
+      "total_tokens": 458,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

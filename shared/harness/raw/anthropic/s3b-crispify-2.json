@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s3b-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\n# `envcheck` Specification\n\n## Purpose\n\n`envcheck` compares the variable names in `.env.example` with those in `.env`. It reports:\n\n- **Missing keys:** listed in `.env.example`, but not in `.env`.\n- **Extra keys:** listed in `.env`, but not in `.env.example`.\n- **Empty keys:** listed in `.env` with an empty value.\n\n## Invocation\n\n```text\nenvcheck [--example PATH] [--env PATH]\n```\n\nDefaults:\n\n- `--example`: `.env.example`\n- `--env`: `.env`\n\nPaths are relative to the current working directory unless absolute. Do not modify either file.\n\n## Parsing\n\nRead files as UTF-8, one logical entry per line.\n\n- Ignore blank lines and lines whose first non-whitespace character is `#`.\n- For other lines, use the text before the first `=` as the key, trimming surrounding whitespace.\n- Lines without `=` are ignored.\n- A key is empty or invalid if it is blank after trimming; ignore such lines.\n- For `.env`, the value is the text after the first `=`, with surrounding whitespace trimmed. A value is empty if that result is empty. Quotes are not stripped: `KEY=\"\"` is **not** empty.\n- Compare keys exactly and case-sensitively.\n- If a key appears more than once in a file, treat it as one key. For `.env`, it is empty if any occurrence has an empty value.\n\n## Output\n\nPrint a summary to standard output. List keys in each category in sorted order, one per line. Omit categories with no keys.\n\nExample:\n\n```text\nMissing keys:\n  API_URL\nExtra keys:\n  DEBUG\nEmpty keys:\n  TOKEN\n```\n\nIf there are no missing, extra, or empty keys, print:\n\n```text\nAll environment keys are present and non-empty.\n```\n\n## Exit codes\n\n- **0:** No keys are missing from `.env`. Extra or empty keys alone do not change the exit code.\n- **1:** One or more keys from `.env.example` are missing from `.env`.\n- **2:** A file cannot be read, or command-line arguments are invalid. Print a diagnostic to standard error.\n\nA successfully read empty file is valid and contains no keys."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "# `envcheck` specification\n\n`envcheck` compares keys in `.env.example` and `.env`. It reports:\n\n- **Missing keys:** in `.env.example`, not in `.env`.\n- **Extra keys:** in `.env`, not in `.env.example`.\n- **Empty keys:** in `.env` with an empty value.\n\n## Invocation\n\n```text\nenvcheck [--example PATH] [--env PATH]\n```\n\nDefaults: `--example .env.example` and `--env .env`. Paths are relative to the current working directory unless absolute. Neither file is modified.\n\n## Parsing\n\nRead each file as UTF-8, one logical entry per line.\n\n- Ignore blank lines, lines whose first non-whitespace character is `#`, and lines without `=`.\n- For other lines, use the text before the first `=` as the key, trimmed of surrounding whitespace. Ignore keys that are blank after trimming.\n- In `.env`, use the text after the first `=` as the value, trimmed of surrounding whitespace. Quotes are not stripped, so `KEY=\"\"` is not empty.\n- Compare keys exactly and case-sensitively.\n- Treat duplicate keys as one key. In `.env`, a key is empty if any occurrence has an empty value.\n\n## Output\n\nPrint each non-empty category to standard output, with keys sorted and listed one per line:\n\n```text\nMissing keys:\n  API_URL\nExtra keys:\n  DEBUG\nEmpty keys:\n  TOKEN\n```\n\nIf no keys are missing, extra, or empty, print:\n\n```text\nAll environment keys are present and non-empty.\n```\n\n## Exit codes\n\n- **0:** No keys are missing from `.env`. Extra or empty keys do not affect the exit code.\n- **1:** One or more keys from `.env.example` are missing from `.env`.\n- **2:** A file cannot be read or command-line arguments are invalid. Print a diagnostic to standard error.\n\nA successfully read empty file is valid and contains no keys.",
+    "usage": {
+      "prompt_tokens": 641,
+      "completion_tokens": 418,
+      "total_tokens": 1059,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

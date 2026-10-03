@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s4b-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\n**Incident update — /api/orders**\n\nv2.14 deployed at 14:05. At 14:12, the error rate rose from 0.2% to 6%. We rolled back at 14:20, and errors returned to normal by 14:22.\n\nThe new orders query referenced a column missing from the EU replica because the migration had only run on US. About 400 order submissions failed during the incident; customers saw a generic error. No customers were double-charged—payment occurs after order creation.\n\n**Next steps:** Priya to confirm the EU migration tonight. We’ll add a deployment check to ensure migrations have run on all replicas before app deploys. Redeploy is planned for tomorrow at 10:00, after the migration."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Incident update — `/api/orders`**\n\nv2.14 deployed at 14:05. Errors rose from 0.2% to 6% at 14:12. We rolled back at 14:20; the error rate returned to normal by 14:22.\n\nThe new orders query referenced a column missing from the EU replica; the migration had run only on US. About 400 order submissions failed, and customers saw a generic error. No customers were double-charged because payment occurs after order creation.\n\nPriya will confirm the EU migration tonight. We’ll add a deployment check to verify migrations have run on all replicas before app deploys. Redeployment is planned for tomorrow at 10:00, after the migration.",
+    "usage": {
+      "prompt_tokens": 326,
+      "completion_tokens": 156,
+      "total_tokens": 482,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

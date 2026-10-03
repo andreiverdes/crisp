@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s3b-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a spec for a small CLI tool called `envcheck`. It compares a `.env.example` file against a `.env` file and reports keys that are missing from `.env`, keys that are extra in `.env`, and keys that are present but empty. Exit code 0 if nothing is missing, 1 otherwise. A coding agent will implement it from your spec."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "# `envcheck` CLI specification\n\n## Purpose\n\n`envcheck` compares the variable names declared in `.env.example` with those in `.env`. It reports:\n\n- **Missing keys:** present in `.env.example` but absent from `.env`\n- **Extra keys:** present in `.env` but absent from `.env.example`\n- **Empty keys:** present in `.env` with an empty value\n\n## Invocation\n\n```text\nenvcheck [--example PATH] [--env PATH]\n```\n\nDefaults:\n\n- `--example`: `.env.example`\n- `--env`: `.env`\n\nPaths are resolved relative to the current working directory.\n\n## Input parsing\n\nRead both files as UTF-8 text. A line defines a key when, after trimming leading whitespace, it is not blank or a comment and contains an assignment of the form `KEY=VALUE`.\n\n- Ignore blank lines and lines whose first non-whitespace character is `#`.\n- Split an assignment at its first `=`.\n- Trim whitespace around the key. The key must be non-empty; ignore lines with an empty key.\n- Do not interpret quoting, escapes, interpolation, or inline comments. The value is everything after the first `=`.\n- Treat a key as empty when its value is empty after trimming whitespace. Thus `KEY=`, `KEY=   `, and `KEY= # comment` are empty; `KEY=\" \"` is not empty.\n- If a key occurs more than once in a file, treat it as one key. For `.env` empty-key reporting, consider the key empty if its **last** assignment has an empty value.\n\n## Output\n\nWrite a section for each non-empty result category to standard output, in this order:\n\n```text\nMissing keys:\n  KEY\n\nExtra keys:\n  KEY\n\nEmpty keys:\n  KEY\n```\n\nList keys alphabetically within each section. Omit sections with no entries. If there are no missing, extra, or empty keys, print:\n\n```text\nNo issues found.\n```\n\n## Exit status\n\n- `0` when there are no missing keys.\n- `1` when one or more keys are missing.\n\nExtra or empty keys alone do not change the exit status.\n\n## Errors\n\nIf either file cannot be read, or is not valid UTF-8, print a concise error to standard error and exit with a nonzero status other than `0`. Do not print a comparison report when input loading fails.",
+    "usage": {
+      "prompt_tokens": 82,
+      "completion_tokens": 504,
+      "total_tokens": 586,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

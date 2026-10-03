@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s4a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a weekly status update for my team lead from these notes.\n\nmon: fixed flaky checkout test (race in cart cleanup), merged. tue: started payment-retry work, found stripe webhook retries were hitting us twice because the idempotency key wasn't being stored - fixed, PR #412 open waiting on review from Dana. wed: on-call, two pages, both the same memory leak in image-resizer, restarted it both times, root cause not found yet, suspect the sharp version bump from last week. thu: pairing with Lee on the search index migration, 60% of tables moved, ETA friday but blocked on DBA approval for the new index on orders.created_at. fri: cleanup, docs. next week: finish payment retry if #412 lands, image-resizer leak investigation (need a heap dump from prod - need SRE access), search migration if DBA approves. risk: if the DBA approval slips the migration slips a week."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "## Weekly Status Update\n\n**Completed**\n- Fixed and merged a flaky checkout test caused by a race in cart cleanup.\n- Started work on payment retries and fixed duplicate Stripe webhook processing by storing the idempotency key. PR **#412** is open and awaiting Dana’s review.\n- Paired with Lee on the search index migration; **60% of tables are migrated**.\n- Completed cleanup and documentation work.\n\n**On-call**\n- Responded to two pages for the same memory leak in `image-resizer`, restarting the service both times. Root cause is still unknown; the Sharp version bump from last week is a possible cause.\n\n**Blockers and risks**\n- The search migration is blocked on DBA approval for the new index on `orders.created_at`. If approval slips, the migration may be delayed by a week.\n- Investigating the memory leak requires a production heap dump; I need SRE access.\n\n**Next week**\n- Finish payment-retry work if PR #412 is approved.\n- Investigate the `image-resizer` leak once heap-dump access is available.\n- Continue the search migration if DBA approval comes through.",
+    "usage": {
+      "prompt_tokens": 197,
+      "completion_tokens": 235,
+      "total_tokens": 432,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

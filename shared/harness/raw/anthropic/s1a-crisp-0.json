@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s1a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "What's the difference between git merge and git rebase, and when should I use each?"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "`git merge` combines two branches by creating a merge commit (unless it can fast-forward). It preserves the branches’ existing history.\n\n`git rebase` moves your branch’s commits onto a new base, replaying them one by one. It creates new commit IDs and makes history look linear.\n\nUse **merge** when you want to preserve the exact shared history, especially on shared branches or when the merge itself is useful context.\n\nUse **rebase** to tidy your own local commits or update a feature branch from its base before sharing it. Don’t rebase commits other people may already have based work on: rewriting shared history can disrupt their branches.\n\nExample:\n\n```text\nBefore:  A---B---C   main\n              \\\n               D---E feature\n\nMerge:   A---B---C---M\n              \\     /\n               D---E\n\nRebase:  A---B---C---D'---E' feature\n```\n\nIn short: merge preserves history; rebase rewrites your branch’s history for a linear result.",
+    "usage": {
+      "prompt_tokens": 150,
+      "completion_tokens": 219,
+      "total_tokens": 369,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

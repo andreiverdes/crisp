@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s5a-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Compare Postgres LISTEN/NOTIFY, Redis Pub/Sub, and Kafka for a notification service handling about 1,000 events per second, where losing an occasional event is acceptable and we already run Postgres and Redis. Recommend one."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Recommendation: use Postgres `LISTEN/NOTIFY`**, assuming notifications are transient signals and the service can recover by checking its source of truth. At roughly 1,000 events/second, it’s a reasonable fit, and you already run Postgres. It avoids adding Kafka or routing notifications through another system.\n\n| Option | Delivery characteristics | Operational fit |\n|---|---|---|\n| **Postgres `LISTEN/NOTIFY`** | Notifications are not persisted or replayable. Listeners can miss them while disconnected; payloads are limited. | Simplest if Postgres is already available. Keep payloads small—often just an ID—and have consumers fetch current state from the database. |\n| **Redis Pub/Sub** | Also transient: subscribers disconnected at publish time miss messages. | A good alternative if Redis is already the natural notification path, but it does not provide stronger delivery guarantees than `NOTIFY`. |\n| **Kafka** | Durable, replayable, and designed for high-throughput event streams. | More operational complexity than warranted if occasional loss is acceptable and replay is not required. |\n\nA few caveats for `LISTEN/NOTIFY`:\n\n- Treat it as a **wake-up signal**, not the authoritative record of an event.\n- A listener should reconnect and, after reconnecting, check the database for work it may have missed.\n- If publishing must happen only when a database transaction commits, issue `NOTIFY` within that transaction.\n- Load-test your actual payload size and connection pattern; notifications are delivered to listening sessions, so a very large number of listeners can change the trade-off.\n\nChoose **Redis Pub/Sub instead** if your application already publishes and consumes notifications through Redis and you want to avoid coupling this path to Postgres. Choose **Kafka** only if you later need durable retention, replay, consumer offsets, or stronger delivery guarantees.",
+    "usage": {
+      "prompt_tokens": 54,
+      "completion_tokens": 386,
+      "total_tokens": 440,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

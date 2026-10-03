@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s2b-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "I get `RuntimeError: dictionary changed size during iteration` from this. How do I fix it?\n\n```python\ncounts = {\"a\": 0, \"b\": 2, \"c\": 0}\nfor k in counts:\n    if counts[k] == 0:\n        del counts[k]\n```"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Deleting a key changes the dictionary while Python is iterating over it. Iterate over a snapshot of the keys instead:\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr, more simply, build a new dictionary:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```",
+    "usage": {
+      "prompt_tokens": 70,
+      "completion_tokens": 87,
+      "total_tokens": 157,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

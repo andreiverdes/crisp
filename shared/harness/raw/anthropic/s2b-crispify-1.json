@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s2b-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\nYou’re deleting keys while iterating over the dictionary, which changes its size. Iterate over a snapshot of the keys instead:\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr, more concisely, build a new dictionary:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Deleting keys changes the dictionary’s size, so iterate over a snapshot:\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr build a new dictionary:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```",
+    "usage": {
+      "prompt_tokens": 255,
+      "completion_tokens": 74,
+      "total_tokens": 329,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

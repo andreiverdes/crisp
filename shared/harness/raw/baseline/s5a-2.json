@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s5a-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Compare Postgres LISTEN/NOTIFY, Redis Pub/Sub, and Kafka for a notification service handling about 1,000 events per second, where losing an occasional event is acceptable and we already run Postgres and Redis. Recommend one."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Recommendation: use Redis Pub/Sub**, assuming the service can tolerate losing messages while a subscriber is disconnected and doesn’t need replay or delivery guarantees.\n\nAt roughly **1,000 events/second**, all three are capable in many ordinary deployments; the deciding factor is the delivery model and operational cost.\n\n| Option | Delivery behavior | Fit for this service |\n|---|---|---|\n| **Postgres `LISTEN`/`NOTIFY`** | Notifications are transient: a disconnected listener misses them. Notifications issued inside a transaction are delivered only after commit. | Convenient if events are closely tied to database changes, but it couples notification traffic to the database. At this rate, monitor database load and keep payloads small. |\n| **Redis Pub/Sub** | Transient: subscribers that are disconnected or unable to keep up miss messages. | A natural fit for best-effort notifications when Redis is already running. Simple and decoupled from database transactions. |\n| **Kafka** | Persists events and supports replay, consumer offsets, and independent consumer groups. | Strong choice when you need durable delivery, replay, or multiple independent consumers, but likely more infrastructure and operational overhead than this requirement justifies. |\n\nUse **Redis Pub/Sub** for the straightforward best-effort path. Keep the event payloads small, monitor subscriber disconnects and Redis health, and make consumers safe to handle duplicates if your application can produce them through its own retry logic.\n\nChoose **Postgres `LISTEN`/`NOTIFY`** instead if notifications are specifically a signal that committed database state changed, and keeping that mechanism inside Postgres is valuable. Choose **Kafka** if “occasional loss is acceptable” stops being true, or you need replay, durable buffering, or multiple independently managed consumers.",
+    "usage": {
+      "prompt_tokens": 54,
+      "completion_tokens": 364,
+      "total_tokens": 418,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

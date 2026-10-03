@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s3b-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Write a spec for a small CLI tool called `envcheck`. It compares a `.env.example` file against a `.env` file and reports keys that are missing from `.env`, keys that are extra in `.env`, and keys that are present but empty. Exit code 0 if nothing is missing, 1 otherwise. A coding agent will implement it from your spec."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "# `envcheck` Specification\n\n## Purpose\n\n`envcheck` compares the variable names in `.env.example` with those in `.env`. It reports:\n\n- **Missing keys:** listed in `.env.example`, but not in `.env`.\n- **Extra keys:** listed in `.env`, but not in `.env.example`.\n- **Empty keys:** listed in `.env` with an empty value.\n\n## Invocation\n\n```text\nenvcheck [--example PATH] [--env PATH]\n```\n\nDefaults:\n\n- `--example`: `.env.example`\n- `--env`: `.env`\n\nPaths are relative to the current working directory unless absolute. Do not modify either file.\n\n## Parsing\n\nRead files as UTF-8, one logical entry per line.\n\n- Ignore blank lines and lines whose first non-whitespace character is `#`.\n- For other lines, use the text before the first `=` as the key, trimming surrounding whitespace.\n- Lines without `=` are ignored.\n- A key is empty or invalid if it is blank after trimming; ignore such lines.\n- For `.env`, the value is the text after the first `=`, with surrounding whitespace trimmed. A value is empty if that result is empty. Quotes are not stripped: `KEY=\"\"` is **not** empty.\n- Compare keys exactly and case-sensitively.\n- If a key appears more than once in a file, treat it as one key. For `.env`, it is empty if any occurrence has an empty value.\n\n## Output\n\nPrint a summary to standard output. List keys in each category in sorted order, one per line. Omit categories with no keys.\n\nExample:\n\n```text\nMissing keys:\n  API_URL\nExtra keys:\n  DEBUG\nEmpty keys:\n  TOKEN\n```\n\nIf there are no missing, extra, or empty keys, print:\n\n```text\nAll environment keys are present and non-empty.\n```\n\n## Exit codes\n\n- **0:** No keys are missing from `.env`. Extra or empty keys alone do not change the exit code.\n- **1:** One or more keys from `.env.example` are missing from `.env`.\n- **2:** A file cannot be read, or command-line arguments are invalid. Print a diagnostic to standard error.\n\nA successfully read empty file is valid and contains no keys.",
+    "usage": {
+      "prompt_tokens": 82,
+      "completion_tokens": 477,
+      "total_tokens": 559,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

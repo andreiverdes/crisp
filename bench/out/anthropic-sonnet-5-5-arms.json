@@ -1,0 +1,867 @@
+{
+  "schema": "crisp-bench/arms-v1",
+  "team": "anthropic",
+  "generator": "anthropic/claude-sonnet-5-5",
+  "generator_settings": {
+    "reasoning": "low",
+    "temperature": null
+  },
+  "baseline_file": "shared/baseline/claude-sonnet-5-5.json",
+  "prompts": {
+    "crisp": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.",
+    "crispify": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does."
+  },
+  "generated_at": "2026-10-03T19:44:57Z",
+  "tests": {
+    "s1a": {
+      "crisp": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "**Merge** joins two branches by creating a new merge commit with two parents. History stays as it happened, and existing commits are untouched.\n\n**Rebase** replays your branch's commits on top of another branch's tip. Each commit is rewritten with a new hash, so history looks linear, as if you'd started from the latest base.\n\n**Use merge when:**\n- The branch is shared or already pushed and others may have based work on it.\n- You want an accurate record of when branches diverged and joined.\n- Merging a finished feature into `main` (often with `--no-ff` to keep the feature grouped).\n\n**Use rebase when:**\n- Updating your local, unshared feature branch with the latest `main` (`git rebase main`), so the final diff is clean.\n- Tidying your own commits before review (`git rebase -i`: squash, reorder, reword).\n- You want linear history and your team enforces it.\n\n**Tradeoffs:**\n- Merge: noisier history with merge commits, but conflicts are resolved once and nothing is rewritten.\n- Rebase: cleaner history, but conflicts may need resolving once per replayed commit, and it rewrites hashes.\n\n**Rule:** never rebase commits that others have pulled. If you rebase a pushed branch, you must force-push (`--force-with-lease`), which breaks collaborators' clones.\n\n**Common workflow:** rebase your private branch onto `main` while developing, then merge it into `main` via PR (merge commit or squash-merge, per team convention).",
+            "words": 226,
+            "tokens_est": 326,
+            "usage": {
+              "input_tokens": 245,
+              "output_tokens": 486,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 6156
+          },
+          {
+            "index": 1,
+            "text": "**Merge** joins two branches by creating a new merge commit with two parents. History stays as it happened, with the branch structure visible. Existing commits are untouched.\n\n**Rebase** replays your branch's commits on top of another branch's tip. Each commit is rewritten with a new hash, so history becomes linear and the branch looks like it was started from the latest base.\n\n**Use merge when:**\n- The branch is shared or already pushed and others have based work on it.\n- You want to preserve the true history and branch context (e.g., merging a feature into `main` with `--no-ff`).\n- You want the safer option: nothing is rewritten, and conflicts are resolved once.\n\n**Use rebase when:**\n- Updating your own local or unshared feature branch with the latest `main` (`git rebase main`), so the final history is linear.\n- Cleaning up commits before review (`git rebase -i`: squash, reorder, reword).\n- Your team prefers linear history (often paired with a fast-forward or squash merge into `main`).\n\n**Rules and risks:**\n- Never rebase commits others have pulled. Rewritten hashes force them to reconcile diverged history, and you'll need `git push --force-with-lease`, which can destroy their work if misused.\n- Rebase can make you resolve the same conflict repeatedly, once per replayed commit. Merge resolves it once.\n- Rebase loses the original commit timestamps' context and the record of when integration happened. Merge commits keep it.\n\n**Common workflow:** rebase your private feature branch onto `main` while developing, then merge it into `main` via PR (merge commit or squash). Use merge, not rebase, to bring changes into shared branches.",
+            "words": 266,
+            "tokens_est": 363,
+            "usage": {
+              "input_tokens": 245,
+              "output_tokens": 545,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 6842
+          },
+          {
+            "index": 2,
+            "text": "**Merge** joins two branches by creating a new merge commit with two parents. History stays as it happened, and existing commits are untouched.\n\n**Rebase** replays your branch's commits on top of another branch's tip, creating new commits (new SHAs). The result is linear history, as if you had started from the latest base.\n\n**Use merge when:**\n- The branch is shared or already pushed and others may have based work on it.\n- You want an accurate record of when and how branches integrated.\n- Merging a finished feature into `main` (often with `--no-ff` to keep the feature grouped).\n\n**Use rebase when:**\n- Updating your own local or private feature branch with the latest `main` (`git rebase main`), so the branch has no noise merge commits.\n- Cleaning up commits before review (`git rebase -i`: squash, reword, reorder, drop).\n- Your team wants linear history.\n\n**Tradeoffs:**\n- Rebase rewrites history. After rebasing a pushed branch you need `git push --force-with-lease`, which breaks anyone else's checkout of it. Never rebase commits others have pulled.\n- Rebase resolves conflicts per replayed commit, so a long branch can mean repeated conflict fixes. Merge resolves them once.\n- Merge history gets cluttered with merge commits on busy branches, and `git bisect` and `git log` are harder to read.\n- Rebase loses the original context of when commits were made relative to the base.\n\n**Common workflow:** rebase your private branch onto `main` while developing, then merge it into `main` (or squash-merge) via PR. Rebase for your own history, merge for shared history.",
+            "words": 257,
+            "tokens_est": 358,
+            "usage": {
+              "input_tokens": 245,
+              "output_tokens": 530,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 6318
+          }
+        ]
+      },
+      "crispify": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "# Git Merge vs. Git Rebase\n\nBoth integrate one branch into another. Merge keeps true history by adding a merge commit; rebase replays your commits onto the target, producing a linear history with new SHAs.\n\n## Merge\n\n```bash\ngit checkout main\ngit merge feature\n```\n\n```\n      A---B---C  feature\n     /         \\\nD---E---F---G---M  main\n```\n\n- Creates a merge commit tying the histories together.\n- Preserves true history, including where branches diverged and rejoined.\n- Non-destructive: existing commits never change.\n- Safe on shared branches.\n- Many merge commits can clutter history.\n\n## Rebase\n\n```bash\ngit checkout feature\ngit rebase main\n```\n\n```\nBefore:\n      A---B---C  feature\n     /\nD---E---F---G  main\n\nAfter:\n              A'--B'--C'  feature\n             /\nD---E---F---G  main\n```\n\n- Replays your commits on top of the target, creating new commits (new SHAs).\n- Gives a linear history, which makes `git log` and `git bisect` easier to follow.\n- Dangerous on shared branches if others have based work on the old commits.\n\n## When to use which\n\n**Merge** when:\n- Integrating a finished feature into `main`, especially via PR, where you want the feature recorded as a unit.\n- The branch is shared and others pull from it.\n- You want the exact history preserved.\n- You're unsure. It's the safer default.\n\n**Rebase** when:\n- Updating your local feature branch with latest `main`.\n- Cleaning up your own unpushed commits (`git rebase -i`).\n- Your team prefers linear history.\n- Only you use the branch, or the commits are unpushed.\n\n## Golden rule\n\nNever rebase commits already pushed to a shared branch. Others holding the old commits will get diverging histories and painful conflicts. If you must force-push after rebasing your own branch, use `git push --force-with-lease`, not `--force`.\n\n## Combined workflow\n\n```bash\n# Keep feature current (rebase)\ngit checkout feature\ngit rebase main\n\n# Clean up messy commits (interactive rebase)\ngit rebase -i main\n\n# Integrate into main (merge)\ngit checkout main\ngit merge feature\n```\n\n## Conflicts\n\n- **Merge:** resolve once, in the merge commit.\n- **Rebase:** resolve per replayed commit. Run `git rebase --continue` after each fix, or `git rebase --abort` to bail out.\n\n## Summary\n\n| | Merge | Rebase |\n|---|---|---|\n| History | Preserves branching | Linear |\n| Rewrites commits | No | Yes |\n| Safe for shared branches | Yes | No |\n| Conflict resolution | Once | Per commit |\n| Best for | Integrating to main | Updating/cleaning local work |",
+            "words": 408,
+            "tokens_est": 622,
+            "usage": {
+              "input_tokens": 1324,
+              "output_tokens": 913,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 6540,
+            "source_sample": 0
+          },
+          {
+            "index": 1,
+            "text": "# Git Merge vs. Git Rebase\n\nMerge preserves history as it happened and is safe on shared branches. Rebase rewrites your commits into a linear history and is safe only on commits that are yours alone.\n\n## Merge\n\nCreates a **merge commit** that ties the two histories together.\n\n```\nBefore:\n      A---B---C  feature\n     /\nD---E---F---G    main\n\nAfter `git checkout main && git merge feature`:\n      A---B---C\n     /         \\\nD---E---F---G---M  main\n```\n\n**Pros**\n- Non-destructive: existing commits are unchanged\n- Records when and how work was integrated\n- Safe for shared branches\n\n**Cons**\n- Merge commits clutter history\n- Non-linear history is harder to read in `git log`\n\n## Rebase\n\n**Replays** your commits on top of another branch as new commits with new hashes.\n\n```\nAfter `git checkout feature && git rebase main`:\n                  A'--B'--C'  feature\n                 /\nD---E---F---G                 main\n```\n\nFast-forwarding `main` to `C'` then gives a linear history.\n\n**Pros**\n- Linear history, easier to follow with `git log`, `git bisect`, and `git blame`\n- No merge commits\n\n**Cons**\n- **Rewrites history** (new hashes)\n- Dangerous on shared branches\n- Conflicts may need resolving once per replayed commit\n\n## Golden Rule\n\n> **Never rebase commits that have been pushed to a branch others are working on.**\n\nRewriting shared history forces collaborators to reconcile diverging copies of the same commits.\n\n## When to Use Each\n\n| Situation | Use |\n|---|---|\n| Updating your local feature branch with latest `main` | **Rebase** |\n| Cleaning up your own commits before a PR (`rebase -i`) | **Rebase** |\n| Integrating a finished feature into `main` | **Merge** (or squash merge) |\n| Working on a branch shared with others | **Merge** |\n| Preserving exact history of a long-lived branch | **Merge** |\n| Conflict-heavy integration with lots of history | **Merge** (one resolution vs. many) |\n\n## Common Workflow\n\n```bash\n# On your feature branch: stay current with main\ngit fetch origin\ngit rebase origin/main\n\n# Tidy up local commits before review\ngit rebase -i origin/main\n\n# Push (force needed if you'd already pushed before rebasing)\ngit push --force-with-lease\n\n# Then merge the PR into main via your platform (merge commit, squash, or rebase-and-merge)\n```\n\nUse `--force-with-lease` rather than `--force`: it refuses to overwrite the remote if someone else has pushed in the meantime.\n\n## Tips\n\n- **Abort:** `git merge --abort` or `git rebase --abort`\n- **Recover from a bad rebase:** `git reflog` shows earlier states; `git reset --hard` to one\n- **Team conventions:** many teams standardize on one approach (e.g., squash merge only). Check your project's norms.",
+            "words": 423,
+            "tokens_est": 664,
+            "usage": {
+              "input_tokens": 1361,
+              "output_tokens": 989,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 6934,
+            "source_sample": 1
+          },
+          {
+            "index": 2,
+            "text": "# Git Merge vs. Git Rebase\n\nBoth integrate one branch into another. Merge keeps history as it happened; rebase rewrites it into a line.\n\n## Merge\n\nCreates a **merge commit** joining the two branches and preserves both histories.\n\n```bash\ngit checkout main\ngit merge feature\n```\n\n```\nA---B---C---------M   main\n     \\           /\n      D---E---F       feature\n```\n\n- Pros: existing commits never change; records when and how branches were integrated; safe on shared branches.\n- Cons: merge commits clutter history; non-linear history is harder to read and bisect.\n\n## Rebase\n\nReplays your branch's commits on top of another branch as **new commits**.\n\n```bash\ngit checkout feature\ngit rebase main\n```\n\n```\nBefore:\nA---B---C   main\n     \\\n      D---E---F   feature\n\nAfter:\nA---B---C   main\n         \\\n          D'---E'---F'   feature\n```\n\n- Pros: linear history, easier to read with `git log` and `git bisect`, no merge commits.\n- Cons: rewrites history (new hashes); dangerous on shared branches; conflicts may need resolving once per replayed commit.\n\n## When to Use Which\n\n| Situation | Use |\n|---|---|\n| Updating your local feature branch with latest `main` | Rebase |\n| Merging a finished feature into `main` | Merge (or squash merge) |\n| Branch is shared with other developers | Merge |\n| Cleaning up messy local commits before a PR | Interactive rebase (`git rebase -i`) |\n| Permanent record of when a feature landed | Merge (`--no-ff`) |\n| Commits already pushed and pulled by others | Merge |\n\n## Golden Rule\n\nNever rebase commits pushed to a shared branch others work from. Rebasing rewrites history, so collaborators' copies diverge from yours, causing duplicate commits and painful conflicts.\n\n## Common Workflow\n\n1. Create a feature branch and commit locally.\n2. Run `git rebase main` periodically to stay current (only while the branch is yours alone).\n3. Clean up with `git rebase -i main`.\n4. Open a PR and merge into `main` with merge or squash merge.\n\nMany teams do exactly this: rebase locally, merge to integrate.\n\n## Tips\n\n- Abort a bad operation: `git rebase --abort` or `git merge --abort`.\n- Recover from a bad rebase: find the old commit with `git reflog`, then `git reset --hard <hash>`.\n- After rebasing a branch you already pushed (and only you use): `git push --force-with-lease`, not `--force`.\n- Make pull rebase by default: `git config --global pull.rebase true`.",
+            "words": 387,
+            "tokens_est": 589,
+            "usage": {
+              "input_tokens": 1313,
+              "output_tokens": 879,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 6371,
+            "source_sample": 2
+          }
+        ]
+      }
+    },
+    "s1b": {
+      "crisp": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "`==` tests value equality (calls `__eq__`). `is` tests identity: whether both names point to the same object (same `id()`).\n\n```python\na = [1, 2]\nb = [1, 2]\na == b   # True\na is b   # False, two separate lists\nc = a\nc is a   # True\n```\n\n**When it matters:**\n\n- **Use `is` for singletons:** `None`, `True`, `False`, and sentinels. `x is None` is correct because `__eq__` can be overridden to return anything (NumPy arrays and pandas objects return arrays for `== None`), while `is` can't be overridden.\n- **Use `==` for everything else.** Comparing numbers, strings, containers, or custom objects with `is` is a bug even when it appears to work.\n\n**The trap: interning.** CPython caches small ints (-5 to 256) and some strings, so `is` can give misleading results:\n\n```python\na = 256; b = 256\na is b   # True (cached)\na = 257; b = 257\na is b   # may be False (implementation-dependent, varies by context)\n```\n\nThis is an implementation detail, not language semantics. Code relying on it will break unpredictably. Python 3.8+ emits a `SyntaxWarning` for `is` with a literal.\n\n**Mutability:** `is` matters when you need to know if two references alias the same mutable object (mutating one affects the other). `==` only tells you the contents match right now.\n\n**Custom `__eq__`:** if a class defines `__eq__` without `__hash__`, instances become unhashable. And `==` falls back to identity if `__eq__` isn't defined.\n\nRule: `is` for `None`/sentinels/explicit aliasing checks, `==` for all else.",
+            "words": 252,
+            "tokens_est": 424,
+            "usage": {
+              "input_tokens": 247,
+              "output_tokens": 558,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 5284
+          },
+          {
+            "index": 1,
+            "text": "`==` tests value equality (calls `__eq__`). `is` tests identity: whether both names point to the same object (same `id()`).\n\n```python\na = [1, 2]\nb = [1, 2]\na == b   # True\na is b   # False, two separate lists\nc = a\nc is a   # True\n```\n\n**When it matters**\n\n- **Use `is` for singletons:** `None`, `True`, `False`, `...`. Write `x is None`, not `x == None`. A class can override `__eq__` so that `x == None` returns something surprising (numpy arrays return an elementwise array), while `is` can't be overridden.\n- **Use `==` for everything else.** Comparing numbers, strings, containers, or custom objects with `is` gives results that depend on implementation details.\n\n**The trap: small-object caching**\n\nCPython caches small ints (-5 to 256) and interns some strings, so `is` can appear to work:\n\n```python\na = 256; b = 256\na is b   # True\n\na = 257; b = 257\na is b   # may be True or False (depends on context: same line/module vs. runtime-computed)\n```\n\nThis is a CPython implementation detail, not language behavior. Code that relies on it breaks across versions and interpreters. Python 3.8+ also emits a `SyntaxWarning` for `x is 1` or `x is \"abc\"`.\n\n**Other legitimate `is` uses**\n\n- Sentinel objects: `_MISSING = object()` then `if arg is _MISSING`.\n- Checking aliasing: whether two references share a mutable object.\n- Enum members: `color is Color.RED` works (they're singletons), though `==` also works.\n\n**Rule of thumb:** `is` for `None`/sentinels/aliasing, `==` for values.",
+            "words": 252,
+            "tokens_est": 422,
+            "usage": {
+              "input_tokens": 247,
+              "output_tokens": 568,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 5292
+          },
+          {
+            "index": 2,
+            "text": "`==` tests value equality (calls `__eq__`). `is` tests identity: whether both names point to the same object in memory (`id(a) == id(b)`).\n\n```python\na = [1, 2]\nb = [1, 2]\na == b   # True\na is b   # False, two separate lists\nc = a\nc is a   # True\n```\n\n**When it matters**\n\n- **Use `is` for singletons:** `None`, `True`, `False`, and sentinels. `x is None` is correct because `None` is unique and `is` can't be overridden. `x == None` can return surprising results if a class defines a custom `__eq__` (NumPy arrays return an elementwise array, for example).\n- **Use `==` for everything else**, including numbers, strings, and containers.\n\n**The trap: small-value caching**\n\nCPython caches small ints (-5 to 256) and interns some strings, so `is` can appear to work on values:\n\n```python\na = 256; b = 256\na is b   # True\n\na = 257; b = 257\na is b   # may be False (depends on context, e.g. REPL vs. same code block)\n```\n\nThis is an implementation detail and varies by interpreter and version. Never use `is` to compare numbers or strings. Python 3.8+ emits a `SyntaxWarning` for `is` with a literal.\n\n**Custom `__eq__`**\n\n`==` follows whatever `__eq__` defines. If you don't define it, the default falls back to identity, so `==` and `is` agree. `is` can't be customized.\n\n**Rule of thumb:** `is` for `None`/sentinels/\"same object\" checks; `==` for \"same value.\"",
+            "words": 239,
+            "tokens_est": 403,
+            "usage": {
+              "input_tokens": 247,
+              "output_tokens": 522,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 5093
+          }
+        ]
+      },
+      "crispify": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "# `is` vs `==` in Python\n\n- `==` tests equality (same value). It calls `__eq__`.\n- `is` tests identity (same object in memory). It is equivalent to `id(a) == id(b)`.\n\n```python\na = [1, 2, 3]\nb = [1, 2, 3]\nc = a\n\na == b   # True  (same contents)\na is b   # False (two separate list objects)\na is c   # True  (c is another name for the same object)\n```\n\n## When to use which\n\n**Use `is` for singletons (`None`, `True`, `False`).** `None` is a single instance, and `is` can't be fooled by a custom `__eq__`:\n\n```python\nif x is None:\n    ...\n\nclass Weird:\n    def __eq__(self, other):\n        return True\n\nWeird() == None   # True (surprise!)\nWeird() is None   # False\n```\n\n**Use `==` to compare values** (numbers, strings, lists, dicts, custom objects). This is almost always what you want.\n\n**Use `is` to check aliasing**, i.e. whether mutating one name affects the other:\n\n```python\na = [1, 2]\nb = a\nb.append(3)\nprint(a)  # [1, 2, 3], because a is b\n```\n\n## Gotcha: CPython caching\n\nCPython caches some objects, so `is` can appear to work on numbers and strings. Those are implementation details, not language guarantees.\n\n```python\na = 256; b = 256\na is b      # True (ints -5..256 are cached)\n\na = 1000; b = 1000\na is b      # May be True or False, depending on context\n\ns1 = \"hello\"; s2 = \"hello\"\ns1 is s2    # Often True (interning), not guaranteed\n```\n\nNever use `is` to compare numbers or strings. Python 3.8+ emits a `SyntaxWarning` for `x is 1` and `x is \"abc\"`.\n\n## Rule of thumb\n\n| Situation | Use |\n|---|---|\n| Comparing to `None` | `is` / `is not` |\n| Comparing to `True`/`False` (when you need identity) | `is` |\n| Checking whether two variables reference the same object | `is` |\n| Comparing values (numbers, strings, collections, etc.) | `==` |",
+            "words": 324,
+            "tokens_est": 556,
+            "usage": {
+              "input_tokens": 1105,
+              "output_tokens": 721,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 4836,
+            "source_sample": 0
+          },
+          {
+            "index": 1,
+            "text": "# `is` vs `==` in Python\n\n- `==` tests equality: same value. It calls `__eq__`.\n- `is` tests identity: same object. It compares `id(a) == id(b)`.\n\n```python\na = [1, 2, 3]\nb = [1, 2, 3]\nc = a\n\na == b   # True  (same contents)\na is b   # False (two separate list objects)\na is c   # True  (same object)\n```\n\n## Rules\n\n- Use `is` / `is not` for `None`, and for sentinels such as `_MISSING = object()`.\n- Use `==` / `!=` for everything else.\n- Use `is` elsewhere only when you need object identity, e.g. to check whether mutating one name affects another.\n\n## Why\n\n**`None` and singletons: use `is`.** A class can override `__eq__` to return anything, but `is` can't be overridden.\n\n```python\nif x is None:   # correct, reliable\nif x == None:   # can be fooled by a custom __eq__\n\nclass AlwaysEqual:\n    def __eq__(self, other):\n        return True\n\nx = AlwaysEqual()\nx == None   # True (!)\nx is None   # False\n```\n\n**Values: use `==`.** `is` with a literal is unreliable, and Python 3.8+ emits a `SyntaxWarning` for it.\n\n```python\nif name == \"alice\":   # correct\nif name is \"alice\":   # wrong\n```\n\n**Don't rely on interning.** CPython caches small ints (-5..256) and some strings, so `is` can work by accident:\n\n```python\na = 256; b = 256\na is b      # True (cached)\n\na = 1000; b = 1000\na is b      # may be False (implementation-dependent)\n```\n\n**Aliasing.** `is` shows whether two names share one mutable object:\n\n```python\na = [1, 2]\nb = a\nb.append(3)\nprint(a)    # [1, 2, 3], same object\n```\n\n**NaN.** The operators can disagree on the same object:\n\n```python\nx = float('nan')\nx == x   # False (NaN != itself)\nx is x   # True\n```",
+            "words": 302,
+            "tokens_est": 526,
+            "usage": {
+              "input_tokens": 1082,
+              "output_tokens": 673,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 4429,
+            "source_sample": 1
+          },
+          {
+            "index": 2,
+            "text": "# `is` vs `==` in Python\n\n- `==` tests equality (same value). It calls `__eq__`.\n- `is` tests identity (same object in memory). It's equivalent to `id(a) == id(b)`.\n\n```python\na = [1, 2, 3]\nb = [1, 2, 3]\nc = a\n\na == b   # True  (same contents)\na is b   # False (two separate list objects)\na is c   # True  (same object)\n```\n\n## Rules\n\n**Compare to `None` with `is`.** `None` is a singleton, and a class can override `==` to return something unexpected. The same holds for `True` and `False`, though `if x:` is usually what you want.\n\n```python\nif x is None:       # correct\nif x is not None:   # correct\nif x == None:       # usually works, discouraged\n```\n\n**Compare values with `==`.** This covers numbers, strings, lists, dicts, and nearly everything else.\n\n```python\nif name == \"Alice\":   # correct\nif name is \"Alice\":   # wrong, unreliable; SyntaxWarning in 3.8+\n```\n\n**Don't rely on CPython caching.** CPython caches small ints (-5..256), so `is` can appear to work for values. It's an implementation detail. This is why `is` for value comparison passes in testing and then fails elsewhere.\n\n```python\na = 256; b = 256\na is b     # True (cached)\n\na = 1000; b = 1000\na is b     # may be False\n```\n\n**Use `is` to check aliasing.** When two names refer to the same mutable object, mutation through one is visible through the other.\n\n```python\na = [1, 2]\nb = a\nb.append(3)\nprint(a)        # [1, 2, 3]\na is b          # True\n```\n\n**`is` can't be overridden; `==` can.**\n\n```python\nclass AlwaysEqual:\n    def __eq__(self, other):\n        return True\n\nx = AlwaysEqual()\nx == None   # True (!)\nx is None   # False\n```\n\n## Rule of thumb\n\n- `is` / `is not` for `None` (and occasionally other singletons or sentinels).\n- `==` / `!=` for everything else.",
+            "words": 316,
+            "tokens_est": 535,
+            "usage": {
+              "input_tokens": 1104,
+              "output_tokens": 691,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 4541,
+            "source_sample": 2
+          }
+        ]
+      }
+    },
+    "s2a": {
+      "crisp": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "The default `[]` is evaluated once, when `def` runs, not on each call. Both calls without `items` share that same list, so the second call appends to the list that already holds `\"a\"`.\n\nFix: use `None` as the default and create the list inside the function.\n\n```python\ndef add_item(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items\n```\n\nUse `is None` rather than `if not items`, so a caller who passes their own empty list still gets that list mutated instead of a silent replacement.\n\nThe same applies to any mutable default (`{}`, `set()`, custom objects).",
+            "words": 99,
+            "tokens_est": 145,
+            "usage": {
+              "input_tokens": 319,
+              "output_tokens": 194,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 2615
+          },
+          {
+            "index": 1,
+            "text": "The default `[]` is evaluated once, when `def` runs, not on each call. Every call that omits `items` mutates that same list, so state carries over.\n\nFix: use `None` as the sentinel and create the list inside the function.\n\n```python\ndef add_item(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items\n```\n\nUse `is None`, not `if not items`, so a caller-passed empty list is still used (and mutated) rather than silently replaced.\n\nThe same applies to any mutable default (`{}`, `set()`, custom objects).",
+            "words": 86,
+            "tokens_est": 135,
+            "usage": {
+              "input_tokens": 319,
+              "output_tokens": 184,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 2581
+          },
+          {
+            "index": 2,
+            "text": "The default `[]` is evaluated once, when `def` runs, not on each call. Every call that omits `items` mutates that same list object.\n\nFix: use `None` as the sentinel and create the list inside the function.\n\n```python\ndef add_item(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items\n```\n\nUse `is None` rather than `if not items`, so a caller-passed empty list is still used and mutated instead of silently replaced.\n\nThe same applies to any mutable default (`{}`, `set()`, custom objects).",
+            "words": 84,
+            "tokens_est": 130,
+            "usage": {
+              "input_tokens": 319,
+              "output_tokens": 178,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 2701
+          }
+        ]
+      },
+      "crispify": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "Python's mutable default argument gotcha: default values are evaluated once, when `def` runs, not per call. `items=[]` creates one list, stored in `add_item.__defaults__`, and every call that omits `items` reuses it.\n\n- First call: the shared list is `[]`, you append `\"a\"`, it becomes `['a']`.\n- Second call: it's still `['a']`, you append `\"b\"`, it becomes `['a', 'b']`.\n\n```python\nprint(add_item.__defaults__)  # (['a', 'b'],)\n```\n\n**Fix: use `None` as a sentinel**\n\n```python\ndef add_item(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items\n\nprint(add_item(\"a\"))  # ['a']\nprint(add_item(\"b\"))  # ['b']\n```\n\nA new list is created on each call, so nothing is shared.\n\n**Notes**\n\n- Test with `is None`, not `if not items:`. Otherwise a caller's own empty list gets silently replaced, and they won't see the append.\n- This applies to any mutable default: lists, dicts, sets, custom objects.\n- To avoid mutating the caller's list, build a new one. A tuple default is safe because it can't be modified:\n\n```python\ndef add_item(item, items=()):\n    return [*items, item]\n```\n\n- The shared default is sometimes used on purpose for caching or memoization, but a module-level variable or `functools.lru_cache` is clearer.",
+            "words": 190,
+            "tokens_est": 337,
+            "usage": {
+              "input_tokens": 849,
+              "output_tokens": 473,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 3087,
+            "source_sample": 0
+          },
+          {
+            "index": 1,
+            "text": "This is Python's mutable default argument gotcha.\n\n**Why it happens**\n\nDefault values are evaluated once, when the `def` statement runs, not on each call. `items=[]` creates a single list stored on the function (see `add_item.__defaults__`), and every call that omits `items` uses that same list.\n\n- First call: the shared list is `[]`; appending `\"a\"` gives `['a']`.\n- Second call: the shared list is `['a']`; appending `\"b\"` gives `['a', 'b']`.\n\n```python\nprint(add_item.__defaults__)  # (['a', 'b'],)\n```\n\n**The fix**\n\nDefault to `None` and create the list inside the function:\n\n```python\ndef add_item(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items\n\nprint(add_item(\"a\"))  # ['a']\nprint(add_item(\"b\"))  # ['b']\n```\n\nEach call without `items` now gets a fresh list.\n\n**Notes**\n\n- Use `is None`, not `if not items`. Otherwise a caller's own empty list is silently replaced with a new one.\n- The same bug applies to any mutable default: `{}`, `set()`, custom objects. Immutable defaults (numbers, strings, tuples, `None`) are safe.\n- If you want shared state across calls (e.g., a cache), a mutable default works, but a module-level variable or a class states the intent more clearly.",
+            "words": 188,
+            "tokens_est": 321,
+            "usage": {
+              "input_tokens": 777,
+              "output_tokens": 454,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 3458,
+            "source_sample": 1
+          },
+          {
+            "index": 2,
+            "text": "Python's mutable default argument gotcha. Default values are evaluated once, when `def` runs, not on each call. `items=[]` creates one list, stored on the function (`add_item.__defaults__`), and every call that omits `items` reuses it.\n\n- First call: shared list `[]`, append `\"a\"` → `['a']`.\n- Second call: shared list `['a']`, append `\"b\"` → `['a', 'b']`.\n\n```python\nprint(add_item.__defaults__)  # (['a', 'b'],)\n```\n\n**Fix:** default to `None` and create the list inside the function.\n\n```python\ndef add_item(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items\n\nprint(add_item(\"a\"))  # ['a']\nprint(add_item(\"b\"))  # ['b']\n```\n\n**Notes**\n\n- Use `is None`, not `if not items:`. With `not items`, a caller's own empty list gets silently replaced by a new one, so the item never appears in their list.\n- Any mutable default has the same problem: `{}`, `set()`, custom objects. Immutable defaults (numbers, strings, tuples, `None`) are safe.\n- The shared default is sometimes used on purpose as a cache or memo, but a closure, a class, or `functools.lru_cache` is clearer.",
+            "words": 168,
+            "tokens_est": 303,
+            "usage": {
+              "input_tokens": 813,
+              "output_tokens": 426,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 4486,
+            "source_sample": 2
+          }
+        ]
+      }
+    },
+    "s2b": {
+      "crisp": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "Iterate over a snapshot of the keys, or rebuild the dict.\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr, if you don't need in-place mutation:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```\n\nUse the first if other references to the same dict must see the deletions; use the comprehension otherwise (cleaner, one pass, no mutation during iteration).",
+            "words": 70,
+            "tokens_est": 107,
+            "usage": {
+              "input_tokens": 310,
+              "output_tokens": 154,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 1977
+          },
+          {
+            "index": 1,
+            "text": "Iterate over a snapshot of the keys, or rebuild the dict.\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr, if you don't need in-place mutation:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```\n\nUse the first if other references to the same dict must see the change; use the comprehension otherwise (one pass, no `del` per key).",
+            "words": 69,
+            "tokens_est": 105,
+            "usage": {
+              "input_tokens": 310,
+              "output_tokens": 145,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 1882
+          },
+          {
+            "index": 2,
+            "text": "Iterate over a snapshot of the keys, or rebuild the dict.\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr, if you don't need in-place mutation:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```\n\nUse the first if other references to the same dict must see the deletions. Use the comprehension otherwise; it's cleaner and avoids the copy-then-delete pass.",
+            "words": 70,
+            "tokens_est": 107,
+            "usage": {
+              "input_tokens": 310,
+              "output_tokens": 158,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 1904
+          }
+        ]
+      },
+      "crispify": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "Adding or removing dict keys while iterating raises `RuntimeError`. Iterate over a snapshot of the keys, or build a new dict.\n\n**Option 1: iterate over a copy of the keys**\n```python\ncounts = {\"a\": 0, \"b\": 2, \"c\": 0}\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n`list(counts)` is a separate list, so deleting from the dict is safe.\n\n**Option 2: rebuild the dict**\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```\nThis creates a new dict, so other references to the old `counts` won't see the change.\n\n**Option 3: collect keys, then delete**\n```python\nfor k in [k for k, v in counts.items() if v == 0]:\n    del counts[k]\n```\nSame as option 1, but the keys to delete are collected first.\n\n**Which to use:**\n- Nothing else references the dict: option 2, usually the cleanest.\n- You must mutate the original object (e.g., it was passed in): option 1 or 3.\n\nChanging the value of an existing key (`counts[k] = 5`) during iteration is fine. Only adding or removing keys raises the error.",
+            "words": 185,
+            "tokens_est": 287,
+            "usage": {
+              "input_tokens": 692,
+              "output_tokens": 398,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 3246,
+            "source_sample": 0
+          },
+          {
+            "index": 1,
+            "text": "Adding or removing keys while iterating a dict raises `RuntimeError`. Iterate over a snapshot of the keys, or build a new dict.\n\n**Option 1: iterate over a copy of the keys (mutates in place)**\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\n**Option 2: build a new dict (usually cleanest)**\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```\n\n**Option 3: collect keys first, then delete (mutates in place)**\n```python\nto_delete = [k for k, v in counts.items() if v == 0]\nfor k in to_delete:\n    del counts[k]\n```\n\nUse Option 2 unless other code holds a reference to the same dict and must see the change; then use Option 1 or 3. All three yield `{\"b\": 2}`.\n\nChanging the value of an existing key during iteration is safe, since the dict's size doesn't change.",
+            "words": 145,
+            "tokens_est": 226,
+            "usage": {
+              "input_tokens": 608,
+              "output_tokens": 314,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 2548,
+            "source_sample": 1
+          },
+          {
+            "index": 2,
+            "text": "Adding or removing keys while iterating a dict raises `RuntimeError`. Iterate over a snapshot of the keys, or build a new dict.\n\n**Rebinding the name is fine: use a comprehension (usually cleanest)**\n\n```python\ncounts = {\"a\": 0, \"b\": 2, \"c\": 0}\ncounts = {k: v for k, v in counts.items() if v != 0}\n```\n\n**Other references must see the change (dict passed in, stored on an object): mutate in place**\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\n`list(counts)` copies the keys up front, so deleting from `counts` is safe. Equivalent: collect keys first, then delete.\n\n```python\nto_delete = [k for k, v in counts.items() if v == 0]\nfor k in to_delete:\n    del counts[k]\n```\n\nChanging the value of an existing key during iteration is fine. Only a size change triggers the error.",
+            "words": 139,
+            "tokens_est": 221,
+            "usage": {
+              "input_tokens": 690,
+              "output_tokens": 313,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 2201,
+            "source_sample": 2
+          }
+        ]
+      }
+    },
+    "s3a": {
+      "crisp": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "# Plan: Per-user rate limiting (100 req/min, Redis, 429 + Retry-After)\n\n## Decisions (fixed; don't revisit)\n\n- **Algorithm:** fixed-window counter, 60s windows. Simple, one Redis round trip. Known tradeoff: a user can burst up to 200 requests across a window boundary. Accept this unless told otherwise.\n- **Redis client:** `ioredis`. If the repo already uses `redis` (node-redis) or another client, reuse that instead and adapt the code.\n- **Atomicity:** a Lua script does INCR + EXPIRE + TTL in one call, so a crash between INCR and EXPIRE can't leave an immortal key.\n- **Failure mode:** fail open. If Redis errors or times out, log and allow the request. Rate limiting must not take the API down.\n- **Placement:** after the JWT middleware, so `req.user.id` is set. Unauthenticated requests (no `req.user`) skip the limiter; JWT middleware already rejects them on protected routes.\n\n## Steps\n\n### 1. Discover\n- Find where the Express app is built and where the JWT middleware is mounted (`grep -rn \"req.user\" src`, check `app.js`/`server.js`).\n- Check `package.json` for an existing Redis client and the config/env pattern. Check the test framework (jest/mocha/vitest) and how existing tests mount the app.\n- Report any deviation from the assumptions above in your final summary.\n\n### 2. Dependency and config\n- `npm i ioredis` (skip if a client already exists).\n- Add env vars, following the repo's existing config pattern:\n  - `REDIS_URL` (required)\n  - `RATE_LIMIT_MAX` default `100`\n  - `RATE_LIMIT_WINDOW_SEC` default `60`\n- Document them in `.env.example` / README if either exists.\n\n### 3. Redis client module\nCreate `src/lib/redis.js` (match repo's module style, ESM vs CJS) exporting a single shared client:\n- `new Redis(process.env.REDIS_URL, { maxRetriesPerRequest: 1, enableOfflineQueue: false, commandTimeout: 100 })`\n- Attach an `error` listener that logs; without it ioredis throws on unhandled error events.\n\nIf a shared client already exists, import it instead.\n\n### 4. Middleware\nCreate `src/middleware/rateLimit.js`.\n\nLua script (via `redis.defineCommand` or `eval`):\n```lua\nlocal c = redis.call('INCR', KEYS[1])\nif c == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end\nlocal ttl = redis.call('TTL', KEYS[1])\nif ttl < 0 then redis.call('EXPIRE', KEYS[1], ARGV[1]); ttl = tonumber(ARGV[1]) end\nreturn {c, ttl}\n```\n\nMiddleware logic:\n1. If `!req.user?.id`, call `next()`.\n2. Key: `ratelimit:${req.user.id}` (one key per user, TTL provides the window; no bucket math needed).\n3. Run the script; get `[count, ttl]`.\n4. Always set headers: `RateLimit-Limit: 100`, `RateLimit-Remaining: max(0, 100 - count)`, `RateLimit-Reset: ttl`.\n5. If `count > max`: set `Retry-After: ttl` (integer seconds, minimum 1) and respond `429` with JSON `{ \"error\": \"Too Many Requests\", \"retryAfter\": ttl }`. Use the repo's existing error format if it has one.\n6. Otherwise `next()`.\n7. Wrap in try/catch: on error, log and `next()` (fail open).\n\nExport a factory `createRateLimiter({ max, windowSec, redis })` so tests can inject a client and small limits.\n\n### 5. Mount\n- Register `app.use(rateLimiter)` immediately after the JWT middleware. If JWT is applied per-router rather than globally, mount the limiter on the same routers directly after it.\n- Exempt health checks (`/health`, `/healthz`, or whatever exists) by mounting them before the limiter.\n\n### 6. Tests\nUse the repo's test framework. Prefer a real Redis (docker/CI service) or `ioredis-mock` if the repo already avoids real services. Cover:\n- Request 100 returns 200; request 101 returns 429.\n- 429 response has `Retry-After` as an integer between 1 and 60.\n- Two different user IDs have independent counters.\n- After the window expires (use a 1s window via the factory), the user is allowed again.\n- Redis failure (inject a client whose script call rejects) results in the request passing through.\n- Request with no `req.user` is not limited and doesn't touch Redis.\n\n### 7. Verify\n- Run the full test suite and linter; all must pass.\n- Manual check if a dev server is feasible: loop 101 authenticated `curl` requests and confirm the last returns 429 with `Retry-After`.\n\n## Out of scope\nPer-route limits, IP-based limiting, sliding-window accuracy, admin overrides, metrics. Mention in the summary if any seem needed, but don't build them.\n\n## Deliverable\nCode and tests committed on a branch, plus a short summary listing files changed, new env vars, and any assumption that turned out wrong.",
+            "words": 688,
+            "tokens_est": 1152,
+            "usage": {
+              "input_tokens": 321,
+              "output_tokens": 1808,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 15152
+          },
+          {
+            "index": 1,
+            "text": "# Plan: Per-user rate limiting (100 req/min, Redis, 429 + Retry-After)\n\n## Decisions (made up front so the executor doesn't have to)\n\n- **Algorithm:** fixed window via atomic Lua script (INCR + EXPIRE on first hit, returns count and TTL). Simple and cheap; allows up to 2x burst at window boundaries. Use sliding window only if the user asks.\n- **Client:** reuse the existing Redis client if the repo has one (grep for `ioredis` / `redis` in `package.json` and `src`). If none, add `ioredis`.\n- **Key:** `ratelimit:{userId}:{windowStart}` where `windowStart = floor(now / 60000)`. TTL 60s.\n- **Failure mode:** fail open. If Redis errors or times out (250 ms), log and call `next()`. Availability beats strict limiting here.\n- **Placement:** after the JWT middleware, so `req.user.id` exists. Unauthenticated requests (no `req.user`) skip the limiter; they are not this feature's scope.\n\n## Steps\n\n1. **Recon.** Find: where the JWT middleware is registered, the existing Redis client (if any), config/env conventions, test framework, and which routes are public (health checks, login). Report these before changing code if anything contradicts the assumptions above.\n\n2. **Config.** Add to the existing config module/env schema:\n   - `RATE_LIMIT_MAX` (default 100)\n   - `RATE_LIMIT_WINDOW_SEC` (default 60)\n   - `REDIS_URL` (only if not already present)\n\n   Document in `.env.example`.\n\n3. **Middleware** at `src/middleware/rateLimit.(ts|js)` (match repo language/layout):\n   - Export `createRateLimiter({ redis, max, windowSec })` returning an Express middleware.\n   - If `!req.user?.id`, call `next()`.\n   - Run the Lua script via `redis.eval` (or `defineCommand`):\n     ```lua\n     local c = redis.call('INCR', KEYS[1])\n     if c == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end\n     local ttl = redis.call('TTL', KEYS[1])\n     return {c, ttl}\n     ```\n   - If `ttl < 0` (key without expiry, a safety case), call `EXPIRE` again and use `windowSec`.\n   - Always set `X-RateLimit-Limit`, `X-RateLimit-Remaining` (min 0), and `X-RateLimit-Reset` (epoch seconds).\n   - If `count > max`: set `Retry-After: <ttl>` (integer seconds, minimum 1), respond `429` with JSON `{ \"error\": \"rate_limit_exceeded\", \"retryAfter\": <ttl> }`. Do not call `next()`.\n   - Wrap Redis calls in try/catch plus the 250 ms timeout; on failure, log at `warn` and `next()`.\n\n4. **Wire up.** In the app setup, register `app.use(rateLimiter)` immediately after the JWT middleware and before the routers. If public routes are mounted before JWT, leave them untouched. If JWT is applied per-router rather than globally, attach the limiter at the same level.\n\n5. **Tests** (existing framework; use `supertest`, and a real Redis in CI or `ioredis-mock` if the repo has no Redis test setup, noting that mock doesn't fully support Lua, in which case prefer a real Redis container):\n   - 100 requests succeed; the 101st returns 429 with `Retry-After` between 1 and 60.\n   - Two different user IDs have independent counters.\n   - After the window expires (use short `windowSec` such as 1 in tests), requests succeed again.\n   - Request without `req.user` bypasses the limiter.\n   - Redis failure (stub client to throw) results in the request passing through.\n   - Headers `X-RateLimit-*` present on both 200 and 429 responses.\n\n6. **Verify.** Run the full test suite and linter. Manually check with a loop of 101 authenticated `curl` calls against a local instance and confirm the 429 and `Retry-After`.\n\n## Out of scope\n\nIP-based limiting, per-route limits, tiered plans, and admin overrides. Mention them in the PR description as follow-ups, not in the code.\n\n## Risks to flag in the PR\n\n- Fixed window permits up to 200 requests across a window boundary.\n- With `trust proxy` or multiple app instances, behavior is correct since state is in Redis; no sticky sessions are needed.\n- Fail-open means a Redis outage removes protection; add an alert on the warn log if that matters.",
+            "words": 594,
+            "tokens_est": 1019,
+            "usage": {
+              "input_tokens": 321,
+              "output_tokens": 1579,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 14568
+          },
+          {
+            "index": 2,
+            "text": "# Plan: Per-user rate limiting (Express + Redis)\n\n## Decisions\n\n- **Algorithm:** sliding window counter via a Lua script (atomic, no race between check and increment). Fixed window allows 2x bursts at boundaries; sliding window log costs O(n) memory per user. Sliding window counter (two adjacent fixed buckets, weighted) is the compromise.\n- **Client:** `ioredis`. If the repo already uses `redis` (node-redis), use that instead and adapt the script call.\n- **Placement:** after JWT middleware, before route handlers. Unauthenticated requests (no `req.user`) skip this limiter; IP-based limiting is out of scope.\n- **Failure mode:** fail open. If Redis errors or times out (>100 ms), log and allow the request. Change to fail closed only if the user says so.\n\n## Steps\n\n1. **Inspect the repo first.** Find: where JWT middleware is mounted in the app setup, whether a Redis client already exists, config/env conventions, test framework, and TypeScript vs JS. Match existing conventions. Do not add a second Redis client if one exists.\n\n2. **Dependencies.** Add `ioredis` if no Redis client is present. For tests, use `ioredis-mock` only if it supports `defineCommand`/`eval`; otherwise run tests against a real Redis (docker or `REDIS_URL` from env).\n\n3. **Config.** Add env vars with defaults:\n   - `REDIS_URL` (required, no default)\n   - `RATE_LIMIT_MAX=100`\n   - `RATE_LIMIT_WINDOW_SEC=60`\n\n4. **Create `middleware/rateLimit.(js|ts)`** exporting `createRateLimiter({ redis, max, windowSec })` that returns Express middleware.\n\n   Behavior per request:\n   - If `!req.user?.id`, call `next()`.\n   - Key prefix: `rl:{userId}:`. Current bucket = `floor(now / windowSec)`; keys are `rl:{userId}:{bucket}` and `rl:{userId}:{bucket-1}`.\n   - Lua script (single `EVAL`, keys = current and previous bucket):\n     - Read previous count `p` and current count `c`.\n     - Elapsed fraction `f` = (now mod window) / window.\n     - Estimated `e = p * (1 - f) + c`.\n     - If `e >= max`: return `{0, retryAfterSec}` without incrementing.\n     - Else `INCR` current, `EXPIRE` current to `2 * windowSec`, return `{1, remaining}`.\n   - Pass `now` from Node as an argument (ms). Redis server time via `TIME` is preferable if multiple app servers have clock skew; use `redis.call('TIME')` inside the script if so (Redis ≥5 with script replication of effects, which is the default in 5+/7).\n   - Compute `retryAfterSec` as the time until the estimate drops below `max`, minimum 1, integer, rounded up. A simple acceptable approximation: seconds until the current bucket ends (`ceil(windowSec - now mod windowSec)`), min 1.\n   - Always set headers: `RateLimit-Limit`, `RateLimit-Remaining` (floor, min 0).\n   - On block: set `Retry-After: <integer seconds>`, respond `429` with JSON `{ \"error\": \"rate_limit_exceeded\", \"retryAfter\": <n> }`. Match the API's existing error body shape if it has one.\n   - Wrap Redis call in try/catch with a 100 ms timeout; on error, log with the existing logger and `next()`.\n\n5. **Wire it up.** In app setup, mount `app.use(rateLimiter)` immediately after the JWT middleware. If JWT is applied per-router rather than globally, mount the limiter on the same routers. Exclude health-check routes (e.g. `/health`) if they sit behind JWT.\n\n6. **Tests.** Cover:\n   - 100 requests in a window succeed; the 101st returns 429 with an integer `Retry-After` ≥ 1.\n   - Two different users have independent counters.\n   - Request without `req.user` is not limited.\n   - Counter recovers after the window passes (use a short `windowSec` such as 1–2 in the test, or fake time by injecting `now`).\n   - Redis failure (point client at a closed port) results in the request passing through.\n   - Concurrency: fire 150 parallel requests for one user, assert exactly 100 succeed.\n\n7. **Verify.** Run the full test suite and linter. Manually start the server with a local Redis and hit an authenticated endpoint 101 times (`for` loop with curl), confirming the 429 and the header.\n\n## Deliverables\n\n- Middleware file, config changes, wiring change, tests.\n- A short note in the README or `.env.example` for the three env vars.\n\n## Out of scope\n\nIP-based limiting, per-route limits, tiered limits per plan, Redis Cluster key-slot handling (both keys share the `{userId}` prefix; if the deployment is a cluster, use the hash tag `rl:{userId}:...` with braces so both keys land on one slot, as written above).\n\n## Report back\n\nList any deviations from this plan, especially if an existing Redis client or JWT mounting pattern forced a different structure.",
+            "words": 694,
+            "tokens_est": 1140,
+            "usage": {
+              "input_tokens": 321,
+              "output_tokens": 1782,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 16300
+          }
+        ]
+      },
+      "crispify": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "# Plan: Per-User Rate Limiting (Express + Redis)\n\n**Goal:** Limit each authenticated user to 100 requests/minute. Over-limit requests get HTTP 429 with `Retry-After` (seconds). Counters live in Redis so limits hold across API instances.\n\n**Assumptions (verify in Step 1; if any is false, stop, adapt, and report it in the PR description):**\n- The JWT middleware sets `req.user.id`.\n- Node/Express; package manager is whichever the repo uses.\n- Redis is available (Docker locally for dev).\n\nMatch the repo's style, module system (CJS/ESM), and layout; adjust paths below. Commit in this order: (1) config + Redis client, (2) middleware, (3) wiring, (4) tests, (5) docs/infra.\n\n## Step 1: Recon (no code changes)\n1. Find the app entry (`app.js`/`server.js`/`src/index.ts`) and note middleware order.\n2. Find the JWT middleware and whether it is mounted globally or per-router.\n3. Look for an existing Redis client/config; reuse it if present.\n4. Identify JS vs TS, test framework (Jest/Mocha/Vitest), and config/env convention.\n5. Check for existing rate limiting (e.g., `express-rate-limit`) to avoid conflicts.\n6. List routes to exempt (health checks, login, webhooks) and unauthenticated routes.\n\n## Step 2: Algorithm\nFixed window, atomic in Redis via Lua. Key: `ratelimit:{userId}:{windowStart}`, `windowStart = floor(now / 60)`.\n\n```lua\nlocal current = redis.call('INCR', KEYS[1])\nif current == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end\nlocal ttl = redis.call('TTL', KEYS[1])\nreturn {current, ttl}\n```\n\nLua avoids a crash between `INCR` and `EXPIRE` leaving a key with no TTL.\n\nTradeoff: fixed windows allow up to 2x bursts at window boundaries. Note this in a code comment. If that is unacceptable, switch to a sliding-window log (sorted set with `ZADD`/`ZREMRANGEBYSCORE`/`ZCARD` in Lua).\n\n## Step 3: Dependencies and config\n1. Install `ioredis` (or reuse the existing client).\n2. Add to `.env.example` and the existing config module:\n   - `REDIS_URL` (e.g., `redis://localhost:6379`)\n   - `RATE_LIMIT_MAX` (default 100)\n   - `RATE_LIMIT_WINDOW_SECONDS` (default 60)\n   - `RATE_LIMIT_FAIL_OPEN` (default `true`)\n\n## Step 4: Redis client\nCreate `src/lib/redis.(js|ts)` unless one exists:\n- Export a singleton built from `REDIS_URL`.\n- Attach an `error` handler that logs, so errors don't crash the process.\n- Set `maxRetriesPerRequest` and `connectTimeout` so requests don't hang when Redis is down.\n\n## Step 5: Middleware\nCreate `src/middleware/rateLimiter.(js|ts)` exporting `createRateLimiter({ max, windowSeconds, redis })`, which returns `(req, res, next)`. Injected dependencies keep it testable.\n\nBehavior:\n- **No `req.user?.id`:** call `next()` and log at debug. Auth middleware rejects unauthenticated requests. No IP fallback unless owners ask.\n- **Counting:** run the Lua script (load once via `defineCommand` in ioredis, or `EVALSHA` with fallback) with key `ratelimit:${userId}:${windowStart}`.\n- **Headers on every response:**\n  - `X-RateLimit-Limit: <max>`\n  - `X-RateLimit-Remaining: max(0, max - current)`\n  - `X-RateLimit-Reset: <unix timestamp of window end>`\n- **If `current > max`:** set `Retry-After: <ttl>` (integer, min 1) and respond 429 with `{ \"error\": \"Too Many Requests\", \"message\": \"Rate limit exceeded. Try again in N seconds.\", \"retryAfter\": N }`. Don't call `next()`.\n- **Otherwise:** call `next()`.\n- **Redis error:** wrap Redis calls in try/catch and log with context. If `RATE_LIMIT_FAIL_OPEN` is `true`, call `next()` so an outage doesn't take down the API. If `false`, respond 503.\n- **Logging:** use the user ID only as a key component. Don't log tokens or PII beyond the ID.\n\n## Step 6: Wiring\n1. Mount the limiter immediately after the JWT middleware and before route handlers. If JWT is per-router, mount it there.\n2. Exempt routes (health checks, etc.): mount the limiter only on the relevant routers, or register exempt routes first.\n3. Don't change `trust proxy`; limiting is by user, not IP.\n\n## Step 7: Tests\nUse the repo's framework plus `supertest`. For unit tests use a mock Redis such as `ioredis-mock`, but its Lua support may be limited, so prefer a real Redis container for anything exercising the script.\n\nCases:\n- Requests 1–100 return 200 with correct `X-RateLimit-Remaining`.\n- Request 101 returns 429 with integer `Retry-After` in 1–60.\n- Two users have independent counters.\n- After the window expires (fake timers or `windowSeconds` of 1–2), requests succeed again.\n- Missing `req.user` bypasses limiting and calls `next()`.\n- Redis failure: fail-open calls `next()`; fail-closed returns 503.\n- Concurrency: 150 parallel requests for one user yield exactly 100 successes and 50 429s.\n\nIntegration test: boot the app with the real JWT middleware and a test Redis, send requests with a valid token, and verify the full flow including headers.\n\n## Step 8: Dev, CI, docs\n1. Add `redis:7-alpine` to `docker-compose.yml` if one exists.\n2. Add a Redis service to CI for integration tests.\n3. Update the README: limit, env vars, response format, running Redis locally.\n\n## Step 9: Verification\n- [ ] Tests pass (including new ones); lint and type checks pass.\n- [ ] Manual: 101 authenticated `curl` requests in a loop; the 101st returns 429 with `Retry-After`.\n- [ ] `redis-cli TTL ratelimit:<id>:<window>` shows a TTL on every key.\n- [ ] Stopping Redis doesn't crash the API (fail-open confirmed).\n- [ ] Two app instances share one counter.\n\n## Out of scope (unless asked)\n- IP-based limiting for unauthenticated routes.\n- Per-endpoint or per-tier limits.\n- Admin override or allowlist tooling.\n\n## Deliverables\n`src/lib/redis` (if missing), `src/middleware/rateLimiter`, app wiring, config, `.env.example`, docker-compose/CI changes, README, and tests.",
+            "words": 850,
+            "tokens_est": 1517,
+            "usage": {
+              "input_tokens": 3245,
+              "output_tokens": 2442,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 13235,
+            "source_sample": 0
+          },
+          {
+            "index": 1,
+            "text": "# Implementation Plan: Per-User Rate Limiting (Express + Redis)\n\n## Goal\nLimit each authenticated user to 100 requests per 60 seconds. Over-limit requests get `429 Too Many Requests` with a `Retry-After` header (seconds). State lives in Redis so limits hold across API instances.\n\n## Assumptions (verify in step 1)\n- JWT middleware runs before the limiter and sets `req.user.id`.\n- Node/Express project already using npm, yarn, or pnpm.\n- A Redis instance is available, URL supplied via env var.\n\n## Step 1: Reconnaissance (no changes)\n1. Find the app entry point (`app.use(...)` registrations) and the JWT middleware. Note middleware order and which routes are protected.\n2. Look for an existing Redis client (`grep -r \"redis\" src package.json`). Reuse it; don't open a second connection.\n3. Identify the test framework, config/env-loading pattern, logger, and error-handling conventions. Follow them.\n4. Check whether the app is behind a proxy/load balancer. This affects only the unauthenticated fallback (Step 4).\n\n## Step 2: Dependencies\n- If no Redis client exists, install `ioredis` or `redis` (node-redis v4+), matching codebase style. Default to `ioredis` if there's no precedent.\n- Do not add `express-rate-limit` or similar. A small custom limiter gives exact control over the Lua logic and headers.\n- Tests: prefer real Redis if CI provides it, since mocks emulate Lua poorly. Otherwise use `ioredis-mock` as a dev dependency.\n\n## Step 3: Configuration\nAdd to the config module and `.env.example`:\n```\nREDIS_URL=redis://localhost:6379\nRATE_LIMIT_MAX=100\nRATE_LIMIT_WINDOW_SECONDS=60\nRATE_LIMIT_FAIL_OPEN=true\n```\nDefaults: 100 and 60. Parse as integers; fail fast on invalid values.\n\n## Step 4: Middleware\nCreate `src/middleware/rateLimit.js` (match project language and directory conventions, e.g. `.ts`).\n\n**Algorithm:** fixed-window counter with an atomic Lua script. Known tradeoff: up to 2x burst at window boundaries. Implement fixed window by default; if the burst is unacceptable, a sliding-window log (sorted set) is the alternative. Note this in the PR description.\n\n**Key:** `ratelimit:{userId}:{windowStart}`, where `windowStart = floor(now / window) * window` (epoch seconds). `Retry-After` = `windowStart + window - now`.\n\n**Atomic script** (via `EVAL`; avoids an INCR/EXPIRE race where a crash between them leaves a key with no TTL):\n```lua\nlocal current = redis.call('INCR', KEYS[1])\nif current == 1 then\n  redis.call('EXPIRE', KEYS[1], ARGV[1])\nend\nreturn current\n```\n`ARGV[1] = windowSeconds` (optionally +1s buffer). Load once: `defineCommand` in ioredis, or `SCRIPT LOAD`/`EVALSHA` in node-redis.\n\n**Request flow:**\n1. Read `req.user?.id`. If missing, the limiter is mounted before auth or the route is public. Don't skip silently. Either:\n   - (a) limit by `req.ip`, only if `trust proxy` is configured correctly; or\n   - (b) call `next()` if the route is intentionally public.\n   \n   If `trust proxy` is not configured correctly, log a warning and skip. Document the choice in a code comment.\n2. Compute `now`, `windowStart`, and key; run the script to get `count`.\n3. On every response set:\n   - `RateLimit-Limit: 100`\n   - `RateLimit-Remaining: max(0, 100 - count)`\n   - `RateLimit-Reset: <seconds until window end>`\n4. If `count > limit`: set `Retry-After` (integer, min 1), respond `429` using the project's error format (e.g. `{ \"error\": \"Too Many Requests\", \"retryAfter\": N }`), and don't call `next()`.\n5. Otherwise call `next()`.\n\n**Redis failure:** fail open. Catch the error, log at error level with the user id, and call `next()`, so a Redis outage doesn't take down the API. Set a 200–500 ms connect/command timeout so a hung Redis adds no significant latency. Gate this on `RATE_LIMIT_FAIL_OPEN` so it can be flipped.\n\n**Export:** `createRateLimiter({ redis, limit, windowSeconds, now? })`. The optional clock (`now`) enables testing. Instantiate with config values in app wiring.\n\n## Step 5: Wiring\n- Register after JWT middleware and before route handlers: `app.use(jwtMiddleware); app.use(rateLimiter);`. Or mount on the authenticated router if the app has public routes.\n- Exempt `/health` and `/ready` by mounting the limiter below them or via a path skip.\n- Close the Redis client in the existing graceful-shutdown handler, if there is one.\n\n## Step 6: Tests\nUse the project's framework (supertest or similar). Cover:\n1. Requests 1–100 in a window succeed, with decreasing `RateLimit-Remaining`.\n2. Request 101 returns `429`, with an integer `Retry-After` between 1 and 60 and the correct body.\n3. Two users have independent counters.\n4. Counter resets in a new window (fake timers or injected `now()`).\n5. Redis failure passes the request through and logs an error.\n6. Key has `TTL > 0` after the first request.\n7. Concurrency: ~150 parallel requests from one user yield exactly 100 successes.\n\n## Step 7: Documentation\n- Add the new env vars to `.env.example` and the README/API docs.\n- Document the 429 response shape and headers for API consumers.\n\n## Step 8: Verification\n- [ ] Existing tests pass.\n- [ ] New tests pass.\n- [ ] Manual: `for i in $(seq 1 105); do curl -s -o /dev/null -w \"%{http_code}\\n\" -H \"Authorization: Bearer $TOKEN\" localhost:3000/api/...; done` shows 100 successes, then 429s.\n- [ ] `redis-cli --scan --pattern 'ratelimit:*'` shows keys with `TTL` ≤ 60.\n- [ ] Lint/type-check passes.\n- [ ] No new Redis connection if one already existed.\n\n## Out of Scope (mention in PR, don't build)\n- Per-route or per-tier limits.\n- Sliding-window precision.\n- IP limiting beyond the Step 4 fallback.\n- Metrics/dashboards. As a cheap start, log a structured line on each 429.\n\n## Deliverable\nOne PR with middleware, wiring, config, tests, and docs. The description must note the fixed-window tradeoff and the fail-open decision.",
+            "words": 885,
+            "tokens_est": 1488,
+            "usage": {
+              "input_tokens": 2883,
+              "output_tokens": 2377,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 12908,
+            "source_sample": 1
+          },
+          {
+            "index": 2,
+            "text": "# Plan: Per-User Rate Limiting (Express + Redis)\n\n## Goal\nLimit each authenticated user to 100 requests per 60 seconds, backed by Redis. Over-limit requests get HTTP 429 with a `Retry-After` header (seconds). The existing JWT middleware sets `req.user.id`.\n\n## Design Decisions\n\n- **Algorithm:** Fixed-window counter in an atomic Lua script (`INCR`, `EXPIRE` on first hit, returns count and TTL). One Redis round trip, race-free. Tradeoff: a user can burst up to 2x at window boundaries. If that's unacceptable, use a sliding-window log or token bucket (see Optional upgrades).\n- **Key:** `ratelimit:{userId}:{windowSeconds}`, expiring after the window length.\n- **Placement:** After the JWT middleware, so `req.user.id` exists. Requests without it skip this middleware (auth should reject them, or a separate IP limiter handles them; out of scope).\n- **Failure mode:** Fail open on Redis errors (log, allow the request) so a Redis outage doesn't take down the API. Configurable.\n- **Library:** Reuse the project's Redis client if it has one; otherwise add `ioredis`. No rate-limit library: the logic is small and custom code gives exact header control.\n\n## Steps\n\n### 1. Reconnaissance (no changes)\n- Find the Express app setup file (`app.js`/`server.ts`) and where the JWT middleware is mounted.\n- Check `package.json` for a Redis client (`ioredis`, `redis`) and an existing connection module/config. Reuse it.\n- Note language (JS/TS), module system (CJS/ESM), test framework, and lint/format conventions. Match them.\n- Note config conventions (dotenv, config module) and how `REDIS_URL` or equivalent is supplied.\n\n### 2. Dependencies\n- If no Redis client exists: `npm install ioredis` (ships its own types).\n- For tests, prefer a real Redis if the repo already uses one in integration tests; some mocks (including possibly `ioredis-mock`) handle Lua poorly. Verify before using a mock.\n\n### 3. Configuration\nFollow the project's config pattern:\n\n| Variable | Default | Purpose |\n|---|---|---|\n| `RATE_LIMIT_MAX` | `100` | Requests per window |\n| `RATE_LIMIT_WINDOW_SECONDS` | `60` | Window length |\n| `RATE_LIMIT_FAIL_OPEN` | `true` | Allow requests on Redis error |\n| `REDIS_URL` | existing | Redis connection |\n\n### 4. Middleware\nCreate `src/middleware/rateLimit.(js|ts)` (match repo layout). Export `createRateLimiter({ redis, max, windowSeconds, failOpen })`, returning Express middleware.\n\nLua script:\n```lua\nlocal current = redis.call('INCR', KEYS[1])\nif current == 1 then\n  redis.call('EXPIRE', KEYS[1], ARGV[1])\nend\nlocal ttl = redis.call('TTL', KEYS[1])\nif ttl < 0 then\n  redis.call('EXPIRE', KEYS[1], ARGV[1])\n  ttl = tonumber(ARGV[1])\nend\nreturn {current, ttl}\n```\nThe `ttl < 0` branch repairs a key that lost its expiry, which would otherwise lock the user out permanently.\n\nBehavior:\n1. If `!req.user?.id`, call `next()` and return.\n2. Run the script (`redis.defineCommand` in ioredis, or `eval`/`evalsha`) with key `ratelimit:${req.user.id}:${windowSeconds}`.\n3. Set on every response: `RateLimit-Limit: <max>`, `RateLimit-Remaining: <max(0, max - current)>`, `RateLimit-Reset: <ttl>`.\n4. If `current > max`: set `Retry-After: <ttl>` (integer, minimum 1) and respond 429 with `{ \"error\": \"Too Many Requests\", \"retryAfter\": <ttl> }`. Use the API's existing error shape if there is one.\n5. Otherwise call `next()`.\n6. On Redis error: log with the project's logger; if `failOpen`, call `next()`, else respond 503.\n\n### 5. Wire it in\n- Mount immediately after the JWT middleware, before route handlers:\n  ```js\n  app.use(jwtMiddleware);\n  app.use(createRateLimiter({ redis, max, windowSeconds, failOpen }));\n  ```\n- If JWT is applied per-router, mount the limiter on those routers right after it.\n- Exempt health/metrics endpoints (e.g., `/health`) by mounting them before the limiter or via a skip list.\n- Proxy setup needs no change; the limit is per user, not per IP.\n\n### 6. Tests\nUse the project's framework (and `supertest` if already used):\n- Requests 1–100 in a window succeed; request 101 returns 429.\n- 429 includes `Retry-After` as an integer in 1–60.\n- `RateLimit-Remaining` decrements correctly.\n- Two users have independent counters.\n- After the window expires (1–2 second window in test config, or manipulate TTL), requests succeed again.\n- Requests without `req.user` bypass the limiter.\n- Redis failure: `failOpen=true` allows the request and logs an error; `failOpen=false` returns 503.\n- Concurrency: ~150 parallel requests for one user; exactly 100 succeed.\n\n### 7. Documentation\n- README/API docs: limit, window, response headers, 429 format, new env vars.\n- Add the env vars to `.env.example`.\n\n### 8. Verification\n- [ ] Existing tests pass.\n- [ ] New tests pass.\n- [ ] Lint/type-check passes.\n- [ ] Manual: send 101 `curl` requests with a valid JWT; the 101st returns 429 with `Retry-After`.\n- [ ] `redis-cli TTL ratelimit:<id>:60` shows a positive TTL, and keys expire on their own.\n\n## Optional upgrades (do not implement unless asked)\n- Sliding-window log or token bucket to remove boundary bursts.\n- Per-route or per-tier limits (e.g., higher for paid users).\n- Separate IP-based limiter for unauthenticated endpoints such as login.\n- Redis Cluster: keys are single-key, so the script is cluster-safe; verify hash-slot behavior if clustering is used.\n\n## Constraints for the executing agent\n- Don't modify the JWT middleware.\n- Don't change existing route behavior beyond adding the limiter and headers.\n- Keep changes minimal and match existing style.\n- If an assumption here conflicts with the repo (different auth flow, no Redis config), stop and report the conflict instead of guessing.",
+            "words": 850,
+            "tokens_est": 1428,
+            "usage": {
+              "input_tokens": 2882,
+              "output_tokens": 2336,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 12209,
+            "source_sample": 2
+          }
+        ]
+      }
+    },
+    "s3b": {
+      "crisp": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "# envcheck spec\n\n## Purpose\nCLI that compares `.env.example` (reference) to `.env` (actual) and reports drift. Single-file implementation, no runtime dependencies beyond the language's standard library.\n\n## Usage\n```\nenvcheck [--example PATH] [--env PATH] [--no-color]\n```\n- `--example PATH`: default `.env.example`\n- `--env PATH`: default `.env`\n- `--no-color`: disable ANSI color. Color is also off when stdout is not a TTY or `NO_COLOR` is set.\n- `-h`, `--help`: print usage, exit 0.\n\n## Parsing rules\nApply to both files identically.\n- Read as UTF-8. Strip a leading BOM.\n- Split on `\\n`; strip trailing `\\r`.\n- Skip blank lines and lines whose first non-whitespace char is `#`.\n- Strip an optional leading `export ` (with whitespace) before the key.\n- Split on the first `=`. Left side, trimmed, is the key. Lines with no `=` are ignored.\n- A key must match `[A-Za-z_][A-Za-z0-9_]*`. Lines with invalid keys are ignored and produce a warning on stderr: `warn: <file>:<line>: invalid key`.\n- Value is the right side, trimmed. If wrapped in matching single or double quotes, strip them. Do not process escapes or inline comments; value is otherwise taken literally.\n- A value is **empty** if it is the empty string after the trimming and unquoting above. Whitespace-only quoted values (`\" \"`) are not empty.\n- Duplicate keys: last occurrence wins. Emit `warn: <file>:<line>: duplicate key <KEY>` to stderr.\n- No variable interpolation. No multiline values.\n\n## Comparison\nLet E = keys in example, A = keys in actual.\n- **missing** = E − A. Keys in the example absent from `.env`.\n- **extra** = A − E. Keys in `.env` absent from the example.\n- **empty** = keys in A whose value is empty. Reported regardless of whether the example's value is empty, **except** keys in E whose example value is also empty are skipped (the example signals the key is optional/blank by design).\n\nEach list is sorted alphabetically (byte order).\n\n## Output\nWritten to stdout. Sections appear only if non-empty, in this order: missing, extra, empty.\n\n```\nMissing (2):\n  DATABASE_URL\n  SECRET_KEY\n\nExtra (1):\n  LEGACY_FLAG\n\nEmpty (1):\n  API_TOKEN\n```\n- Headers colored red (missing), yellow (extra), yellow (empty) when color is on.\n- If all three lists are empty, print `OK: .env matches .env.example` and nothing else.\n- Sections are separated by one blank line; no trailing blank line.\n\n## Exit codes\n- `0`: missing list is empty. Extra and empty keys alone do not fail the check, but are still reported.\n- `1`: missing list is non-empty.\n- `2`: usage error or unreadable file (not found, permission denied). Message to stderr: `error: cannot read <path>: <reason>`.\n\n## Edge cases\n- Either file missing: exit 2, no report.\n- Empty file: valid, zero keys.\n- Same file passed for both: reports OK.\n\n## Tests\nImplement tests covering at minimum:\n1. Missing only → exit 1.\n2. Extra only → exit 0, reported.\n3. Empty only → exit 0, reported.\n4. Example key with blank value, `.env` also blank → not reported as empty.\n5. Quoted empty (`KEY=\"\"`) → empty; `KEY=\" \"` → not empty.\n6. `export KEY=val`, CRLF line endings, BOM, comments.\n7. Duplicate key warning, last wins.\n8. Invalid key line warns and is ignored.\n9. Missing file → exit 2.\n10. All matching → `OK` line, exit 0.\n\n## Non-goals\nValue comparison, type validation, `.env` writing or fixing, multiple env files, JSON output.",
+            "words": 564,
+            "tokens_est": 875,
+            "usage": {
+              "input_tokens": 336,
+              "output_tokens": 1360,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 10852
+          },
+          {
+            "index": 1,
+            "text": "# envcheck spec\n\n## Purpose\nCLI that compares `.env.example` (reference) against `.env` (actual) and reports drift. Single binary/script, no network, no dependencies beyond the language stdlib.\n\n## Usage\n```\nenvcheck [--example PATH] [--env PATH] [--strict]\n```\n- `--example PATH`: default `.env.example`\n- `--env PATH`: default `.env`\n- `--strict`: also fail (exit 1) on extra and empty keys. Without it, only missing keys fail.\n- `-h`/`--help`: print usage, exit 0.\n\n## Parsing rules\nApply identically to both files.\n- One entry per line: `KEY=VALUE`.\n- Skip blank lines and lines whose first non-whitespace char is `#`.\n- Strip an optional leading `export ` before the key.\n- Split on the first `=` only. Trim whitespace around the key. Key must match `[A-Za-z_][A-Za-z0-9_]*`; lines that don't match are ignored with a warning to stderr (`warn: <file>:<line>: unparseable`).\n- Value: trim surrounding whitespace. If wrapped in matching single or double quotes, strip them. Unquoted values end at an unquoted ` #` (inline comment); strip it.\n- A value is **empty** if it is the empty string after the steps above (`KEY=`, `KEY=\"\"`, `KEY=''`).\n- Duplicate keys: last one wins. No warning.\n- Multiline values are not supported.\n- Do not expand variables or read the process environment.\n\n## Definitions\n- **missing**: key in example, not in env.\n- **extra**: key in env, not in example.\n- **empty**: key in env with an empty value. Report this only if the key is also in example (an empty extra key is reported only as extra).\n\nWhether the example value is empty does not matter; the check looks only at `.env`.\n\n## Output\nWrite to stdout. Sort keys alphabetically within each section. Omit sections with no entries. Format:\n```\nmissing (2):\n  API_KEY\n  DB_URL\nextra (1):\n  LEGACY_FLAG\nempty (1):\n  SECRET\n```\nIf all three are empty, print `ok` and nothing else. Never print values.\n\nWarnings and errors go to stderr. No color, no flags for it.\n\n## Exit codes\n- `0`: no missing keys (and, with `--strict`, no extra or empty keys).\n- `1`: otherwise.\n- `2`: usage error, or either file is unreadable or does not exist. Print `error: <message>` to stderr.\n\nExtra and empty keys are still printed without `--strict`; they just don't affect the exit code.\n\n## Tests\nCover at minimum:\n1. Identical files → `ok`, exit 0.\n2. Missing key → listed, exit 1.\n3. Extra key only → listed, exit 0; with `--strict`, exit 1.\n4. Empty forms: `K=`, `K=\"\"`, `K=''`, `K=   ` all count as empty.\n5. Empty extra key appears under extra only.\n6. Comments, blank lines, `export ` prefix, quoted values, inline ` #` comment.\n7. Value containing `=` (`URL=a=b`) parses as `a=b`.\n8. Duplicate key, last wins (`K=1` then `K=` → empty).\n9. Missing file → exit 2.\n10. Output never contains a value.",
+            "words": 466,
+            "tokens_est": 748,
+            "usage": {
+              "input_tokens": 336,
+              "output_tokens": 1127,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 9154
+          },
+          {
+            "index": 2,
+            "text": "# envcheck spec\n\n## Purpose\nCLI that compares `.env.example` (reference) against `.env` (actual) and reports drift. Single-file implementation, no runtime dependencies beyond the language's standard library.\n\n## Usage\n```\nenvcheck [--example PATH] [--env PATH]\n```\n- `--example PATH`: default `.env.example`\n- `--env PATH`: default `.env`\n- `-h`, `--help`: print usage, exit 0\n\nUnknown flags: print usage to stderr, exit 2.\n\n## Parsing rules\nApply identically to both files.\n\n- Read as UTF-8. Strip a leading BOM if present.\n- Split on `\\n`; strip a trailing `\\r` from each line.\n- Skip blank lines and lines whose first non-whitespace character is `#`.\n- Strip an optional leading `export ` (export followed by whitespace).\n- Split on the first `=`. Key is the left side, trimmed. Value is the right side, trimmed.\n- Skip lines with no `=` or an empty key. Emit a warning to stderr: `warn: <file>:<line>: unparseable line`.\n- Value handling: if the trimmed value is wrapped in matching `\"` or `'`, remove the quotes. Otherwise, strip an inline comment starting at the first ` #` (space then hash). No escape processing or variable expansion.\n- A value is **empty** if it is the empty string after the steps above. Whitespace-only quoted values (`\" \"`) are not empty.\n- Duplicate keys: last one wins.\n\n## Comparison\nLet E = keys in example, A = keys in actual.\n\n- **missing** = E − A (in example, absent from `.env`)\n- **extra** = A − E (in `.env`, not in example)\n- **empty** = keys in A whose value is empty. Report only keys that are also in E; empty extras are already reported as extra.\n\nWithin each category, sort keys alphabetically (byte order).\n\nIf a key is empty in the example and also empty in `.env`, it is still reported as empty. (The example's blank is a placeholder; the user is expected to fill it in.)\n\n## Output\nWritten to stdout. Omit any section with zero entries. Format:\n\n```\nMissing (2):\n  DATABASE_URL\n  SECRET_KEY\n\nExtra (1):\n  LEGACY_FLAG\n\nEmpty (1):\n  API_TOKEN\n```\n\nSections appear in the order Missing, Extra, Empty, separated by one blank line. If all three are empty, print `OK` and nothing else.\n\nNo color, no ANSI codes. Never print values.\n\n## Exit codes\n- `0`: no keys missing and no keys empty. Extra keys alone do not cause failure.\n- `1`: one or more keys missing or empty.\n- `2`: usage error, or a file cannot be read. For an unreadable file, print `error: cannot read <path>: <reason>` to stderr.\n\nBoth files are checked for readability before any output is produced.\n\n## Edge cases\n- Empty `.env.example`: every key in `.env` is extra; exit 0.\n- Empty `.env`: every example key is missing; exit 1.\n- Same path passed for both: valid, yields `OK`.\n\n## Tests\nCover at minimum: each category in isolation, all three together, `export` prefix, quoted values, inline comments, duplicate keys, CRLF input, BOM, missing file (exit 2), and exit codes for extra-only (0) versus empty-only (1).",
+            "words": 501,
+            "tokens_est": 741,
+            "usage": {
+              "input_tokens": 336,
+              "output_tokens": 1136,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 9259
+          }
+        ]
+      },
+      "crispify": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "# envcheck: Specification\n\n`envcheck` is a CLI that compares a template `.env.example` against an actual `.env` and reports discrepancies. For local development and CI.\n\n## Usage\n\n```\nenvcheck [--example <path>] [--env <path>] [--strict] [--no-color]\nenvcheck --help\nenvcheck --version\n```\n\n| Option | Default | Description |\n|---|---|---|\n| `--example <path>` | `.env.example` | Template file |\n| `--env <path>` | `.env` | Actual env file |\n| `--strict` | off | Also exit 1 on extra or empty keys |\n| `--no-color` | off | Disable ANSI colors. Also disabled when stdout is not a TTY or `NO_COLOR` is set |\n| `--help`, `-h` | | Print usage, exit 0 |\n| `--version`, `-v` | | Print version, exit 0 |\n\n## Parsing\n\nBoth files use the same custom parser (no third-party dotenv library):\n\n1. Split into lines on `\\n` or `\\r\\n`. Strip a leading UTF-8 BOM.\n2. Trim each line.\n3. Skip blank lines and lines starting with `#`.\n4. Strip a leading `export` followed by whitespace.\n5. Split on the first `=`: left is the key (trimmed), right is the raw value.\n6. A line with no `=` is a key with empty value (`FOO` → key `FOO`, value empty).\n7. Keys must match `^[A-Za-z_][A-Za-z0-9_]*$`. Otherwise skip the line and write to stderr: `warning: <file>:<lineno>: invalid key, skipping`.\n8. Values:\n   - Trim the raw value.\n   - If it starts with `\"` or `'` and has a matching closing quote on the same line, the value is the content between the quotes (no escape processing). Anything after the closing quote is ignored.\n   - Otherwise (including a quote with no closing quote on the line), it is unquoted: strip from the first whitespace-then-`#` onward, then trim.\n9. A value is empty if the result is the empty string. `\"\"` and `''` are empty. `\" \"` is not.\n10. Duplicate keys: last wins, no warning.\n\nMulti-line quoted values are out of scope.\n\n## Comparison\n\n`E` = keys in the example, `A` = keys in the actual file.\n\n- **Missing**: in `E`, not in `A`.\n- **Extra**: in `A`, not in `E`.\n- **Empty**: in both `E` and `A`, with an empty value in `A`. Missing keys and extra keys are never reported as empty.\n\nThe example file's own values are irrelevant; an empty example value means \"you must supply this.\"\n\n## Output\n\nReport to stdout; warnings and errors to stderr. Sort keys alphabetically within each section and omit empty sections.\n\n```\nMissing in .env (2):\n  DATABASE_URL\n  SECRET_KEY\n\nExtra in .env (1):\n  LEGACY_FLAG\n\nEmpty in .env (1):\n  API_TOKEN\n```\n\n- Headers use the actual paths passed (or defaults), e.g. `Missing in ./config/.env (2):`.\n- With colors: Missing header red, Extra and Empty headers yellow, key names uncolored.\n- No issues: print `✓ .env matches .env.example` (using actual file names), exit 0.\n\n## Exit Codes\n\n| Code | Condition |\n|---|---|\n| 0 | No missing keys (and, with `--strict`, no extra or empty keys) |\n| 1 | Any missing key; with `--strict`, also any extra or empty key |\n| 2 | Usage or runtime error |\n\nExtra and empty keys are always reported but affect the exit code only under `--strict`.\n\n## Errors (exit 2)\n\n- Unreadable or nonexistent file: `error: cannot read <path>: <reason>` to stderr.\n- Unknown flag: `error: unknown option <flag>` plus a hint to run `--help`.\n- Option missing its required value (e.g. `--env` with no path): print an error.\n\n## Implementation Notes\n\n- Use the project's existing language. If starting fresh, use Node.js (TypeScript) or Python 3, standard library only (argument parsing may use it).\n- Keep `parseEnv(text) -> Map<string,string>` and `compare(example, actual) -> {missing, extra, empty}` pure and separate from I/O for unit testing.\n- Never print values from either file, only key names. `.env` files contain secrets.\n\n## Tests\n\nAutomated tests must cover at least:\n\n1. Identical files: exit 0, success message.\n2. Missing key: reported, exit 1.\n3. Extra key only: reported, exit 0 (1 with `--strict`).\n4. Empty value only (`FOO=`, `FOO=\"\"`, `FOO=''`): reported, exit 0 (1 with `--strict`).\n5. `FOO=\" \"` is not reported as empty.\n6. Comments, blank lines, `export FOO=bar`, and CRLF parse correctly.\n7. `FOO=bar # note` → `bar`; `FOO=\"a # b\"` → `a # b`.\n8. Value containing `=` (`URL=postgres://h/db?a=b`) parses correctly.\n9. Duplicates: last wins (`FOO=x` then `FOO=` makes FOO empty).\n10. Missing file: error on stderr, exit 2.\n11. Invalid key line: skipped, warning on stderr.\n12. Output never contains values from the files.\n13. A missing key is not also listed under Empty.\n\n## Out of Scope\n\nVariable interpolation (`${VAR}`), multi-line values, type or format validation, reading the process environment, auto-fixing or writing files.",
+            "words": 781,
+            "tokens_est": 1270,
+            "usage": {
+              "input_tokens": 2556,
+              "output_tokens": 1892,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 11196,
+            "source_sample": 0
+          },
+          {
+            "index": 1,
+            "text": "# envcheck: Specification\n\n`envcheck` is a CLI tool that compares a template file (`.env.example`) against an actual config file (`.env`) and reports:\n\n1. **Missing**: keys in the example but not in the actual file\n2. **Extra**: keys in the actual file but not in the example\n3. **Empty**: keys in the actual file with an empty value\n\n## Usage\n\n```\nenvcheck [--example PATH] [--env PATH] [--strict] [--no-color]\n```\n\n| Flag | Default | Description |\n|---|---|---|\n| `--example PATH` | `.env.example` | Template file |\n| `--env PATH` | `.env` | Actual file |\n| `--strict` | off | Also exit 1 on extra or empty keys |\n| `--no-color` | off | Disable ANSI colors. Also disabled when stdout is not a TTY or `NO_COLOR` is set |\n| `-h`, `--help` | | Print usage, exit 0 |\n\n## Parsing\n\nBoth files are parsed identically. Read as UTF-8; strip a leading BOM.\n\nFor each line:\n\n1. Strip leading and trailing whitespace.\n2. Skip blank lines and lines starting with `#`.\n3. Strip an optional `export ` prefix (`export` followed by whitespace).\n4. Split on the **first** `=`: left is the key, right is the value.\n5. Trim whitespace around key and value. Lines with no `=` or an empty key are ignored.\n6. Value handling:\n   - If it starts with `\"` or `'` and the matching quote appears later, the value is the content between the quotes. Anything after the closing quote (e.g. an inline comment) is discarded.\n   - Otherwise the value ends at the first ` #` (space, hash); drop that comment and trailing whitespace.\n7. A value is **empty** only if it is zero-length after processing. `KEY=\"\"` is empty; `KEY=\" \"` is not.\n\nValid keys match `[A-Za-z_][A-Za-z0-9_.]*`. Lines with an invalid key are ignored and warn on stderr: `warning: <file>:<line>: ignored invalid line`.\n\nDuplicate keys: the last occurrence wins, with a stderr warning: `warning: <file>:<line>: duplicate key <KEY>`.\n\nMulti-line values and `${VAR}` interpolation are not supported. Each line is parsed independently and values are literal.\n\n## Comparison\n\nLet `E` = keys in the example, `A` = keys in the actual file.\n\n- **missing** = `E − A`\n- **extra** = `A − E`\n- **empty** = keys in `A` with an empty value, regardless of the example's value\n\nOutput lists are sorted in byte order.\n\n## Output (stdout)\n\nSections appear in this order and are omitted when empty:\n\n```\nMissing (2):\n  DATABASE_URL\n  SECRET_KEY\n\nExtra (1):\n  OLD_FLAG\n\nEmpty (1):\n  API_TOKEN\n```\n\nIf all three are empty, print (using the actual paths passed, not hardcoded names):\n\n```\nOK: .env matches .env.example\n```\n\nColors (when enabled): Missing header red; Extra and Empty headers yellow; OK line green.\n\nPrint only key names, never values, so secrets don't leak into logs.\n\n## Exit Codes\n\n| Code | Condition |\n|---|---|\n| 0 | No missing keys (with `--strict`: also no extra or empty keys) |\n| 1 | Missing keys exist (with `--strict`: or any extra or empty keys) |\n| 2 | Usage or I/O error: unreadable or nonexistent file, bad flags |\n\nErrors go to stderr as `envcheck: error: <message>`. If a file does not exist, the message names it.\n\n## Implementation\n\n- Single file `envcheck.py`, Python 3.8+, standard library only (`argparse`, `sys`, `os`, `re`), with `main()` and an `if __name__ == \"__main__\":` guard.\n- Pure, unit-testable functions: `parse_env(text, filename) -> (dict, warnings)` and `compare(example, actual) -> (missing, extra, empty)`.\n\n## Tests\n\n`test_envcheck.py` (`unittest` or `pytest`) must cover at minimum:\n\n- Missing, extra, and empty detection, each in isolation and all together\n- Matching files: OK message, exit 0\n- Extra/empty only: exit 0 normally, exit 1 with `--strict`\n- Comments, blank lines, `export` prefix, quoted values, inline comments\n- `KEY=\"\"` is empty; `KEY=\" \"` is not\n- `URL=a=b` parses with value `a=b`\n- Duplicate keys and invalid lines produce warnings\n- Missing file: exit 2, error names the file\n- Values never appear in output\n\n## Out of Scope\n\n- Multi-line values, interpolation, auto-fixing or generating `.env`\n- Type or format validation of values\n- Scanning multiple files or directories",
+            "words": 681,
+            "tokens_est": 1078,
+            "usage": {
+              "input_tokens": 2200,
+              "output_tokens": 1644,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 9634,
+            "source_sample": 1
+          },
+          {
+            "index": 2,
+            "text": "# envcheck: Specification\n\n`envcheck` is a CLI tool for local development and CI. It compares a template file (`.env.example`) against an actual config file (`.env`) and reports discrepancies.\n\n## Usage\n\n```\nenvcheck [--example PATH] [--env PATH] [--strict] [--quiet] [--no-color]\nenvcheck --help\nenvcheck --version\n```\n\n| Flag | Default | Description |\n|---|---|---|\n| `--example PATH` | `.env.example` | Template file |\n| `--env PATH` | `.env` | Actual file |\n| `--strict` | off | Exit 1 on extra and empty keys too |\n| `--quiet`, `-q` | off | Suppress all stdout; only the exit code matters |\n| `--no-color` | off | Disable ANSI colors. Colors are also off when stdout is not a TTY or `NO_COLOR` is set |\n| `--help`, `-h` | | Print usage, exit 0 |\n| `--version` | | Print version, exit 0 |\n\n## Definitions\n\n- **Missing**: key in the example file, absent from the env file.\n- **Extra**: key in the env file, absent from the example file.\n- **Empty**: key in the env file whose parsed value is empty. Only keys present in the env file are checked, so a missing key is never also reported as empty.\n\n## Parsing Rules\n\nBoth files use the same hand-written parser. No third-party dotenv library.\n\n1. Read as UTF-8. Strip a leading BOM. Accept `\\n` and `\\r\\n`.\n2. Ignore blank lines and lines whose first non-whitespace character is `#`.\n3. Strip an optional leading `export ` (followed by whitespace).\n4. Split `KEY=VALUE` on the **first** `=`. Trim whitespace around the key. A line with no `=` is ignored with a stderr warning: `warning: <file>:<line>: ignoring malformed line`.\n5. Valid keys match `[A-Za-z_][A-Za-z0-9_]*`. A line with an invalid key is malformed (same warning).\n6. Values:\n   - Trim leading and trailing whitespace from the raw value.\n   - If the value starts with `\"` or `'`, the value is the content up to the matching closing quote. Ignore anything after the closing quote, including comments. Process no escape sequences. An unterminated quote takes the rest of the line.\n   - Otherwise the value ends at the first ` #` (whitespace then `#`); the comment is trimmed off.\n   - A value is empty if the result is the empty string. `KEY=` and `KEY=\"\"` are empty. `KEY=\"   \"` is not (whitespace inside quotes is preserved).\n7. Never print values (they may be secrets). Output contains key names only.\n8. For a duplicate key, the last occurrence determines emptiness. The key is reported once.\n\n## Output\n\nPrint to stdout, grouped by category, keys sorted alphabetically within each group. Omit empty groups.\n\n```\nMissing in .env (2):\n  DATABASE_URL\n  SECRET_KEY\n\nExtra in .env (1):\n  LEGACY_FLAG\n\nEmpty in .env (1):\n  API_TOKEN\n```\n\n- Headers use the actual paths passed (or defaults), e.g. `Missing in config/.env (2):`.\n- With no issues, print `OK: .env matches .env.example` (actual paths) to stdout.\n- Colors, when enabled: Missing red, Extra yellow, Empty yellow.\n- Warnings and errors go to stderr, never stdout.\n- With `--quiet`, print nothing to stdout and suppress stderr warnings. Fatal errors (exit 2) are still printed.\n\n## Exit Codes\n\n| Code | Meaning |\n|---|---|\n| 0 | No missing keys (with `--strict`, also no extra or empty keys) |\n| 1 | Any missing key (with `--strict`, also any extra or empty key) |\n| 2 | Usage or I/O error: unknown flag, file not found, unreadable file, or path is a directory |\n\nExtra and empty keys are always reported; `--strict` only changes the exit code.\n\nExit-2 errors go to stderr as `envcheck: error: <description>`, e.g. `envcheck: error: cannot read .env: no such file or directory`.\n\n## Implementation Notes\n\n- Language is your choice, but the result must be a single self-contained executable or script using only the standard library (Go, Rust, or Python stdlib only). If unsure, use Python 3.9+ with `argparse`.\n- Treat values as literal text. Do not interpolate `${VAR}`.\n- Do not read or modify the process environment.\n- Separate parsing, comparison, and reporting so each is unit-testable.\n\n## Required Tests\n\n1. Identical files → `OK`, exit 0.\n2. Key missing from env → under Missing, exit 1.\n3. Extra key in env only → under Extra, exit 0 (1 with `--strict`).\n4. `KEY=` and `KEY=\"\"` → Empty, exit 0 (1 with `--strict`).\n5. `KEY=\"  \"` → not Empty.\n6. `export KEY=value`, CRLF endings, and a BOM parse correctly.\n7. `KEY=value # comment` → `value`; `KEY=\"a # b\"` → `a # b`.\n8. A value containing `=` (e.g. `URL=postgres://u:p@h/db?x=1`) parses correctly.\n9. Duplicate keys are reported once; the last occurrence determines emptiness.\n10. Malformed line → stderr warning, parsing continues.\n11. Missing `.env` → exit 2, error on stderr.\n12. A missing key is not also listed as Empty.\n13. `--quiet` produces no stdout in any case.\n14. Secret values never appear in any output.\n\n## Out of Scope\n\nType validation, value format checks, multiline values, variable interpolation, multiple env files, and auto-fixing or generating `.env` from the example.",
+            "words": 832,
+            "tokens_est": 1300,
+            "usage": {
+              "input_tokens": 2489,
+              "output_tokens": 1979,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 10952,
+            "source_sample": 2
+          }
+        ]
+      }
+    },
+    "s4a": {
+      "crisp": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "**Weekly status**\n\n**Done**\n- Fixed flaky checkout test (race in cart cleanup); merged.\n- Found Stripe webhook retries hitting us twice because the idempotency key wasn't stored. Fixed in PR #412, waiting on Dana's review.\n- Pair-worked with Lee on the search index migration: 60% of tables moved.\n- Friday: cleanup and docs.\n\n**In progress**\n- Payment-retry work: continues once #412 lands.\n- Search index migration: ETA Friday, but blocked on DBA approval for the new index on `orders.created_at`.\n\n**On-call**\n- Two pages, both from the same memory leak in image-resizer. Restarted it each time. Root cause not found; I suspect last week's sharp version bump.\n\n**Next week**\n- Finish payment retry (if #412 lands).\n- Investigate the image-resizer leak. I need a prod heap dump, which requires SRE access.\n- Finish search migration (if DBA approves).\n\n**Risks and asks**\n- If DBA approval slips, the migration slips a week. Can you nudge the DBA?\n- I need SRE access for the heap dump. Can you help get it? Until then the leak will likely page again.\n- #412 needs Dana's review to unblock payment retry.",
+            "words": 186,
+            "tokens_est": 260,
+            "usage": {
+              "input_tokens": 521,
+              "output_tokens": 422,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 3662
+          },
+          {
+            "index": 1,
+            "text": "**Weekly status**\n\n**Done**\n- Fixed flaky checkout test (race in cart cleanup); merged.\n- Found Stripe webhook retries hit us twice because the idempotency key wasn't stored. Fixed in PR #412.\n- Documentation and cleanup.\n\n**In progress**\n- **Payment retry:** PR #412 is open, waiting on review from Dana.\n- **Search index migration (with Lee):** 60% of tables moved. Friday ETA missed because we're blocked on DBA approval for the new index on `orders.created_at`.\n- **image-resizer memory leak:** Paged twice Wednesday on-call, same leak both times. Restarted the service each time. Root cause unknown; suspect the sharp version bump from last week.\n\n**Next week**\n- Finish payment retry once #412 lands.\n- Investigate the image-resizer leak. Need a prod heap dump, which requires SRE access.\n- Finish the search migration if DBA approves.\n\n**Asks**\n- Dana: review of #412.\n- SRE access for the heap dump.\n- Help getting the DBA approval moving.\n\n**Risk**\n- If DBA approval slips, the search migration slips a week.\n- Until the leak is fixed, image-resizer will keep needing restarts and may page again.",
+            "words": 180,
+            "tokens_est": 253,
+            "usage": {
+              "input_tokens": 521,
+              "output_tokens": 423,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 4017
+          },
+          {
+            "index": 2,
+            "text": "**Weekly status**\n\n**Done**\n- Fixed flaky checkout test (race in cart cleanup); merged.\n- Found Stripe webhook retries hit us twice because the idempotency key wasn't stored. Fixed in PR #412, awaiting review from Dana.\n- Search index migration (paired with Lee): 60% of tables moved.\n- Cleanup and docs.\n\n**On-call**\n- Two pages, both from the same memory leak in image-resizer. Restarted the service each time. Root cause not found; suspect the sharp version bump from last week.\n\n**Blocked / needs from you**\n- DBA approval for the new index on `orders.created_at`. Without it the search migration misses Friday's ETA.\n- SRE access to pull a prod heap dump for the image-resizer investigation.\n\n**Next week**\n- Finish payment-retry work, if #412 lands.\n- Investigate image-resizer leak (needs SRE access).\n- Finish search migration, if DBA approves.\n\n**Risk**\n- If DBA approval slips, the search migration slips a week.",
+            "words": 149,
+            "tokens_est": 210,
+            "usage": {
+              "input_tokens": 521,
+              "output_tokens": 350,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 3119
+          }
+        ]
+      },
+      "crispify": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "**Weekly Status Update**\n\n**Done**\n- Fixed a race condition in cart cleanup that caused intermittent checkout test failures. Merged.\n- Fixed duplicate Stripe webhook processing: retries were handled twice because the idempotency key wasn't stored. Found while starting the payment-retry work. PR #412 awaits Dana's review.\n- Finished cleanup and docs.\n\n**In progress**\n- **Search index migration (with Lee):** ~60% of tables migrated. Missed the Friday ETA; blocked on DBA approval for the new index on `orders.created_at`. If approval slips, the migration slips about a week.\n- **Image-resizer memory leak:** Caused two on-call pages. Restarted the service each time; root cause unknown. Suspect last week's `sharp` version bump. A prod heap dump is needed, which requires SRE access.\n\n**Next week**\n1. Finish payment-retry work (needs #412 merged).\n2. Investigate the image-resizer leak (needs SRE access).\n3. Complete the search migration (needs DBA approval).\n\n**Asks**\n- Nudge the DBA approval for the `orders.created_at` index.\n- Help me get SRE access for the heap dump.",
+            "words": 163,
+            "tokens_est": 244,
+            "usage": {
+              "input_tokens": 913,
+              "output_tokens": 406,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 2816,
+            "source_sample": 0
+          },
+          {
+            "index": 1,
+            "text": "**Weekly Status Update**\n\n**Summary:** Fixed the checkout test flake and a duplicate-webhook bug. The search index migration is blocked on DBA approval. The image-resizer memory leak is still unresolved.\n\n**Done**\n- **Checkout flake:** Fixed a race condition in cart cleanup that caused intermittent failures. Merged.\n- **Stripe webhook duplicates:** Retries hit us twice because the idempotency key wasn't stored. Fix is in PR #412.\n- Cleanup and doc updates finished Friday.\n\n**In progress**\n- **Payment retries:** PR #412 is open, waiting on Dana's review.\n- **Search index migration (with Lee):** ~60% of tables moved. Missed the Friday ETA: blocked on DBA approval for the new index on `orders.created_at`. If approval slips, the migration slips a week.\n- **Image-resizer memory leak:** Paged twice on-call for the same leak; restarted the service each time. Root cause unknown. I suspect last week's `sharp` version bump. More pages are possible until it's found.\n\n**Needs**\n- Dana: review #412.\n- DBA: approve the `orders.created_at` index.\n- SRE: prod access so I can take a heap dump of the image-resizer.\n\nCan you nudge the DBA approval and SRE access? They're the most likely to change next week's plan.\n\n**Next week**\n- Finish payment retry work once #412 lands.\n- Investigate the image-resizer leak (needs the heap dump access).\n- Complete the search migration if DBA approval comes through.",
+            "words": 222,
+            "tokens_est": 317,
+            "usage": {
+              "input_tokens": 944,
+              "output_tokens": 526,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 3723,
+            "source_sample": 1
+          },
+          {
+            "index": 2,
+            "text": "**Weekly Status Update**\n\n**Done**\n- **Checkout test flakiness:** Fixed a race condition in cart cleanup. Merged.\n- **Stripe webhook duplicates:** Retries were processed twice because the idempotency key wasn't persisted. Fix is in PR #412, awaiting Dana's review.\n\n**In progress**\n- **Payment retry work:** Started Tuesday. Depends on #412 landing.\n- **Search index migration (with Lee):** ~60% of tables moved. Missed the Friday target; blocked on DBA approval for the new index on `orders.created_at`.\n- **Image-resizer memory leak:** Two on-call pages, same leak. Restarting the service mitigated it each time. Root cause unknown; the main suspect is last week's `sharp` version bump.\n\n**Blockers / asks**\n- Dana: review PR #412.\n- DBA: approve the `orders.created_at` index. If approval slips, the migration slips a week.\n- SRE: grant production heap dump access for the image-resizer investigation. Until the root cause is found, the leak may page again.\n\n**Next week**\n1. Finish payment retry work (if #412 lands).\n2. Investigate the image-resizer leak (needs heap dump access).\n3. Complete the search migration (if DBA approves).\n\nCan you unblock SRE access or nudge the DBA approval?",
+            "words": 183,
+            "tokens_est": 277,
+            "usage": {
+              "input_tokens": 927,
+              "output_tokens": 454,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 3698,
+            "source_sample": 2
+          }
+        ]
+      }
+    },
+    "s4b": {
+      "crisp": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "**Incident update: v2.14 orders errors (resolved)**\n\nv2.14 deployed at 14:05. At 14:12, `/api/orders` error rate rose from 0.2% to 6%. We rolled back at 14:20 and errors returned to normal at 14:22.\n\n**Cause:** The new orders query uses a column that doesn't exist on the EU replica. The migration had only run on US.\n\n**Impact:** About 400 order submissions failed over ~10 minutes. Customers saw a generic error. No double charges, since payment happens after order create.\n\n**Fixes:**\n- Run the migration on EU.\n- Add a deploy pipeline check that confirms migrations have run on all replicas before the app deploys.\n\n**Next:** Re-deploy planned tomorrow at 10:00, after the EU migration.\n\n**Ask:** @Priya, please confirm the EU migration is complete tonight.",
+            "words": 122,
+            "tokens_est": 191,
+            "usage": {
+              "input_tokens": 460,
+              "output_tokens": 294,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 3044
+          },
+          {
+            "index": 1,
+            "text": "**Incident update: v2.14 /api/orders errors (resolved)**\n\nv2.14 deployed at 14:05. At 14:12, /api/orders error rate rose from 0.2% to 6%. We rolled back at 14:20 and errors returned to normal at 14:22.\n\n**Cause:** The new orders query referenced a column that doesn't exist on the EU replica. The migration had only run on US.\n\n**Impact:** About 400 order submissions failed over the ~10-minute window. Customers saw a generic error. No double charges, since payment runs after order create.\n\n**Fixes:**\n- Run the migration on EU.\n- Add a deploy pipeline check that migrations have run on all replicas before the app deploys.\n\n**Next:** Re-deploy v2.14 tomorrow at 10:00, after the EU migration.\n\n**Ask:** @Priya, please confirm the EU migration is done tonight.",
+            "words": 122,
+            "tokens_est": 196,
+            "usage": {
+              "input_tokens": 460,
+              "output_tokens": 296,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 3029
+          },
+          {
+            "index": 2,
+            "text": "**Incident update: v2.14 /api/orders errors (resolved)**\n\nv2.14 deployed at 14:05. At 14:12 the /api/orders error rate rose from 0.2% to 6%. We rolled back at 14:20, and errors returned to normal at 14:22.\n\n**Cause:** The new orders query used a column that doesn't exist on the EU replica. The migration had only run on US.\n\n**Impact:** About 400 failed order submissions over roughly 10 minutes. Customers saw a generic error. No double charges, since payment happens after order create.\n\n**Fixes:**\n- Run the migration on EU.\n- Add a deploy pipeline check that migrations have run on all replicas before the app deploys.\n\n**Next:** Re-deploy tomorrow at 10:00, after the EU migration.\n\n**Ask:** @Priya, please confirm the EU migration tonight.",
+            "words": 120,
+            "tokens_est": 190,
+            "usage": {
+              "input_tokens": 460,
+              "output_tokens": 289,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 2666
+          }
+        ]
+      },
+      "crispify": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "**Incident update: /api/orders errors after v2.14 deploy (resolved)**\n\n**Status:** Resolved. v2.14 was rolled back; service normal since 14:22.\n\n**Timeline**\n- 14:05: v2.14 deployed\n- 14:12: /api/orders error rate rose from 0.2% to 6%\n- 14:20: rollback started\n- 14:22: error rate normal\n\n**Cause:** The new orders query referenced a column missing from the EU replica. The migration had only run on the US database.\n\n**Impact:** About 400 order submissions failed between 14:12 and 14:20. Customers saw a generic error. No double charges: payment happens after order creation.\n\n**Follow-ups**\n- Run the migration on the EU replica. **@Priya, confirm tonight that it's done.**\n- Add a pipeline check that verifies migrations have run on all replicas before the app deploys.\n- Re-deploy v2.14 tomorrow at 10:00, once the EU migration is confirmed.",
+            "words": 131,
+            "tokens_est": 224,
+            "usage": {
+              "input_tokens": 621,
+              "output_tokens": 331,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 2439,
+            "source_sample": 0
+          },
+          {
+            "index": 1,
+            "text": "**Incident: /api/orders errors after v2.14 deploy (resolved)**\n\nv2.14 is rolled back and error rates are back to baseline.\n\n**Timeline (today)**\n- 14:05: v2.14 deployed\n- 14:12: /api/orders error rate rose from 0.2% to 6%\n- 14:20: Rolled back\n- 14:22: Error rate back to baseline\n\n**Cause:** The new orders query referenced a column missing on the EU replica. The migration had only run on US.\n\n**Impact:** About 400 order submissions failed between 14:12 and 14:22. Customers saw a generic error. No double charges, since payment happens after order creation.\n\n**Follow-ups**\n- Run the migration on the EU replica. **Priya: confirm tonight when done.**\n- Add a pipeline check that verifies migrations have run on all replicas before the app deploys.\n- Re-deploy v2.14 tomorrow at 10:00, once the EU migration is confirmed.",
+            "words": 132,
+            "tokens_est": 219,
+            "usage": {
+              "input_tokens": 630,
+              "output_tokens": 325,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 3202,
+            "source_sample": 1
+          },
+          {
+            "index": 2,
+            "text": "**Incident update: /api/orders errors after v2.14 deploy (resolved)**\n\nv2.14 is rolled back and the service is healthy.\n\n**Timeline (today)**\n- 14:05: v2.14 deployed\n- 14:12: /api/orders error rate rose from 0.2% to 6%\n- 14:20: rollback started\n- 14:22: error rate back to normal\n\n**Impact:** About 400 order submissions failed between 14:12 and 14:22. Customers saw a generic error. No double charges: payment runs after order creation, so failed submissions were never charged.\n\n**Cause:** The new orders query referenced a column missing on the EU replica. The migration had only run on US.\n\n**Follow-ups**\n- Run the migration on the EU replica. **Priya, confirm tonight once it's done.**\n- Add a deploy pipeline check that verifies migrations have run on all replicas before the app deploys.\n- Re-deploy v2.14 tomorrow at 10:00, after the EU migration is confirmed.",
+            "words": 138,
+            "tokens_est": 225,
+            "usage": {
+              "input_tokens": 626,
+              "output_tokens": 335,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 2679,
+            "source_sample": 2
+          }
+        ]
+      }
+    },
+    "s5a": {
+      "crisp": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "**Recommendation: Redis Pub/Sub.** It handles 1,000 events/sec trivially, you already run it, and at-most-once delivery matches your loss tolerance.\n\n**Postgres LISTEN/NOTIFY**\n- Throughput at 1k/sec is feasible, but NOTIFY takes a global lock at commit time, so concurrent writers serialize. It degrades as writer concurrency grows.\n- Payload limit is 8000 bytes. Delivery is lost if the listener is disconnected.\n- Ties notification load to your primary database, which is the thing you least want to stress.\n- Fits only if events originate from transactions and you want delivery tied to commit (no phantom notifications).\n\n**Redis Pub/Sub**\n- Handles 100k+ msgs/sec on one node; 1k/sec is negligible load.\n- Fire-and-forget: subscribers that are disconnected or slow miss messages (slow ones can be dropped when output buffer limits hit). That is within your stated tolerance.\n- No persistence, replay, or consumer groups. If you later need those, Redis Streams is a drop-in step up on the same infrastructure.\n- Not tied to commit: publish after the DB transaction succeeds, accepting an occasional missed publish.\n\n**Kafka**\n- Durable, replayable, partitioned, scales far past your load.\n- Costs you a new cluster to run (brokers, KRaft/ZooKeeper, monitoring, upgrades) for guarantees you said you don't need.\n- Justified only if you expect to need replay, multiple independent consumers with their own offsets, or 10-100x growth with durability requirements.\n\n**Decision rule:** Start with Redis Pub/Sub. Move to Redis Streams if you need persistence or consumer groups. Consider Kafka only if throughput grows by an order of magnitude or event replay becomes a product requirement.",
+            "words": 259,
+            "tokens_est": 363,
+            "usage": {
+              "input_tokens": 308,
+              "output_tokens": 627,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 6306
+          },
+          {
+            "index": 1,
+            "text": "**Recommendation: Redis Pub/Sub.** It handles 1,000 events/sec with headroom, you already run it, and at-most-once delivery matches your tolerance for occasional loss.\n\n**Postgres LISTEN/NOTIFY**\n- Throughput is fine at 1k/s, but NOTIFY takes a global lock at commit, so concurrent writers serialize. This becomes a bottleneck as write load grows.\n- Payload limit is 8 KB. The notification queue is 8 GB by default, and a stalled listener can make NOTIFY fail.\n- Messages are lost if a listener is disconnected. Not transactional with a queue, so no replay.\n- Adds load to your primary database, the hardest component to scale.\n- Best fit: low-volume signals tied to a transaction (cache invalidation, \"row changed\").\n\n**Redis Pub/Sub**\n- Handles 100k+ msgs/sec on a single node, so 1k/s is trivial.\n- Fire-and-forget: subscribers that are disconnected miss messages. No persistence, no ack, no replay.\n- A slow subscriber can get disconnected when its output buffer exceeds `client-output-buffer-limit pubsub` (default 32 MB hard, 8 MB/60s soft). Monitor this.\n- Zero new infrastructure. Fan-out to many subscribers is built in.\n- If you later need durability, Redis Streams (consumer groups, acks) is a small step up on the same infrastructure.\n\n**Kafka**\n- Easily handles 1k/s, with durability, replay, partitioned ordering, and consumer groups.\n- You'd be paying for guarantees you said you don't need: a new cluster (or managed service), ops burden, monitoring, and schema/topic management.\n- Justified if events will become a shared backbone (multiple consumers, audit, reprocessing, 10x+ growth).\n\n**Decision rules**\n- Loss is truly acceptable and consumers are mostly online: Redis Pub/Sub.\n- You want \"occasional loss\" to mean rare rather than every deploy or restart: use Redis Streams instead of Pub/Sub. Same infrastructure, small cost.\n- Events must originate atomically with a DB write: Postgres (or an outbox table), accepting the load on the primary.\n- You need replay, audit, or many independent consumers: Kafka.\n\nSubscriber restarts and deploys are the main source of loss with Pub/Sub. If your notifications are user-visible and you deploy often, test that rate before committing.",
+            "words": 341,
+            "tokens_est": 497,
+            "usage": {
+              "input_tokens": 308,
+              "output_tokens": 840,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 8234
+          },
+          {
+            "index": 2,
+            "text": "**Recommend Redis Pub/Sub**, unless you need fan-out to offline clients or replay, in which case use Redis Streams (same infra).\n\n**Why it fits:** 1,000 events/s is trivial for Redis (100k+/s per node). Pub/Sub is at-most-once with no persistence, which matches your \"occasional loss is fine\" constraint. You already run it, so there is zero new operational cost.\n\n**Postgres LISTEN/NOTIFY**\n- Works at 1k/s but is the weakest scaling path. NOTIFY takes a global lock at commit time, so concurrent writers serialize; throughput degrades as transaction concurrency rises.\n- Payload limit is 8 KB. Each listener holds a dedicated connection, which conflicts with PgBouncer transaction pooling.\n- Advantage: transactional. The notification fires only if the transaction commits. Pick it only if events originate from DB writes and you want that guarantee, with low volume.\n- Adds load to your primary database, your most expensive and hardest-to-scale component.\n\n**Redis Pub/Sub**\n- Fire-and-forget: if a subscriber is disconnected, it misses messages. Slow subscribers can be disconnected when their output buffer limit is hit.\n- No consumer groups: every subscriber gets every message, so you can't load-balance work across workers. If you need that, use Streams.\n- Publishing is not tied to a DB transaction, so publish after commit. A crash between commit and publish drops the event, which you've said is acceptable.\n\n**Kafka**\n- Durable, replayable, partitioned, with consumer groups. All of that is overkill here.\n- Cost: a new cluster (brokers, plus KRaft or ZooKeeper), monitoring, upgrades, and schema/topic management. 1k/s doesn't justify it.\n- Choose it only if you expect 10–100x growth, need replay or audit, or multiple independent consumers need durable history.\n\n**Decision rule**\n- Fan-out to live connections (WebSocket/push gateway), loss OK → Redis Pub/Sub.\n- Worker queue or need catch-up after disconnect → Redis Streams.\n- Events must be atomic with DB writes, low volume → Postgres NOTIFY (or an outbox table).\n- Need durability, replay, or large growth → Kafka.",
+            "words": 323,
+            "tokens_est": 459,
+            "usage": {
+              "input_tokens": 308,
+              "output_tokens": 779,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 7388
+          }
+        ]
+      },
+      "crispify": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "**Use Redis Pub/Sub.** If consumers must catch up after downtime, use Redis Streams instead (same infrastructure, no new system).\n\n**Why Redis**\n- You already run it, so there's no new operational burden.\n- It keeps notification load off Postgres.\n- Your tolerance for occasional loss removes Kafka's main advantage.\n- It handles 100k+/sec on modest hardware, about 100x your ~1,000 events/sec, with sub-millisecond latency.\n\n**Tradeoffs at ~1,000 events/sec**\n\n*Redis Pub/Sub*\n- At-most-once, fire-and-forget. A disconnected subscriber misses messages; no persistence or replay.\n- Not transactional with Postgres writes. You can publish for a transaction that later rolls back, or lose an event if the app crashes between commit and publish. Acceptable given your stated loss tolerance.\n\n*Postgres LISTEN/NOTIFY*\n- 1k/sec works, but NOTIFY takes a global lock at commit, so concurrent writers serialize. It becomes a bottleneck as you grow.\n- 8KB payload limit; typically you send an ID and fetch the row.\n- At-most-once, only to connected listeners. A stalled listener can fill the notification queue and eventually make NOTIFY fail for everyone.\n- Each listener needs a dedicated connection, competing with your pool. PgBouncer transaction pooling breaks LISTEN.\n- Upside: transactional. The notification fires only if the transaction commits.\n- Adds load to your primary database, probably your most precious resource.\n\n*Kafka*\n- Far more throughput than you need, plus durability, replay, consumer groups, and per-partition ordering.\n- Cost: a new system to deploy, monitor, upgrade, and understand (brokers, partitions, consumer lag, KRaft/ZooKeeper). At 1k/sec with loss tolerated, you'd pay for guarantees you don't need.\n\n**When to choose differently**\n- **Catch-up after consumer restarts:** Redis Streams with consumer groups. Adds persistence, acks, and replay at modest complexity.\n- **Events must be atomic with DB transactions:** LISTEN/NOTIFY, or better, a transactional outbox table polled or relayed to Redis.\n- **10-100x growth, multiple independent consumers replaying history, or an event log as system of record:** Kafka becomes justified then, not now.\n\n**Redis operational risks**\n- Many slow subscribers can bloat server output buffers. Set `client-output-buffer-limit pubsub` appropriately and monitor it.\n- On a single instance, failover drops all subscriptions. Ensure clients reconnect and resubscribe automatically.",
+            "words": 355,
+            "tokens_est": 530,
+            "usage": {
+              "input_tokens": 1371,
+              "output_tokens": 916,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 5365,
+            "source_sample": 0
+          },
+          {
+            "index": 1,
+            "text": "**Recommendation: Redis Pub/Sub if every subscriber needs every event (e.g., fanout to WebSocket gateways). Redis Streams with consumer groups if work is split across a worker pool (e.g., push/email senders). Skip Kafka for now. Avoid LISTEN/NOTIFY at this volume unless transactional coupling is your top priority.**\n\n## Comparison at ~1,000 events/sec\n\n**Postgres LISTEN/NOTIFY**\n- 1k/sec is feasible, but NOTIFY takes a global lock at commit, serializing commits across the database. This can hurt your primary write workload as volume grows.\n- 8 KB payload limit, so you mostly send IDs and re-query.\n- At-most-once delivery. Listeners need a persistent connection, which is awkward behind PgBouncer in transaction mode.\n- Upside: transactional. The notification fires only if the transaction commits.\n- Risk: puts notification load on your system of record.\n\n**Redis Pub/Sub**\n- Handles 100k+/sec on modest hardware (~100x headroom), with sub-millisecond latency.\n- At-most-once, fire-and-forget. Disconnected subscribers miss messages, which fits your tolerance for occasional loss.\n- Already in your stack, so no new infrastructure, and client libraries are mature.\n- Downsides: no persistence, no replay, no consumer groups. Every subscriber gets every message, so scaling workers horizontally duplicates work unless you shard channels.\n\n**Kafka**\n- Throughput far exceeds your need. Durability, replay, consumer groups, and per-partition ordering are excellent.\n- It adds a new system (brokers, KRaft/ZooKeeper, monitoring, upgrades, schema management) to solve problems you've said you don't have. Overkill at 1k/sec with loss tolerated.\n\n## Why Redis\n\n- Loss is acceptable, so Kafka's durability buys nothing.\n- No added load or lock contention on Postgres.\n- Near-zero operational cost.\n\n## Caveats\n\n- **Multiple workers sharing load:** plain Pub/Sub delivers each event to all of them. Use Redis Streams with consumer groups for load-balanced consumption, acks, and short-term replay, on the same infrastructure. It handles 1k/sec easily.\n- **Events from DB writes that must match committed state:** write to an outbox table in the same transaction and have a small relay publish to Redis. This gives transactional consistency without NOTIFY.\n- **Revisit Kafka if you need:** long retention, replay for new consumers, multiple independent downstream consumers at scale, or strict ordering and durability guarantees.",
+            "words": 355,
+            "tokens_est": 519,
+            "usage": {
+              "input_tokens": 1348,
+              "output_tokens": 898,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 5369,
+            "source_sample": 1
+          },
+          {
+            "index": 2,
+            "text": "**Use Redis Pub/Sub.** If subscribers must survive disconnects, use Redis Streams instead (same infrastructure, small API change).\n\n## Comparison at ~1,000 events/sec, loss tolerated\n\n**Postgres LISTEN/NOTIFY**\n- NOTIFY takes a global lock on the notification queue at commit, so concurrent writers serialize. It bottlenecks well before Redis or Kafka would, though 1k/s is feasible.\n- Payload limit is 8000 bytes. The queue is finite (8GB), and a stalled listener can block commits.\n- Each listener holds a long-lived Postgres connection (expensive) and doesn't work through transaction-mode PgBouncer.\n- It adds load to your primary database, probably your most precious resource.\n- Upside: transactional. A notification is delivered only if its transaction commits. You've said loss is OK, so you'd be paying for a guarantee you don't need.\n\n**Redis Pub/Sub**\n- 1k/s is trivial (Redis handles 100k+/s). Low latency, minimal code, easy fan-out.\n- At-most-once: a disconnected subscriber misses messages, which matches your \"occasional loss is fine\" requirement.\n- No new infrastructure.\n- Downsides: no persistence, no replay, no consumer groups (every subscriber gets every message, so work-sharing across instances needs extra design). Slow subscribers are disconnected when output buffers overflow.\n\n**Kafka**\n- Throughput far beyond need. Durable, replayable, partitioned, with consumer groups and ordering.\n- Cost: a new system to deploy, monitor, upgrade, and learn (brokers, partitions, offsets, KRaft/ZooKeeper, or a managed bill). That is heavy overhead for guarantees you've said you don't need.\n\n## Why Redis\n\n- You already run it, so operational cost is near zero.\n- It covers the load with large headroom.\n- Its weakness (no delivery guarantee) is the tradeoff you've declared acceptable.\n- It keeps notification traffic off Postgres.\n\n## When to choose differently\n\n- **Multiple consumer instances should share work** (each notification handled once): Pub/Sub delivers a copy to each instance. Use **Redis Streams with consumer groups** for persistence, acks, and load-sharing without Kafka.\n- **Notifications must be tied to DB transactions** (e.g., notify only if the order committed): use LISTEN/NOTIFY, or an outbox table with a worker that publishes to Redis.\n- **Growth of 10-100x, replay, event sourcing, or multiple independent consumers reading history**: Kafka earns its keep.\n\n## Operational checks\n\n- Make sure `client-output-buffer-limit pubsub` isn't set small enough to make pub/sub fragile.\n- Monitor subscriber lag and disconnects.\n\nRevisit Kafka only if durability, replay, or scale requirements change.",
+            "words": 388,
+            "tokens_est": 571,
+            "usage": {
+              "input_tokens": 1418,
+              "output_tokens": 986,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 5784,
+            "source_sample": 2
+          }
+        ]
+      }
+    },
+    "s5b": {
+      "crisp": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "Use a monorepo.\n\n**Why it fits your setup:** The shared API client is the deciding factor. With separate repos, every client change means: publish a version, bump it in the web repo, bump it in the mobile repo, and handle the window where the two apps run different client versions. In a monorepo, one PR changes the client and both consumers, and CI proves they still build and pass tests together. At 6 engineers, that coordination cost hits everyone regularly, and the usual monorepo costs (slow CI, ownership sprawl, tooling scale) don't appear at this size.\n\n**Setup:**\n- Workspaces: pnpm or yarn workspaces, with `apps/web`, `apps/mobile`, `packages/api-client`.\n- Task runner with caching and affected-only builds: Turborepo or Nx. Without it, CI time grows with every package.\n- CI: run only affected projects per PR. Keep mobile release builds (EAS/Fastlane) on separate triggers from web deploys.\n- CODEOWNERS per directory if ownership matters.\n- Metro (React Native) needs explicit config to resolve workspace packages and avoid duplicate dependency copies. Budget a day or two for this.\n\n**Risks:**\n- Mobile and web release cadences differ (app store review vs. continuous deploy). Since both consume the client from source, a client change that ships to web immediately may reach mobile users weeks later. Keep API changes backward compatible against the server regardless of repo layout.\n- Tooling setup cost is front-loaded, roughly a few days.\n- If you later need strict access separation (contractors, open-sourcing the client), you'll have to split it out. `packages/api-client` is a clean seam for that.\n\n**When separate repos would win:** different teams owning each app with little overlap, a client published externally with its own semver and release process, or hard access-control requirements. None apply here.",
+            "words": 288,
+            "tokens_est": 394,
+            "usage": {
+              "input_tokens": 280,
+              "output_tokens": 612,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 6229
+          },
+          {
+            "index": 1,
+            "text": "Use a monorepo.\n\n**Why:** The shared API client is the deciding factor. With separate repos, every client change needs publish, version bump, and update PRs in two consumers. That's a multi-step loop that slows a 6-person team and lets web and mobile drift onto different client versions. In a monorepo, one PR changes the client and both apps, and CI proves nothing broke.\n\n**Setup:**\n- Workspaces: pnpm (or yarn) workspaces with `apps/web`, `apps/mobile`, `packages/api-client`.\n- Task runner with caching: Turborepo or Nx. Either is enough at this size; Turborepo is lighter.\n- CI: run only affected packages (`turbo --filter=...[origin/main]`) so mobile changes don't rebuild web.\n- Ownership: CODEOWNERS per directory if you want review boundaries.\n- Mobile: if it's React Native, configure Metro for workspace symlinks (the usual friction point). If it's native iOS/Android, the monorepo still works for the client library only if it's JS/TS or generated from an OpenAPI spec; check this first.\n\n**Costs to accept:**\n- CI config and caching take about 1-3 days to set up well.\n- Slower clones and a noisier history as the repo grows (not a problem at your scale).\n- Mobile release cadence is tied to app store review, so keep release tags/branches per app rather than one global version.\n\n**When I'd flip the answer:**\n- Mobile is fully native (Swift/Kotlin) and doesn't consume the TS client. Then the shared-code benefit disappears, and separate repos or a generated-client approach is simpler.\n- Other teams or external consumers need to depend on the client independently. Then publish it as a versioned package (you can still develop it in the monorepo).\n- Strict access separation is required between apps.",
+            "words": 276,
+            "tokens_est": 391,
+            "usage": {
+              "input_tokens": 280,
+              "output_tokens": 605,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 6022
+          },
+          {
+            "index": 2,
+            "text": "Use a monorepo.\n\n**Why it fits your setup:**\n- The shared API client is the deciding factor. With separate repos, every client change needs a publish, a version bump in two consumers, and a window where web and mobile run different versions. In a monorepo it's one PR, one CI run, and both apps are verified against the change before merge.\n- At 6 engineers, the usual monorepo costs (CI scale, ownership boundaries, tooling build-out) are small. The coordination cost of three repos is not.\n- Atomic refactors across API client, web, and mobile become possible. Breaking changes get fixed in the same PR that introduces them.\n\n**What it costs:**\n- You need path-based CI so a web-only change doesn't build mobile. Turborepo, Nx, or Bazel handle this; Turborepo or Nx is enough at your size.\n- Mobile tooling (Metro, Gradle, Xcode) needs config to resolve workspace packages. React Native is the known pain point here. Budget a few days up front.\n- Release cadences differ: mobile ships through app store review, web ships continuously. Handle this with per-app release tags and branches, not separate repos.\n\n**Layout:**\n```\napps/web\napps/mobile\npackages/api-client\n```\nUse pnpm or yarn workspaces, with the apps depending on `packages/api-client` via `workspace:*`.\n\n**When to choose separate repos instead:** if the API client is consumed by external teams or published publicly, or if web and mobile are owned by different teams with different access requirements. Neither applies to you. If the client later goes public, you can publish it from the monorepo without splitting.",
+            "words": 256,
+            "tokens_est": 352,
+            "usage": {
+              "input_tokens": 280,
+              "output_tokens": 534,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 5421
+          }
+        ]
+      },
+      "crispify": {
+        "samples": [
+          {
+            "index": 0,
+            "text": "**Use a monorepo.**\n\n**Why**\n\n- **The shared API client decides it.** With separate repos, each client change means publishing a package, bumping versions in two consumers, and waiting on CI in each. In a monorepo, one PR updates the client and both apps atomically, and CI verifies nothing broke.\n- **Six engineers means low coordination cost.** Ownership conflicts, CI contention, and noisy history mostly appear at much larger scale.\n- **Cross-cutting changes are common.** API, auth flow, and new-endpoint changes touch the client plus both apps. Each becomes one reviewable PR instead of three coordinated ones.\n- **Shared tooling.** One lint config, one TS config, one set of CI conventions, one dependency policy.\n\n**Reconsider if**\n\n- Mobile and web have very different release cadences *and* need to pin different client versions for long periods.\n- You need strict access control (e.g., contractors who shouldn't see all code).\n- The mobile toolchain (Xcode, Gradle, Metro) fights the workspace layout. Solvable, but the most common friction point for React Native or native.\n\n**Setup**\n\n- **Layout:** `apps/web`, `apps/mobile`, `packages/api-client`, optionally `packages/config` for shared lint/TS settings.\n- **Tooling (JS/TS):** pnpm workspaces plus Turborepo (or Nx for more features). Both provide task caching and changed-only build/test.\n- **CI:** affected-only builds and path filters so web-only changes don't trigger mobile builds. Cache aggressively.\n- **Versioning:** the client is consumed by workspace reference, so no internal publishing. Add Changesets only if you later publish externally.\n- **Mobile releases:** separate deploy pipelines per app, triggered by path or tag. A monorepo doesn't require a unified release.\n- **Ownership:** CODEOWNERS for review routing.\n\n**Main risk**\n\nMobile tooling with workspaces, especially React Native and Metro with symlinks, can need extra config. Before committing, spend 1–2 days getting the mobile app to build against the workspace client.\n\nIf the spike works, the monorepo saves meaningful time weekly. If not, fall back to separate repos with a published client package.\n\nTell me your stack (React Native vs. native, JS vs. other languages) and I'll tailor the layout and tooling.",
+            "words": 337,
+            "tokens_est": 493,
+            "usage": {
+              "input_tokens": 1157,
+              "output_tokens": 792,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 4821,
+            "source_sample": 0
+          },
+          {
+            "index": 1,
+            "text": "**Use a monorepo.**\n\n**Why**\n- **Shared API client is the deciding factor.** With separate repos, each client change means publishing a version, bumping it in two consumers, and waiting on two PRs. In a monorepo, one PR changes the library and both apps, and CI verifies nothing broke.\n- **Six engineers is small enough** that build times, ownership boundaries, and tooling load won't bite for a long time.\n- **Atomic changes.** API contract, client, and UI changes ship together, removing web/mobile version-skew bugs.\n- **Less overhead.** One CI config, one lint/TS/formatting ruleset, one dependency policy, one place to search and review.\n\n**When separate repos win**\n- Teams with different release cadences and strict access boundaries.\n- The client library is consumed by external third parties and needs independent versioning and publishing.\n- The mobile toolchain fights the workspace setup (the most common real-world pain, especially React Native with Metro).\n\nNone seem to apply to you, but check the last one before committing.\n\n**Setup**\n- **Layout:**\n  ```\n  apps/web\n  apps/mobile\n  packages/api-client\n  packages/config   (shared eslint/tsconfig, optional)\n  ```\n- **Tooling (assuming JS/TS):** pnpm workspaces plus Turborepo or Nx for task caching and affected-only builds. Turborepo is lighter; Nx is more featureful. Pick Turborepo unless you want generators and enforced module boundaries.\n- **CI:** run only affected projects (`turbo run test --filter=...[origin/main]`) with remote caching.\n- **Ownership:** CODEOWNERS routes web and mobile changes to the right reviewers.\n- **Releases:** deploy web and mobile independently from path-filtered pipelines. App store review gates mobile anyway, so don't couple them. If you later publish the client externally, Changesets can version that package alone.\n\n**Pitfalls**\n- Don't let packages import each other's internals; enforce public entry points.\n- Watch dependency hoisting with Metro and native modules. Test in a spike first.\n- Migrate incrementally: move the client library and one app first, then the other, preserving history with `git subtree` or `git filter-repo`.\n\n**Next step:** spend a day on a spike getting the mobile app to build inside the workspace. If it works, the rest is straightforward. If it's painful, tell me your stack and I'll suggest workarounds or a hybrid (web + client in a monorepo, mobile separate).",
+            "words": 360,
+            "tokens_est": 533,
+            "usage": {
+              "input_tokens": 1193,
+              "output_tokens": 835,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 5133,
+            "source_sample": 1
+          },
+          {
+            "index": 2,
+            "text": "**Use a monorepo.**\n\n**Why**\n\n- **Shared API client.** With separate repos, every client change means publishing a version, bumping it in two consumers, and waiting on CI in each. That causes drift, \"works on web but not mobile\" bugs, and stale pinned versions. In a monorepo, one PR changes the client and both consumers, and CI proves they work together.\n- **Team size.** Six engineers keeps tooling cost low, and most of them likely touch more than one of the three projects.\n- **Atomic changes.** API contract, client, and UI changes land and get reviewed together.\n- **One set of conventions.** Lint, TypeScript config, formatting, CI, and dependency versions are defined once.\n\n**When I'd choose differently**\n\n- Separate teams with different release cadences, access restrictions, or contractors who shouldn't see all the code.\n- Native mobile (Swift/Kotlin) with no shared tooling with the JS/TS side. The shared-client benefit shrinks, though it still works if the client is generated from an OpenAPI spec.\n- The client must be open-sourced or distributed externally on its own. You can still publish it from a monorepo.\n\n**Setup**\n\n1. Layout: `apps/web`, `apps/mobile`, `packages/api-client`.\n2. Workspaces: pnpm (or npm/yarn) workspaces, so apps consume `api-client` by local link with no publishing.\n3. Task runner: Turborepo or Nx with caching. Use `affected`/filtered builds so a web-only change doesn't rebuild mobile.\n4. CI: path-based filtering plus remote caching.\n5. CODEOWNERS: assign ownership per directory.\n6. Mobile releases: keep them independent (tags or release branches per app). A monorepo doesn't mean everything ships together.\n7. Versioning: skip it internally. Add Changesets only if you publish the client externally.\n\n**Watch-outs**\n\n- Metro (React Native) needs config for symlinks and watch folders. Budget half a day.\n- Without caching and affected-only builds, CI slows as the repo grows.\n- Start with pnpm + Turborepo. Bazel or full Nx is overkill at this size.\n\nTell me the stack (React Native vs. native, TypeScript or not, how the client is built) and I can sketch the concrete config.",
+            "words": 334,
+            "tokens_est": 493,
+            "usage": {
+              "input_tokens": 1190,
+              "output_tokens": 768,
+              "reasoning_tokens": null
+            },
+            "latency_ms": 5157,
+            "source_sample": 2
+          }
+        ]
+      }
+    }
+  }
+}

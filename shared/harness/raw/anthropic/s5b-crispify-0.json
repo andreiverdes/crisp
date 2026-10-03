@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s5b-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\nUse a **monorepo**, unless the web app, mobile app, and API client are owned or released very independently.\n\nFor a six-engineer team, the shared client creates meaningful coordination costs across repositories: changes often need matching updates, synchronized pull requests, and version bumps. In a monorepo, one change can update the client and both apps together, and shared tooling and review practices are easier to maintain.\n\nA practical structure might be:\n\n```text\napps/\n  web/\n  mobile/\npackages/\n  api-client/\n```\n\nKeep clear package boundaries: each app should depend on the API client through an explicit package interface, with its own tests and build configuration. Use CI to run checks only for affected packages where possible, and make releases independently if the apps or client need different release schedules.\n\nChoose separate repos instead if the client is a stable product consumed by other teams or external users, or if access controls, compliance, or substantially different release processes require separation. Otherwise, start with the monorepo; you can split a package out later if a real need emerges."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Use a **monorepo** unless the web app, mobile app, and API client have substantially independent owners or release schedules.\n\nWith six engineers, separate repos add coordination costs: matching changes, synchronized pull requests, and version bumps. A monorepo lets one change update the client and both apps, and keeps tooling and review practices consistent.\n\n```text\napps/\n  web/\n  mobile/\npackages/\n  api-client/\n```\n\nKeep package boundaries explicit: each app should use the API client through its package interface, with its own tests and build configuration. Configure CI to check only affected packages where possible. Release apps and the client independently if they need different schedules.\n\nUse separate repos if the client is a stable product for other teams or external users, or if access controls, compliance, or release requirements demand separation. Otherwise, start with a monorepo and split packages later if a concrete need emerges.",
+    "usage": {
+      "prompt_tokens": 386,
+      "completion_tokens": 187,
+      "total_tokens": 573,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

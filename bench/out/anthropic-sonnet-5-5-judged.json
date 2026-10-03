@@ -1,0 +1,3461 @@
+{
+  "schema": "crisp-bench/judged-v1",
+  "team": "anthropic",
+  "generator": "anthropic/claude-sonnet-5-5",
+  "generator_settings": {
+    "reasoning": "low",
+    "temperature": null
+  },
+  "judge": "anthropic/claude-opus-5-5",
+  "judge_settings": {
+    "reasoning": "high"
+  },
+  "arms_file": "bench/out/anthropic-sonnet-5-5-arms.json",
+  "baseline_file": "shared/baseline/claude-sonnet-5-5.json",
+  "generated_at": "2026-10-03T19:45:58Z",
+  "tests": {
+    "s1a": {
+      "judgments": [
+        {
+          "arm": "crisp",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 3,
+              "relevance": 3,
+              "conversational": 3,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "A mentions `--no-ff` to keep a feature grouped and squash-merge as a PR option. B omits both, and its rebase-then-merge workflow would actually fast-forward without saying so.",
+            "arm": "B includes before/after commit-graph diagrams, `git rebase --continue`/`--abort` for handling rebase conflicts, the advice to default to merge when unsure, and the note that linear history makes `git bisect` easier."
+          },
+          "preferred": "arm",
+          "notes": "Both cover every required fact accurately. A does it in a tight, colleague-like answer, while B repeats itself across sections, a summary table and a closing offer. B's diagrams and conflict commands are nice but don't outweigh the bloat."
+        },
+        {
+          "arm": "crisp",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 3,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "B has before/after commit-graph diagrams showing exactly what each operation does. It also covers recovery: `git merge --abort`, `git rebase --abort`, and `git reflog` with `reset --hard`. It explains what `--force-with-lease` protects against."
+          },
+          "preferred": "baseline",
+          "notes": "Both answers cover every required fact. B's diagrams make the difference concrete, and its abort and reflog tips help someone act safely. A is tighter, but its claim that rebase 'loses the original commit timestamps' context' is vague and partly misleading, since rebase keeps the author date by default. B is heavier on headers and repeats itself in 'Short Version', but it is still the more useful answer."
+        },
+        {
+          "arm": "crisp",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 3,
+              "conversational": 3,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "B includes before/after commit-graph diagrams and recovery tips: git rebase --abort, git merge --abort, and git reflog plus reset --hard to undo a bad rebase. A has none of these."
+          },
+          "preferred": "arm",
+          "notes": "Both cover all required facts, though neither says that merge can fast-forward. A delivers the same decision guidance and tradeoffs in far fewer words. B repeats its points across pros/cons, a table, a golden rule, and a summary, and adds tangents like the pull.rebase config."
+        },
+        {
+          "arm": "crispify",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 4
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers carry the same content and the same small imprecision: each implies merge always creates a merge commit and omits fast-forward. A says it in fewer words and drops B's closing offer to inspect the repo, so it is more useful per word."
+        },
+        {
+          "arm": "crispify",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "The content is nearly identical. B puts the one-line summary at the top, where A has an intro and puts its summary at the end, and B's wording is slightly tighter. That makes B a little more scannable per word. Neither answer says merge can fast-forward when the histories haven't diverged."
+        },
+        {
+          "arm": "crispify",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 3,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 3,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers have the same content and the same minor omission: neither says merge can fast-forward when the histories have not diverged (both mention --no-ff only in passing). B is tighter: it drops A's redundant Summary section and uses compact pros/cons lines, so it gives the same value in fewer words."
+        }
+      ]
+    },
+    "s1b": {
+      "judgments": [
+        {
+          "arm": "crisp",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "B gives a real-world reason to prefer `is None`: NumPy arrays and pandas objects return arrays for `== None`. B names user-defined sentinels explicitly. B notes that `==` falls back to identity when `__eq__` isn't defined.",
+            "arm": "A includes a runnable example of a custom `__eq__` that makes `== None` return True, which shows concretely why `is` is safer."
+          },
+          "preferred": "arm",
+          "notes": "Both are correct and cover every required fact. B delivers the same content more densely and adds the practical NumPy/pandas case and sentinel mention, though its `__hash__` aside is tangential. A is more readable, but its extra headers and table add length without adding substance."
+        },
+        {
+          "arm": "crisp",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 3,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "A gives the concrete numpy case, where == None returns an elementwise array. A also covers enum members and explains why the 257 result depends on context. B lacks all three.",
+            "arm": "B shows the NaN case, where x == x is False but x is x is True. A does not mention it."
+          },
+          "preferred": "arm",
+          "notes": "Both answers cover all five facts correctly. A is tighter and adds the practical numpy and enum points. B is longer, partly redundant (its aliasing and custom __eq__ sections repeat earlier points), and has a garbled phrase ('sentinel objects sentinel')."
+        },
+        {
+          "arm": "crisp",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 3,
+              "conversational": 3,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "A gives the real-world NumPy case where == None returns an elementwise array, and notes that default __eq__ falls back to identity.",
+            "arm": "B shows a concrete custom __eq__ class where x == None returns True, and mentions `is not`/`!=`."
+          },
+          "preferred": "arm",
+          "notes": "Both answers are correct and include every required fact. A covers the same ground more tightly, while B adds a title that restates the question and an aliasing section that repeats its opening example."
+        },
+        {
+          "arm": "crispify",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers have the same content, examples and table. A delivers it more compactly, with fewer headers and less repeated wording. B adds sub-headers and splits code blocks without adding information."
+        },
+        {
+          "arm": "crispify",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers have essentially the same content. B puts the rules of thumb up front, is tighter, and avoids A's garbled sentinel line (\"sentinel objects sentinel\"). That makes B quicker to scan and act on."
+        },
+        {
+          "arm": "crispify",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "A's heading notes that string interning, not just small-int caching, can make `is` appear to work. Its body never shows a string example, though."
+          },
+          "preferred": "arm",
+          "notes": "The content is essentially identical. B states each point as a bolded, actionable rule and uses slightly fewer words, so it scans faster. A's heading mentions string interning but its body only shows ints, which leaves a small loose end."
+        }
+      ]
+    },
+    "s2a": {
+      "judgments": [
+        {
+          "arm": "crisp",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "A shows how to inspect the shared list via add_item.__defaults__. It also offers a non-mutating alternative (tuple default returning [*items, item]) and shows the corrected output for both calls. B has none of these."
+          },
+          "preferred": "arm",
+          "notes": "Both are correct and cover every required fact. B does it in a fraction of the words. A's extras, the __defaults__ demo and the tuple alternative, are mildly useful, but the memoization aside is a tangent, so B has the better usefulness per word."
+        },
+        {
+          "arm": "crisp",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "B shows how to inspect the shared list via add_item.__defaults__. It also notes that immutable defaults are safe, and that deliberately shared state is better made explicit."
+          },
+          "preferred": "arm",
+          "notes": "Both are correct and cover every required fact. A does it in far fewer words. B's extras, such as the __defaults__ check and the step-by-step walkthrough, are mildly useful but partly restate what the asker already observed."
+        },
+        {
+          "arm": "crisp",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 3,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "B shows how to inspect the shared default via add_item.__defaults__ and notes that immutable defaults are safe; A has neither."
+          },
+          "preferred": "arm",
+          "notes": "Both are correct and cover every required fact. A delivers the explanation, the fix and the is-None caveat in a fraction of the words. B's extras, the __defaults__ check and the caching tangent, are mildly useful but dilute it."
+        },
+        {
+          "arm": "crispify",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "tie",
+          "notes": "Both answers carry the same content and are equally correct. A says it in slightly fewer words, and B adds a 'Why it happens' heading that makes it a little easier to scan. Neither difference is decisive."
+        },
+        {
+          "arm": "crispify",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "tie",
+          "notes": "The two answers have essentially the same content and structure. A is slightly terser, while B adds small connective phrases like \"You can confirm it\" and \"sentinel\" that read a bit more naturally, so neither is meaningfully more useful."
+        },
+        {
+          "arm": "crispify",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers have the same substance: the explanation, the `__defaults__` check, the None fix, the `is None` caveat, and the note on other mutable defaults. B says it in fewer words. A's 'Why it happens' header and fuller sentences read a little more naturally, but B delivers the same value more efficiently."
+        }
+      ]
+    },
+    "s2b": {
+      "judgments": [
+        {
+          "arm": "crisp",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 3
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            },
+            "arm": {
+              "present": [
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            }
+          },
+          "facts_lost": [
+            "f1"
+          ],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "B explains why the error happens (removing keys while iterating). It also notes that changing values of existing keys during iteration is fine, and that only adding or removing keys triggers the error. A has neither."
+          },
+          "preferred": "baseline",
+          "notes": "Both give the correct fixes. A never explicitly states the cause of the error, while B does and adds the useful note about value changes being safe. B's Option 3 is somewhat redundant."
+        },
+        {
+          "arm": "crisp",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 3
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            },
+            "arm": {
+              "present": [
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            }
+          },
+          "facts_lost": [
+            "f1"
+          ],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "A explains the cause: removing keys during iteration triggers the error. A also notes that changing an existing key's value during iteration is safe, which B does not mention."
+          },
+          "preferred": "baseline",
+          "notes": "B gives good fixes but never explains why the error happens. A states the cause and adds the useful point that changing values is fine. A's Option 3 is slightly redundant."
+        },
+        {
+          "arm": "crisp",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 3
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            },
+            "arm": {
+              "present": [
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            }
+          },
+          "facts_lost": [
+            "f1"
+          ],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "A explains the cause: removing keys while iterating changes the dict's size. It also explains why list(counts) is safe and notes that changing values during iteration is fine. B gives neither the cause nor the nuance."
+          },
+          "preferred": "baseline",
+          "notes": "B gives working fixes but never says why the error happens, so it misses f1. A covers the cause and the value-vs-size nuance, though its Option 3 largely repeats Option 1."
+        },
+        {
+          "arm": "crispify",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "tie",
+          "notes": "The two answers are nearly identical in content, code and structure. A reads slightly more naturally in full sentences, and B's Option 3 heading is slightly more precise. Neither difference is decisive."
+        },
+        {
+          "arm": "crispify",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "The answers are nearly identical in content. B is slightly tighter, and its '(mutates in place)' labels on Options 1 and 3 make the in-place versus rebind choice visible while scanning, so it is marginally better per word."
+        },
+        {
+          "arm": "crispify",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3"
+              ],
+              "total": 3
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers have the same content. B puts the when-to-use guidance directly in the headings. A lists numbered options and then repeats the decision guidance in a separate section, so B carries more value per word."
+        }
+      ]
+    },
+    "s3a": {
+      "judgments": [
+        {
+          "arm": "crisp",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 3,
+              "clarity": 4,
+              "ambiguity": 3,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 3,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "B gives concrete ioredis client options for fast failure (enableOfflineQueue: false, commandTimeout: 100, maxRetriesPerRequest: 1). B's Lua script also guards ttl < 0 so a key can never be left without an expiry.",
+            "arm": "A includes a concurrency test (150 parallel requests should yield exactly 100 successes) and an optional fail-closed mode returning 503. A also adds Redis to docker-compose and CI, and checks that two instances share one counter."
+          },
+          "preferred": "arm",
+          "notes": "A's key embeds floor(now/60) but sets the TTL from the first request, so Retry-After (ttl) can overstate the time until the next window opens and contradicts its X-RateLimit-Reset. A also hedges on the algorithm. B fixes every decision up front, its single-key TTL scheme makes Retry-After exactly correct, and it covers the same ground in fewer words."
+        },
+        {
+          "arm": "crisp",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "A states the decisions concisely up front and makes a firm call on unauthenticated requests (skip). B leaves that choice open to the executor.",
+            "arm": "B computes Retry-After as windowStart + window - now, which matches the window-embedded key. A uses a TTL set at the first hit, which can overstate the wait. B also adds a concurrency test (150 parallel requests, exactly 100 succeed), a TTL-present test, an injectable clock for testing the window reset, explicit health-check exemption, Redis client cleanup on graceful shutdown, and a configurable fail-open flag."
+          },
+          "preferred": "baseline",
+          "notes": "Both cover every required fact. B is preferred because its Retry-After is computed correctly from the window end, while A's per-key TTL from the first hit can report the wrong wait. B's tests are also stronger, especially the concurrency test. A is tighter and more decisive."
+        },
+        {
+          "arm": "crisp",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 3,
+              "clarity": 3,
+              "ambiguity": 3,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "A uses a sliding window counter that avoids the 2x boundary bursts of a fixed window. It also discusses using Redis TIME to handle clock skew across app servers.",
+            "arm": "B provides the actual Lua script, including a TTL-repair branch for keys that lost their expiry. It makes fail-open configurable and returns 503 when fail-closed. It adds a RateLimit-Reset header, a redis-cli TTL verification step, and explicit agent constraints such as not modifying the JWT middleware and stopping to report conflicts."
+          },
+          "preferred": "baseline",
+          "notes": "Both cover every required fact. A's sliding-window plan has a flawed 'acceptable' Retry-After approximation: at the next bucket boundary the previous bucket's weight is still near 1, so the user stays blocked. A also has muddled notes on Redis versions and cluster hash tags. B is correct, concrete, and ready for an agent to execute."
+        },
+        {
+          "arm": "crispify",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 4,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 3,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both plans have the same content, including the same subtle flaw: TTL is set from the first request rather than the window end, so Retry-After can overstate the remaining window time. B is tighter and commits to fixed window outright, where A hedges between sliding and fixed. B also states its stop-and-adapt rule at the top, so it delivers the same plan in fewer words."
+        },
+        {
+          "arm": "crispify",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 4,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "B adds RATE_LIMIT_FAIL_OPEN to the config block and puts the optional `now` clock in the factory signature. A mentions both only in passing, and its factory signature omits the clock that its tests need.",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both plans have the same substance. B is tighter and internally consistent: the fail-open flag is in the config, and the clock parameter is in the factory signature. A leaves both of these scattered across sections, so B is slightly easier for an agent to execute."
+        },
+        {
+          "arm": "crispify",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers give the same plan: a Lua-atomic fixed window, fail-open, the same tests and the same wiring. A says it in fewer words without the decorative bolding, so it delivers slightly more usefulness per word."
+        }
+      ]
+    },
+    "s3b": {
+      "judgments": [
+        {
+          "arm": "crisp",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 4,
+              "ambiguity": 3,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "A treats an example key whose own value is empty as optional, so an empty value for it is not reported. A warns on duplicate keys. These are minor design choices, not essential.",
+            "arm": "B requires that values are never printed, because .env files hold secrets. B states that missing keys and extra keys are not also listed under Empty. B defines inline-comment stripping and how a value containing '=' parses. B asks for pure parse and compare functions so they can be unit tested. B specifies unknown-flag and missing-option-argument errors. B's success message and section headers use the actual paths passed in."
+          },
+          "preferred": "baseline",
+          "notes": "Both answers cover every required fact. A's 'empty' rule contradicts itself as written and leaves open whether extra keys can also be listed as empty. B states these overlaps explicitly and adds the secret-safety rule of never printing values. Its extra --strict and --version flags are minor scope creep."
+        },
+        {
+          "arm": "crisp",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 4,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 3,
+              "conversational": 3,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "B states explicitly that an empty extra key is reported only under extra, which avoids double-listing. A leaves that key in both lists.",
+            "arm": "A specifies UTF-8/BOM handling. It also covers inline comments after a closing quote, requires the error message to name the missing file, and suggests separating parse/compare into pure functions for testing."
+          },
+          "preferred": "arm",
+          "notes": "Both cover every required fact. B is tighter and resolves the extra-vs-empty overlap and the exit-code nuance explicitly. A adds scope nobody asked for (colors, NO_COLOR, language choice) and has a small inconsistency about warnings for lines with no '='."
+        },
+        {
+          "arm": "crisp",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 3,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 2,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 3
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [
+            "f4"
+          ],
+          "useful_lost": {
+            "baseline": "A states that an empty key that is also extra is reported only under Extra. B leaves that overlap undefined.",
+            "arm": "B validates key names with the regex `[A-Za-z_][A-Za-z0-9_]*`. It defines how quoted values with trailing content and unterminated quotes are parsed. It tests values that contain `=`. It also separates parsing, comparison and reporting so each can be unit-tested. A has none of these."
+          },
+          "preferred": "baseline",
+          "notes": "A makes empty keys cause exit 1. That directly contradicts the prompt's rule that only missing keys affect the exit code. B keeps the required exit behavior and puts the stricter behavior behind an opt-in `--strict` flag. B adds some unrequested flags (`--quiet`, colors, `--version`), but its core spec is correct and more precise."
+        },
+        {
+          "arm": "crispify",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers specify the same behavior, rules, edge cases and tests. B says it in fewer words, folding the unclosed-quote rule into the value rules and putting the errors under an 'exit 2' heading, so it delivers slightly more per word."
+        },
+        {
+          "arm": "crispify",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both specs have the same substance. B is a tighter edit of A: it drops filler such as \"Keep it simple; no special-casing\" and the hedged language choice. It also removes A's dangling \"(but see Warnings)\" reference to a section that doesn't exist, which leaves A unclear about whether lines with no '=' or an empty key trigger a warning."
+        },
+        {
+          "arm": "crispify",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "The two specs have the same content. A is slightly tighter. A's table describes --quiet as suppressing stdout, which agrees with its later rule that fatal errors are still printed. B's table says 'Suppress all output', which contradicts that rule."
+        }
+      ]
+    },
+    "s4a": {
+      "judgments": [
+        {
+          "arm": "crisp",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 4,
+              "ambiguity": 3,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "B notes the leak will likely page again until SRE access is granted, which gives the access ask some urgency. A does not.",
+            "arm": "A opens with a one-line summary the lead can read in seconds, and says the Friday ETA was the original ETA and is now missed. B lacks both."
+          },
+          "preferred": "baseline",
+          "notes": "Both cover every fact. B writes 'ETA Friday' after Friday has passed and splits the migration across Done and In progress, so its status is unclear. A states the migration's state plainly and adds a useful summary, though it repeats the SRE ask three times."
+        },
+        {
+          "arm": "crisp",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "B opens with a one-line summary a team lead can read alone. It also says that DBA approval and SRE access are the two items most likely to affect next week's plan."
+          },
+          "preferred": "arm",
+          "notes": "Both answers state every required fact accurately and use the same structure. A gives the same information in fewer words. B adds a summary and closing line that help a little but mostly restate the body."
+        },
+        {
+          "arm": "crisp",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f7"
+              ],
+              "total": 7
+            }
+          },
+          "facts_lost": [
+            "f6"
+          ],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "B lists Dana's review of PR #412 as an explicit ask in its Blockers section. It also flags that the image-resizer leak may page again until the root cause is found."
+          },
+          "preferred": "baseline",
+          "notes": "A is tighter but leaves Dana's review out of its asks. A also frames Friday's ETA as still ahead when Friday has already passed. B's asks list is complete and adds the useful repeat-page risk, at the cost of a slightly redundant summary and a closing line."
+        },
+        {
+          "arm": "crispify",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "B lists Dana's review of #412 as an explicit blocker. A only notes it as a dependency, and its Asks section omits it."
+          },
+          "preferred": "arm",
+          "notes": "Both are accurate and complete. A covers the same content more tightly, while B repeats the blockers across its Summary, Blockers, Next Week, and Asks sections. A's only gap is that Dana's review is missing from its Asks section."
+        },
+        {
+          "arm": "crispify",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both cover every fact, and B's separate Risks section is slightly easier to scan. A says the same things in fewer words, puts the ask to the lead right after the needs list, and reads more like a colleague. B's long summary and extra phrasing add little. A's flat 'Missed the Friday ETA' is a small inference beyond the notes."
+        },
+        {
+          "arm": "crispify",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6",
+                "f7"
+              ],
+              "total": 7
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers are accurate and complete. B is tighter: it drops the summary that repeats the body and the docs/cleanup filler. It also attaches each risk to the ask that owns it (e.g., DBA approval slipping delays the migration a week), which makes the update more actionable per word."
+        }
+      ]
+    },
+    "s4b": {
+      "judgments": [
+        {
+          "arm": "crisp",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "B puts the ask to Priya in its own labeled section, so it is harder to miss.",
+            "arm": "A opens with an explicit status line and lists the timeline as bullets. It also makes the redeploy depend on the EU migration being confirmed."
+          },
+          "preferred": "tie",
+          "notes": "Both answers include every required fact and are well structured. A has a status line and a bulleted timeline but gives the impact window as 14:12–14:20, when errors lasted until 14:22. B is slightly more accurate and gives the ask its own section, so the two balance out."
+        },
+        {
+          "arm": "crisp",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers are accurate and complete. A is tighter and gives Priya's ask its own @-mentioned section. B's Status line repeats the title, and its ask sits inside a follow-up bullet, though B's bulleted timeline scans slightly faster."
+        },
+        {
+          "arm": "crisp",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers include every fact and are accurate. B is tighter: it has no Status line repeating the title, and Priya's request stands alone as an @-mentioned Ask, so it is harder to miss in a channel. A's bulleted timeline scans slightly better, but it carries a little more redundancy."
+        },
+        {
+          "arm": "crispify",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "tie",
+          "notes": "The answers are near-identical in structure and content, and both state all six facts. Both carry the same small slip: they put the failure window at 14:12–14:20 even though errors lasted until 14:22. The wording differences (\"please,\" \"deploy pipeline\") are negligible."
+        },
+        {
+          "arm": "crispify",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "tie",
+          "notes": "The two answers are nearly identical in structure and content, and both state every required fact. A's 'Priya, please confirm' reads a little warmer than B's terse 'Priya: confirm', and B is a few words shorter. Neither difference changes what the reader can act on."
+        },
+        {
+          "arm": "crispify",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5",
+                "f6"
+              ],
+              "total": 6
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "tie",
+          "notes": "The two answers are nearly identical in content and structure. A bullets the impact section and says 'please' to Priya. B puts impact and cause in compact prose and is slightly terser. Neither difference is material."
+        }
+      ]
+    },
+    "s5a": {
+      "judgments": [
+        {
+          "arm": "crisp",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [
+            "f4"
+          ],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "A notes that each LISTEN needs a dedicated connection and that PgBouncer transaction pooling breaks LISTEN. It warns that a stalled listener can fill the notify queue and make NOTIFY fail for everyone. It suggests a transactional outbox relayed to Redis. It also says clients must auto-resubscribe after a Redis failover. B has none of these."
+          },
+          "preferred": "baseline",
+          "notes": "Both recommend Redis Pub/Sub with essentially the same reasoning, and B is tighter. B omits the per-listener connection cost of LISTEN/NOTIFY and calls Redis Streams a 'drop-in' upgrade, which overstates it since it uses a different API. A adds actionable operational caveats (PgBouncer, outbox, resubscribe on failover) that a competent engineer would want."
+        },
+        {
+          "arm": "crisp",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [
+            "f4"
+          ],
+          "useful_lost": {
+            "baseline": "A notes the Redis client-output-buffer-limit pubsub defaults that disconnect slow subscribers. It also warns that subscriber restarts and deploys are the main source of Pub/Sub loss and should be tested.",
+            "arm": "B explains that plain Pub/Sub sends every event to every subscriber, so a worker pool would duplicate work, and that Streams consumer groups fix this. A also lacks B's PgBouncer transaction-mode caveat for LISTEN, its outbox-plus-relay pattern, and its point that NOTIFY's transactional coupling is a real correctness benefit."
+          },
+          "preferred": "baseline",
+          "notes": "B covers every required fact, including that each listener holds a persistent connection, and adds the fan-out vs. worker-pool distinction, which decides between Pub/Sub and Streams. A wrongly calls LISTEN/NOTIFY 'not transactional', then contradicts itself in its decision rules."
+        },
+        {
+          "arm": "crisp",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "A explicitly advises publishing after commit and notes that a crash between commit and publish drops the event. B only implies this through the outbox suggestion.",
+            "arm": "B notes that the NOTIFY queue is finite (8GB) and that a stalled listener can break commits. It also suggests checking client-output-buffer-limit pubsub and monitoring subscriber disconnects. A has neither point."
+          },
+          "preferred": "arm",
+          "notes": "Both are accurate and reach the same recommendation. A delivers the same substance in a tighter form and ends with a crisp decision rule. B repeats points in its 'Why Redis' section and bottom line, and only partly makes up for that with extra operational details."
+        },
+        {
+          "arm": "crispify",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers have essentially the same content and are equally correct. A puts the recommendation and its reasons first, then gives the tradeoffs more tersely. B repeats some points across its comparison and 'Why Redis' sections and adds mild filler, so A delivers more per word."
+        },
+        {
+          "arm": "crispify",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "The two answers have the same content. A puts the full conditional recommendation up front and states it once. B opens with a vaguer 'safety net' framing and repeats the decision in a closing bottom line, so it adds words without adding value."
+        },
+        {
+          "arm": "crispify",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 4,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 4,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "Both answers carry the same substance. B is tighter: it uses more direct sentences, opens with an imperative recommendation, and puts the operational checks in their own section. A's vaguer 'cause problems for commits' is slightly more accurate than B's 'block commits', but the difference is minor."
+        }
+      ]
+    },
+    "s5b": {
+      "judgments": [
+        {
+          "arm": "crisp",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "B warns that mobile users stay on old client code for weeks after a client change ships, because app store releases lag web deploys. It says to keep API changes backward compatible with the server regardless of repo layout. A lacks this, and it also lacks B's point that packages/api-client is a clean seam for splitting out later.",
+            "arm": "A recommends a timeboxed 1-2 day spike to confirm the mobile app builds against the workspace client before migrating, with separate repos as the explicit fallback. A also suggests a shared packages/config and Changesets if the client is later published externally."
+          },
+          "preferred": "arm",
+          "notes": "Both meet every required fact. B is tighter and adds the release-cadence and backward-compatibility insight, which is the most practically important risk. A's spike-before-migrating advice is useful but less critical."
+        },
+        {
+          "arm": "crisp",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 4
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "B flags that a fully native (Swift/Kotlin) mobile app may not consume a TS client at all, which removes the shared-code benefit. B also suggests generating the client from an OpenAPI spec. B gives a setup-time estimate (1-3 days) and lists costs explicitly. A lacks all of these.",
+            "arm": "A gives a migration path that preserves git history (git subtree or git filter-repo, moving one app at a time) and suggests a one-day spike to test the mobile build first. A recommends Changesets if the client is ever published externally, suggests a hybrid fallback, and advises enforcing public entry points between packages. B lacks all of these."
+          },
+          "preferred": "arm",
+          "notes": "B is tighter and states the costs of its recommendation explicitly. It also catches the native-mobile case, which could reverse the recommendation. A's costs are only implied through its pitfalls section, though A does add useful migration guidance."
+        },
+        {
+          "arm": "crisp",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 4
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "B says outright that mobile ships through app store review while web ships continuously. B also gives the `workspace:*` dependency specifier and names Gradle/Xcode alongside Metro.",
+            "arm": "A flags the native (Swift/Kotlin) mobile case, where the shared-client benefit shrinks unless the client is generated from OpenAPI. A also recommends CODEOWNERS for per-directory ownership and Changesets if the client is ever published externally."
+          },
+          "preferred": "arm",
+          "notes": "Both cover all required facts with the same recommendation. B is tighter, with a dedicated costs section and a more realistic setup estimate, while A adds useful caveats (native mobile, CODEOWNERS) at roughly twice the length with some overlap in its setup steps."
+        },
+        {
+          "arm": "crispify",
+          "sample": 0,
+          "baseline_sample": 0,
+          "order": "baseline_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 5,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "arm",
+          "notes": "The two answers have the same substance and B is a slightly trimmed copy of A. B delivers the same content in fewer words, though it calls the work a 'spike' without first naming it as one. A reads a little more like a colleague talking ('I'd try the monorepo first'), which is a minor edge."
+        },
+        {
+          "arm": "crispify",
+          "sample": 1,
+          "baseline_sample": 1,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 4,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": ""
+          },
+          "preferred": "tie",
+          "notes": "The two answers are nearly word-for-word identical in substance. A is slightly tighter, and B adds a few clarifying phrases such as 'the usual monorepo downsides', but neither difference changes usefulness."
+        },
+        {
+          "arm": "crispify",
+          "sample": 2,
+          "baseline_sample": 2,
+          "order": "arm_first",
+          "judge": "anthropic/claude-opus-5-5",
+          "scores": {
+            "baseline": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 4,
+              "relevance": 4,
+              "conversational": 4,
+              "completeness": 5
+            },
+            "arm": {
+              "correctness": 5,
+              "clarity": 5,
+              "ambiguity": 5,
+              "scanability": 5,
+              "relevance": 5,
+              "conversational": 4,
+              "completeness": 5
+            }
+          },
+          "facts": {
+            "baseline": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            },
+            "arm": {
+              "present": [
+                "f1",
+                "f2",
+                "f3",
+                "f4",
+                "f5"
+              ],
+              "total": 5
+            }
+          },
+          "facts_lost": [],
+          "useful_lost": {
+            "baseline": "",
+            "arm": "B explicitly flags the shared client as the deciding factor, which A only implies by listing it first."
+          },
+          "preferred": "arm",
+          "notes": "The two answers carry the same content. A delivers it in fewer words, while B adds bolded lead-ins, a code block for a three-line layout, and filler like 'Don't over-engineer' that add little."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "request": {
+    "id": "judge-openai-s1a-crisp-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6.1-sol",
+      "messages": [
+        {
+          "role": "user",
+          "content": "You are judging two answers to the same prompt. You do not know which is which. Judge only what is on the page.\n\nPROMPT GIVEN TO BOTH:\n<prompt>\nWhat's the difference between git merge and git rebase, and when should I use each?\n</prompt>\n\nREQUIRED FACTS (an answer is complete only if it states each of these, in any wording):\nf1: merge preserves the existing commits as they are; when the histories have diverged it adds a merge commit (otherwise it can fast-forward)\nf2: rebase rewrites your commits on top of the other branch, giving a linear history\nf3: do not rebase commits that others already have (shared/pushed branches)\nf4: rebase is for cleaning up or updating a local/feature branch before sharing\nf5: merge is for integrating shared branches or when the true history matters   <!-- one line each: \"f1: <fact>\" -->\n\nANSWER A:\n<answer_a>\n**`git merge` combines histories; `git rebase` rewrites a branch’s history.**\n\nSuppose your branch and `main` have both moved forward:\n\n- **Merge:** joins the two lines of history with a merge commit (unless Git can fast-forward). It preserves the existing commits and makes the branching history visible.\n- **Rebase:** replays your branch’s commits on top of the latest `main`, creating new commit IDs. The result is a more linear history.\n\n### Use merge when\n- You’re integrating a shared branch and want to preserve its history.\n- You don’t want to rewrite commits others may already have based work on.\n- You want the merge itself recorded.\n\n```bash\ngit switch my-branch\ngit merge main\n```\n\n### Use rebase when\n- You’re updating your own local feature branch and want a linear history.\n- You’re comfortable resolving conflicts as commits are replayed.\n\n```bash\ngit switch my-branch\ngit rebase main\n```\n\n**Rule of thumb:** Rebase your own unpublished work; merge shared or published work. Rebasing changes commit IDs, so avoid rebasing commits that teammates may already have pulled. After rebasing a branch you’ve pushed, updating the remote usually requires `git push --force-with-lease`—use that only when appropriate.\n</answer_a>\n\nANSWER B:\n<answer_b>\nBoth `git merge` and `git rebase` integrate changes from one branch into another. The difference is how they represent that integration in history.\n\n### `git merge`: preserve the branch history\n\nIf you’re on `main` and run:\n\n```bash\ngit merge feature\n```\n\nGit combines the branches, usually by creating a **merge commit**. The history shows that the work happened on separate branches and where they came together.\n\n**Use merge when:**\n- You want to preserve the full, shared history of a branch.\n- The branch is already used by teammates or pushed for others to rely on.\n- You’re integrating completed work and want a clear record of the integration.\n\n### `git rebase`: replay commits onto a new base\n\nIf you’re on `feature` and run:\n\n```bash\ngit rebase main\n```\n\nGit replays the feature branch’s commits on top of the latest `main` commits. This creates a **linear history**, but the replayed commits get new IDs.\n\n**Use rebase when:**\n- You want a cleaner, linear history.\n- You’re updating your own local feature branch before merging it.\n- You want to tidy up commits before sharing them.\n\n### Practical rule\n\n- **Rebase your own, unshared work** to keep it current or clean up its history.\n- **Merge shared work** to avoid rewriting commits that others may already have based their work on.\n\nRebasing public or shared commits can cause trouble: teammates may have to reconcile their histories. If you do rebase commits that were already pushed, you’ll typically need to push with `--force-with-lease`, and should coordinate first.\n\nIn short: **merge preserves history; rebase rewrites it into a linear sequence.**\n</answer_b>\n\nScore each answer 1-5 on each dimension. Use the whole scale.\n\n- correctness: 5 = no technical errors; 1 = materially wrong.\n- clarity: 5 = understood on first read; 1 = must be decoded.\n- ambiguity: 5 = nothing vague, every reference and condition is clear; 1 = vague terms, unclear references, hidden assumptions.\n- scanability: 5 = the key point and structure are findable in seconds, and formatting matches the content; 1 = the point is buried, or formatting is decorative or excessive.\n- relevance: 5 = everything serves the question; 1 = padding, generic advice, unasked tangents, restated question or context.\n- conversational: 5 = sounds like a competent colleague talking; 1 = robotic, bureaucratic, academic, or chatty filler (\"Sure!\", \"Great question\", \"In conclusion\").\n- completeness: 5 = everything the asker needs to act, nothing essential missing; 1 = key parts missing.\n\nThen, for each required fact, say whether each answer states it.\n\nThen note useful content that one answer has and the other lacks, beyond the required facts: anything a competent reader would want and could act on. Ignore padding, generic advice, and restated context. If nothing useful is missing from either, use an empty string.\n\nThen choose which answer a competent engineer would rather receive. Length is not a virtue or a flaw by itself; judge usefulness per word.\n\nReply with only a JSON object in this shape. All scores are integers 1-5. `preferred` is exactly one of \"A\", \"B\", \"tie\". Example values shown:\n\n```json\n{\n  \"A\": {\"correctness\": 4, \"clarity\": 3, \"ambiguity\": 4, \"scanability\": 3, \"relevance\": 3, \"conversational\": 3, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f4\"]},\n  \"B\": {\"correctness\": 4, \"clarity\": 5, \"ambiguity\": 4, \"scanability\": 5, \"relevance\": 5, \"conversational\": 4, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\"]},\n  \"useful_lost\": {\"A\": \"B explains the Retry-After calculation; A does not.\", \"B\": \"\"},\n  \"preferred\": \"B\",\n  \"notes\": \"one or two sentences: the decisive difference\"\n}\n```"
+        }
+      ],
+      "reasoning_effort": "high",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "{\n  \"A\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 5,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 5,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\", \"f5\"]\n  },\n  \"B\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 4,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 4,\n    \"facts_present\": [\"f2\", \"f3\", \"f4\", \"f5\"]\n  },\n  \"useful_lost\": {\n    \"A\": \"B explicitly advises coordinating with teammates before force-pushing a rebased branch that was already pushed.\",\n    \"B\": \"A flags that rebase can require resolving conflicts as commits are replayed.\"\n  },\n  \"preferred\": \"A\",\n  \"notes\": \"A states all required facts and explicitly distinguishes a merge commit from a fast-forward. B is otherwise accurate and useful, but its statement that merge usually creates a merge commit leaves that important condition unexplained.\"\n}",
+    "usage": {
+      "prompt_tokens": 1400,
+      "completion_tokens": 532,
+      "total_tokens": 1932,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 242
+      }
+    }
+  },
+  "parsed": {
+    "A": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 5,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 5,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5"
+      ]
+    },
+    "B": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 4,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 4,
+      "facts_present": [
+        "f2",
+        "f3",
+        "f4",
+        "f5"
+      ]
+    },
+    "useful_lost": {
+      "A": "B explicitly advises coordinating with teammates before force-pushing a rebased branch that was already pushed.",
+      "B": "A flags that rebase can require resolving conflicts as commits are replayed."
+    },
+    "preferred": "A",
+    "notes": "A states all required facts and explicitly distinguishes a merge commit from a fast-forward. B is otherwise accurate and useful, but its statement that merge usually creates a merge commit leaves that important condition unexplained."
+  }
+}

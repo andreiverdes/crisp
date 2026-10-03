@@ -1,0 +1,69 @@
+{
+  "request": {
+    "id": "judge-openai-s2b-crisp-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6.1-sol",
+      "messages": [
+        {
+          "role": "user",
+          "content": "You are judging two answers to the same prompt. You do not know which is which. Judge only what is on the page.\n\nPROMPT GIVEN TO BOTH:\n<prompt>\nI get `RuntimeError: dictionary changed size during iteration` from this. How do I fix it?\n\n```python\ncounts = {\"a\": 0, \"b\": 2, \"c\": 0}\nfor k in counts:\n    if counts[k] == 0:\n        del counts[k]\n```\n</prompt>\n\nREQUIRED FACTS (an answer is complete only if it states each of these, in any wording):\nf1: cause: deleting keys mutates the dict while the loop is iterating over it\nf2: gives a valid fix that avoids mutating during iteration, e.g. iterate over a snapshot (list(counts) / list(counts.items())) or build a new dict with a comprehension\nf3: shows corrected code   <!-- one line each: \"f1: <fact>\" -->\n\nANSWER A:\n<answer_a>\nDeleting a key changes the dictionary while Python is iterating over it. Iterate over a snapshot of the keys instead:\n\n```python\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr, more simply, build a new dictionary:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```\n</answer_a>\n\nANSWER B:\n<answer_b>\nDeleting keys changes the dictionary while you’re iterating over it. Iterate over a separate list of keys instead:\n\n```python\ncounts = {\"a\": 0, \"b\": 2, \"c\": 0}\n\nfor k in list(counts):\n    if counts[k] == 0:\n        del counts[k]\n```\n\nOr build a new dictionary:\n\n```python\ncounts = {k: v for k, v in counts.items() if v != 0}\n```\n</answer_b>\n\nScore each answer 1-5 on each dimension. Use the whole scale.\n\n- correctness: 5 = no technical errors; 1 = materially wrong.\n- clarity: 5 = understood on first read; 1 = must be decoded.\n- ambiguity: 5 = nothing vague, every reference and condition is clear; 1 = vague terms, unclear references, hidden assumptions.\n- scanability: 5 = the key point and structure are findable in seconds, and formatting matches the content; 1 = the point is buried, or formatting is decorative or excessive.\n- relevance: 5 = everything serves the question; 1 = padding, generic advice, unasked tangents, restated question or context.\n- conversational: 5 = sounds like a competent colleague talking; 1 = robotic, bureaucratic, academic, or chatty filler (\"Sure!\", \"Great question\", \"In conclusion\").\n- completeness: 5 = everything the asker needs to act, nothing essential missing; 1 = key parts missing.\n\nThen, for each required fact, say whether each answer states it.\n\nThen note useful content that one answer has and the other lacks, beyond the required facts: anything a competent reader would want and could act on. Ignore padding, generic advice, and restated context. If nothing useful is missing from either, use an empty string.\n\nThen choose which answer a competent engineer would rather receive. Length is not a virtue or a flaw by itself; judge usefulness per word.\n\nReply with only a JSON object in this shape. All scores are integers 1-5. `preferred` is exactly one of \"A\", \"B\", \"tie\". Example values shown:\n\n```json\n{\n  \"A\": {\"correctness\": 4, \"clarity\": 3, \"ambiguity\": 4, \"scanability\": 3, \"relevance\": 3, \"conversational\": 3, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f4\"]},\n  \"B\": {\"correctness\": 4, \"clarity\": 5, \"ambiguity\": 4, \"scanability\": 5, \"relevance\": 5, \"conversational\": 4, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\"]},\n  \"useful_lost\": {\"A\": \"B explains the Retry-After calculation; A does not.\", \"B\": \"\"},\n  \"preferred\": \"B\",\n  \"notes\": \"one or two sentences: the decisive difference\"\n}\n```"
+        }
+      ],
+      "reasoning_effort": "high",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "{\n  \"A\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 5,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 5,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\"]\n  },\n  \"B\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 5,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 5,\n    \"completeness\": 5,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\"]\n  },\n  \"useful_lost\": {\n    \"A\": \"\",\n    \"B\": \"\"\n  },\n  \"preferred\": \"tie\",\n  \"notes\": \"Both clearly explain the cause and provide the same two valid fixes with corrected code. B repeats the original dictionary initialization, but this adds no substantive guidance.\"\n}",
+    "usage": {
+      "prompt_tokens": 962,
+      "completion_tokens": 302,
+      "total_tokens": 1264,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 68
+      }
+    }
+  },
+  "parsed": {
+    "A": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 5,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 5,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3"
+      ]
+    },
+    "B": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 5,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 5,
+      "completeness": 5,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3"
+      ]
+    },
+    "useful_lost": {
+      "A": "",
+      "B": ""
+    },
+    "preferred": "tie",
+    "notes": "Both clearly explain the cause and provide the same two valid fixes with corrected code. B repeats the original dictionary initialization, but this adds no substantive guidance."
+  }
+}

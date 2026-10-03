@@ -1,0 +1,74 @@
+{
+  "request": {
+    "id": "judge-openai-s3a-crisp-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6.1-sol",
+      "messages": [
+        {
+          "role": "user",
+          "content": "You are judging two answers to the same prompt. You do not know which is which. Judge only what is on the page.\n\nPROMPT GIVEN TO BOTH:\n<prompt>\nWrite an implementation plan for adding per-user rate limiting to an existing Express API: 100 requests per minute per user, Redis-backed, and over-limit requests get a 429 with a Retry-After header. The API already has a JWT middleware that sets req.user.id. A coding agent will execute the plan.\n</prompt>\n\nREQUIRED FACTS (an answer is complete only if it states each of these, in any wording):\nf1: the rate-limit middleware runs after the JWT middleware, keyed on req.user.id\nf2: names the counting algorithm and Redis key scheme (e.g. fixed window with INCR + EXPIRE per user per minute, or sliding window)\nf3: 429 response includes Retry-After computed from the window's remaining time\nf4: handles the INCR/EXPIRE race: Lua script, MULTI/EXEC transaction, or an algorithm where a missed EXPIRE cannot break limiting (e.g. the key name embeds the window timestamp)\nf5: states what happens when Redis is unavailable (fail open or fail closed) as a decision\nf6: lists tests: under limit passes, 101st request gets 429 with Retry-After, counter resets after the window   <!-- one line each: \"f1: <fact>\" -->\n\nANSWER A:\n<answer_a>\n# Implementation plan: per-user Redis rate limiting\n\n## Goal\n\nLimit authenticated users to **100 requests per rolling 60-second window**. Identify users using `req.user.id`, store counters in Redis, and respond to excess requests with **HTTP 429** and a `Retry-After` header.\n\n## 1. Inspect the existing API\n\n- Find the Express app setup, JWT authentication middleware, route registration, and error-handling middleware.\n- Check how Redis is configured and accessed. Reuse the existing client and configuration if available; otherwise, add Redis configuration following the project’s conventions.\n- Identify which routes require authentication and where middleware runs relative to route handlers.\n- Check existing rate-limiting packages and test patterns before adding dependencies.\n\n## 2. Implement the limiter\n\nAdd a reusable Express middleware that:\n\n1. Reads the authenticated user ID from `req.user.id`. Mount it **after JWT authentication** on the routes it should protect.\n2. Uses a Redis key scoped to the user and limiter, such as `rate-limit:user:<userId>`.\n3. Atomically increments the counter and sets its expiration to 60 seconds on the first request. Use a Redis operation or script that avoids races between incrementing and setting the expiry.\n4. Allows requests while the count is at most 100.\n5. For requests above 100, responds without calling `next()`:\n   - Status: `429`\n   - JSON body using the project’s standard error format\n   - `Retry-After`: integer seconds until the current window expires, rounded up to at least 1\n6. Sets the `Retry-After` header only on rejected requests unless project conventions specify otherwise.\n\nChoose and document the intended window semantics. A fixed window starting with the user’s first request is suitable for this implementation; do not accidentally reset the window on every request.\n\n## 3. Handle Redis failures deliberately\n\nUse the API’s existing Redis failure policy if one exists. Otherwise, make the behavior explicit in code and tests. For an API availability-oriented default, log Redis errors and allow the request through; do not silently treat Redis failures as an exceeded limit. Keep error handling compatible with the Redis client version and Express version in use.\n\n## 4. Mount middleware\n\n- Apply the limiter after JWT authentication so `req.user.id` is present.\n- Apply it only to authenticated routes covered by the requirement. Avoid accidentally limiting public endpoints or counting unauthenticated requests as one shared user.\n- Confirm that requests rejected by the limiter do not reach route handlers.\n\n## 5. Tests\n\nAdd or update tests covering:\n\n- Requests 1 through 100 for a user are allowed; request 101 is rejected with status 429 and a valid `Retry-After` header.\n- The counter expires after 60 seconds and the user can make requests again.\n- Two different user IDs have independent limits.\n- The limiter runs after authentication and uses `req.user.id`.\n- Rejected requests do not invoke downstream handlers.\n- Redis errors follow the chosen failure policy.\n- The `Retry-After` value is an integer of at least 1 and reflects the remaining window time.\n\nUse a mocked Redis client or the project’s integration-test Redis setup, consistent with existing tests.\n\n## 6. Verify\n\n- Run the relevant unit and integration tests, then the project’s full test and lint/type-check commands.\n- Confirm the implementation uses atomic counter/expiry behavior with the installed Redis client.\n- Document the configured limit and Redis dependency in the project’s usual configuration or operational documentation.\n</answer_a>\n\nANSWER B:\n<answer_b>\n# Implementation plan\n\n1. **Inspect the existing API**\n   - Find the Express app setup, JWT middleware, route mounting order, and error-response conventions.\n   - Check whether the project already has a Redis client, configuration pattern, and tests that can be extended.\n   - Confirm that authenticated routes receive a valid `req.user.id` before their handlers run.\n\n2. **Add Redis-backed rate-limit middleware**\n   - Reuse the existing Redis client or add one using the project’s established configuration and lifecycle. Do not create a new connection per request.\n   - Add middleware for a fixed limit of **100 requests per user per 60-second window**.\n   - Use a Redis key that is namespaced and unambiguously includes the user ID, such as `rate-limit:user:<userId>`. Avoid logging or exposing the ID unnecessarily.\n   - Implement the counter update atomically—for example, with a Redis script that increments the key and sets its 60-second expiry on the first request. Do not use separate, race-prone increment and expiry operations.\n   - Treat the first 100 requests in a window as allowed; reject subsequent requests. Define the window boundary and expiry behavior consistently in tests.\n   - On rejection, return HTTP **429** and a `Retry-After` header with the number of seconds remaining until that user’s window resets. Use a positive integer, rounding up if needed. Follow the API’s existing error-response format; do not call `next()` for rejected requests.\n   - Keep the limit scoped by user, not IP. Ensure the middleware runs after JWT authentication so `req.user.id` is available.\n\n3. **Mount the middleware**\n   - Apply it to the intended authenticated API routes, after JWT middleware and before route handlers.\n   - Do not rate-limit public routes or unrelated traffic unless the existing route structure makes that scope explicit.\n\n4. **Handle Redis failures deliberately**\n   - Follow the service’s established availability policy for Redis-dependent middleware. If none exists, clarify with the API owner whether requests should fail closed or proceed when Redis is unavailable; document and test the chosen behavior.\n   - Log operational errors without exposing tokens, user data, or Redis credentials in responses.\n\n5. **Add tests**\n   - Verify that requests from one user are allowed up to 100 times, and the next request receives 429 with a valid `Retry-After` header.\n   - Verify that two different user IDs have independent limits.\n   - Verify that the counter resets after the 60-second window and that the reported retry time decreases appropriately.\n   - Verify middleware ordering: unauthenticated requests follow existing JWT behavior, and authenticated requests are keyed by `req.user.id`.\n   - Test the chosen Redis-failure behavior and any error-response conventions.\n\n6. **Finish and document**\n   - Run the relevant unit, integration, and lint checks.\n   - Document the limit, window, Redis configuration, and failure policy in the project’s appropriate operational or API documentation.\n</answer_b>\n\nScore each answer 1-5 on each dimension. Use the whole scale.\n\n- correctness: 5 = no technical errors; 1 = materially wrong.\n- clarity: 5 = understood on first read; 1 = must be decoded.\n- ambiguity: 5 = nothing vague, every reference and condition is clear; 1 = vague terms, unclear references, hidden assumptions.\n- scanability: 5 = the key point and structure are findable in seconds, and formatting matches the content; 1 = the point is buried, or formatting is decorative or excessive.\n- relevance: 5 = everything serves the question; 1 = padding, generic advice, unasked tangents, restated question or context.\n- conversational: 5 = sounds like a competent colleague talking; 1 = robotic, bureaucratic, academic, or chatty filler (\"Sure!\", \"Great question\", \"In conclusion\").\n- completeness: 5 = everything the asker needs to act, nothing essential missing; 1 = key parts missing.\n\nThen, for each required fact, say whether each answer states it.\n\nThen note useful content that one answer has and the other lacks, beyond the required facts: anything a competent reader would want and could act on. Ignore padding, generic advice, and restated context. If nothing useful is missing from either, use an empty string.\n\nThen choose which answer a competent engineer would rather receive. Length is not a virtue or a flaw by itself; judge usefulness per word.\n\nReply with only a JSON object in this shape. All scores are integers 1-5. `preferred` is exactly one of \"A\", \"B\", \"tie\". Example values shown:\n\n```json\n{\n  \"A\": {\"correctness\": 4, \"clarity\": 3, \"ambiguity\": 4, \"scanability\": 3, \"relevance\": 3, \"conversational\": 3, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f4\"]},\n  \"B\": {\"correctness\": 4, \"clarity\": 5, \"ambiguity\": 4, \"scanability\": 5, \"relevance\": 5, \"conversational\": 4, \"completeness\": 4,\n        \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\"]},\n  \"useful_lost\": {\"A\": \"B explains the Retry-After calculation; A does not.\", \"B\": \"\"},\n  \"preferred\": \"B\",\n  \"notes\": \"one or two sentences: the decisive difference\"\n}\n```"
+        }
+      ],
+      "reasoning_effort": "high",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "{\n  \"A\": {\n    \"correctness\": 4,\n    \"clarity\": 4,\n    \"ambiguity\": 3,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 4,\n    \"completeness\": 5,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\", \"f5\", \"f6\"]\n  },\n  \"B\": {\n    \"correctness\": 5,\n    \"clarity\": 5,\n    \"ambiguity\": 3,\n    \"scanability\": 5,\n    \"relevance\": 5,\n    \"conversational\": 4,\n    \"completeness\": 4,\n    \"facts_present\": [\"f1\", \"f2\", \"f3\", \"f4\", \"f6\"]\n  },\n  \"useful_lost\": {\n    \"A\": \"B explicitly prohibits creating a Redis connection per request and instructs the implementer to avoid exposing user IDs, tokens, or Redis credentials in logs or responses.\",\n    \"B\": \"A explicitly adds a test that rejected requests never invoke downstream handlers and specifies that Retry-After should normally appear only on rejected requests.\"\n  },\n  \"preferred\": \"A\",\n  \"notes\": \"A is more executable because it selects fail-open behavior when no existing Redis failure policy applies; B leaves that essential decision to further consultation. A nevertheless needs its opening claim of a rolling window corrected to match the first-request-anchored fixed window it actually specifies.\"\n}",
+    "usage": {
+      "prompt_tokens": 2196,
+      "completion_tokens": 657,
+      "total_tokens": 2853,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 324
+      }
+    }
+  },
+  "parsed": {
+    "A": {
+      "correctness": 4,
+      "clarity": 4,
+      "ambiguity": 3,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 4,
+      "completeness": 5,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f5",
+        "f6"
+      ]
+    },
+    "B": {
+      "correctness": 5,
+      "clarity": 5,
+      "ambiguity": 3,
+      "scanability": 5,
+      "relevance": 5,
+      "conversational": 4,
+      "completeness": 4,
+      "facts_present": [
+        "f1",
+        "f2",
+        "f3",
+        "f4",
+        "f6"
+      ]
+    },
+    "useful_lost": {
+      "A": "B explicitly prohibits creating a Redis connection per request and instructs the implementer to avoid exposing user IDs, tokens, or Redis credentials in logs or responses.",
+      "B": "A explicitly adds a test that rejected requests never invoke downstream handlers and specifies that Retry-After should normally appear only on rejected requests."
+    },
+    "preferred": "A",
+    "notes": "A is more executable because it selects fail-open behavior when no existing Redis failure policy applies; B leaves that essential decision to further consultation. A nevertheless needs its opening claim of a rolling window corrected to match the first-request-anchored fixed window it actually specifies."
+  }
+}

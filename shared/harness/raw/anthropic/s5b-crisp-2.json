@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crisp-s5b-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Use CRISP for all following output unless told otherwise: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n"
+        },
+        {
+          "role": "user",
+          "content": "Should we use a monorepo or separate repos? Team of 6 engineers maintaining a web app, a mobile app, and a shared API client library used by both. Give a recommendation."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Use a **monorepo** for the web app, mobile app, and shared API client.\n\nWith 6 engineers and 3 closely related codebases, a monorepo makes coordinated changes easier: one change can update the API client and both apps in the same review, and engineers can share tooling and CI. The tradeoff is that CI and ownership need clear boundaries so a change to one app doesn’t require building and testing everything.\n\nKeep packages independently versioned only if the API client must be released to consumers outside these apps, or if the apps need separate access controls or release processes. Otherwise, use one repo with clear package boundaries and per-app test and deploy pipelines.",
+    "usage": {
+      "prompt_tokens": 171,
+      "completion_tokens": 141,
+      "total_tokens": 312,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

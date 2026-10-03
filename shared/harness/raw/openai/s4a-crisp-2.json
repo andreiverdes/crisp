@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s4a-2",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write a weekly status update for my team lead from these notes.\n\nmon: fixed flaky checkout test (race in cart cleanup), merged. tue: started payment-retry work, found stripe webhook retries were hitting us twice because the idempotency key wasn't being stored - fixed, PR #412 open waiting on review from Dana. wed: on-call, two pages, both the same memory leak in image-resizer, restarted it both times, root cause not found yet, suspect the sharp version bump from last week. thu: pairing with Lee on the search index migration, 60% of tables moved, ETA friday but blocked on DBA approval for the new index on orders.created_at. fri: cleanup, docs. next week: finish payment retry if #412 lands, image-resizer leak investigation (need a heap dump from prod - need SRE access), search migration if DBA approves. risk: if the DBA approval slips the migration slips a week."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "**Weekly status**\n\n- **Monday:** Fixed and merged the flaky checkout test, which was caused by a race in cart cleanup.\n- **Tuesday:** Started payment-retry work and fixed an issue that caused duplicate Stripe webhook processing: the idempotency key wasn’t being stored. PR #412 is open and awaiting Dana’s review.\n- **Wednesday:** Handled two on-call pages for the same image-resizer memory leak. Restarted the service both times; root cause is still unknown. The Sharp version bump from last week is a possible cause.\n- **Thursday:** Paired with Lee on the search index migration; 60% of tables are moved. The remaining work is blocked on DBA approval for the index on `orders.created_at`.\n- **Friday:** Cleanup and documentation.\n\n**Next week:** Finish payment-retry work if PR #412 is approved; investigate the image-resizer leak, pending SRE access to a production heap dump; and continue the search migration if the DBA approves.\n\n**Risk:** If DBA approval is delayed, the search migration will slip by a week.",
+    "usage": {
+      "prompt_tokens": 299,
+      "completion_tokens": 223,
+      "total_tokens": 522,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

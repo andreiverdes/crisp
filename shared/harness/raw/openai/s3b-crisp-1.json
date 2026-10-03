@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "openai-crisp-s3b-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Apply CRISP throughout this conversation unless revoked; scope explicit one-off rewrites accordingly. Answer first. Keep relevant content, use shared context, and say each useful point once. Prefer clear, natural words and task-fitting structure. Preserve meaning, uncertainty, conditions, negation, scope, identifiers, and essential facts. Clarify material ambiguity. Use useful task framing and a short private editing pass; do not expose private reasoning or skip checks. Follow higher-priority instructions and exact output formats.\n"
+        },
+        {
+          "role": "user",
+          "content": "Write a spec for a small CLI tool called `envcheck`. It compares a `.env.example` file against a `.env` file and reports keys that are missing from `.env`, keys that are extra in `.env`, and keys that are present but empty. Exit code 0 if nothing is missing, 1 otherwise. A coding agent will implement it from your spec."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "# `envcheck` CLI specification\n\n## Purpose\n\n`envcheck` compares the keys in a `.env.example` file with those in a `.env` file. It reports:\n\n- **Missing keys:** in `.env.example` but not `.env`.\n- **Extra keys:** in `.env` but not `.env.example`.\n- **Empty keys:** present in `.env` with an empty value.\n\n## Invocation\n\n```text\nenvcheck [--example PATH] [--env PATH]\n```\n\nDefaults:\n\n- `--example`: `.env.example`\n- `--env`: `.env`\n\nPaths are relative to the current working directory unless absolute. Each option may be specified at most once. Unknown options or missing option values are usage errors.\n\n## File and parsing rules\n\n- Read both files as UTF-8 text. If either file cannot be read or decoded, report an error to stderr and exit nonzero.\n- Ignore blank lines and lines whose first non-whitespace character is `#`.\n- For each other line, use the first `=` to separate the key from the value. Trim whitespace around the key. Treat the remainder of the line as the value, trimming surrounding whitespace.\n- Lines without `=` or with an empty key are invalid. Report the file and line number to stderr; continue parsing so all invalid lines can be reported.\n- Do not interpret shell syntax, expand variables, or remove quotes. For example, `KEY=\"\"` has the nonempty value `\"\"`; `KEY=   ` has an empty value.\n- If a key appears more than once in a file, report it as a parse error. Do not count duplicate occurrences as additional keys.\n\n## Output\n\nOn success, write a report to stdout. List each category in this order: **Missing keys**, **Extra keys**, **Empty keys**. Sort keys alphabetically within each category. Show `(none)` for an empty category.\n\nExample:\n\n```text\nMissing keys:\n  API_SECRET\nExtra keys:\n  DEBUG\nEmpty keys:\n  DATABASE_URL\n```\n\nIf there are no findings:\n\n```text\nMissing keys:\n  (none)\nExtra keys:\n  (none)\nEmpty keys:\n  (none)\n```\n\n## Exit status\n\n- `0` if parsing succeeds and no keys are missing. Extra or empty keys do not affect the exit status.\n- `1` if one or more keys are missing.\n- Use a separate nonzero status for usage, file, decoding, or parse errors. Do not report a successful comparison when an input has such an error.",
+    "usage": {
+      "prompt_tokens": 184,
+      "completion_tokens": 524,
+      "total_tokens": 708,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

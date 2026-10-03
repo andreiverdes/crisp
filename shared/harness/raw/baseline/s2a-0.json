@@ -1,0 +1,30 @@
+{
+  "request": {
+    "id": "base-s2a-0",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "user",
+          "content": "This Python prints ['a'] then ['a', 'b'], but I expected ['a'] then ['b']. Why, and how do I fix it?\n\n```python\ndef add_item(item, items=[]):\n    items.append(item)\n    return items\n\nprint(add_item(\"a\"))\nprint(add_item(\"b\"))\n```"
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "Default argument values are created **once**, when Python defines the function—not each time it’s called. Both calls therefore use the same list, so the second call appends `\"b\"` to the list that already contains `\"a\"`.\n\nUse `None` as the default and create a new list inside the function:\n\n```python\ndef add_item(item, items=None):\n    if items is None:\n        items = []\n    items.append(item)\n    return items\n\nprint(add_item(\"a\"))  # ['a']\nprint(add_item(\"b\"))  # ['b']\n```\n\nThis pattern also lets callers pass in an existing list when they want to append to it.",
+    "usage": {
+      "prompt_tokens": 71,
+      "completion_tokens": 139,
+      "total_tokens": 210,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}

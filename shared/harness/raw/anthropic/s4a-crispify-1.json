@@ -1,0 +1,34 @@
+{
+  "request": {
+    "id": "anthropic-crispify-s4a-1",
+    "path": "/v1/chat/completions",
+    "body": {
+      "model": "openai-codex/gpt-6-luna",
+      "messages": [
+        {
+          "role": "system",
+          "content": "You rewrite text in CRISP: engineer to engineer.\n\n- Answer first.\n- Say each thing once: no preamble, recap, or restated context.\n- Keep what changes what the reader knows, does, or decides: tradeoffs, risks, asks, corrections, code. Cut the rest.\n- Plain words, one term per concept, named actors, explicit conditions and states, numbers over vague words.\n- Prose by default; structure only when it aids scanning.\n- Depth follows the task: plans carry what the executor needs. Short is not cryptic.\n- Stop.\n\nWhen asked to crispify text, output only the rewritten text. Preserve every fact, number, decision, code block, and caveat that changes what the reader does.\n"
+        },
+        {
+          "role": "user",
+          "content": "Crispify this:\n\n## Weekly Status Update\n\n**Completed**\n- **Monday:** Fixed and merged a flaky checkout test caused by a race in cart cleanup.\n- **Tuesday:** Started payment-retry work and fixed an issue where Stripe webhook retries could be processed twice because the idempotency key wasn’t being stored. PR **#412** is open and awaiting Dana’s review.\n- **Wednesday:** Covered on-call and handled two pages for the same image-resizer memory leak. Restarted the service both times; root cause is still unknown. The Sharp version bump from last week may be related.\n- **Thursday:** Paired with Lee on the search index migration; **60% of tables are migrated**. The remaining work is blocked on DBA approval for the new index on `orders.created_at`.\n- **Friday:** Cleanup and documentation.\n\n**Next week**\n- Finish payment-retry work if PR #412 is approved.\n- Continue investigating the image-resizer leak; need SRE access to get a production heap dump.\n- Continue the search migration if DBA approval comes through.\n\n**Risk**\n- If DBA approval is delayed, the search migration may slip by a week."
+        }
+      ],
+      "reasoning_effort": "low",
+      "stream": false
+    }
+  },
+  "response": {
+    "status": 200,
+    "finish_reason": "stop",
+    "text": "## Weekly status\n\n- **Monday:** Fixed and merged the flaky checkout test caused by a cart-cleanup race.\n- **Tuesday:** Started payment-retry work and fixed duplicate Stripe webhook processing by storing the idempotency key. PR #412 awaits Dana’s review.\n- **Wednesday:** Handled two on-call pages for the image-resizer memory leak, restarting the service each time. Root cause is unknown; last week’s Sharp version bump may be related.\n- **Thursday:** Migrated 60% of tables with Lee. The rest is blocked on DBA approval for the `orders.created_at` index.\n- **Friday:** Completed cleanup and documentation.\n\n## Next week\n\n- Finish payment-retry work if PR #412 is approved.\n- Investigate the image-resizer leak; SRE access is needed for a production heap dump.\n- Continue the search migration if DBA approval comes through.\n\n## Risk\n\nA delay in DBA approval may push the search migration back by a week.",
+    "usage": {
+      "prompt_tokens": 400,
+      "completion_tokens": 202,
+      "total_tokens": 602,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  }
+}
