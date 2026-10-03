@@ -1,4 +1,4 @@
-<img alt="CRISP: Concise, Relevant, Intuitive, Simple, Protocol. Say the useful thing once, as clearly as possible, then stop. 47% fewer tokens, 21 of 30 blind pairings won, 97% of required facts kept." src="web/hero-banner.png" width="100%">
+<img alt="CRISP: a skill for steering LLMs to be concise, relevant, intuitive and simple. 47% fewer tokens, 21 of 30 blind pairings won, 97% of facts kept, 30% fewer tokens than ASD-STE100." src="web/github-banner.png" width="100%">
 
 # CRISP
 

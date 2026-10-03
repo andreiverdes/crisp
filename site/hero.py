@@ -96,4 +96,4 @@ for theme in ("dark", "light"):
     sk = re.sub(rf"raw\.githubusercontent\.com/andreiverdes/crisp/main/web/hero-{theme}(-[0-9a-f]{{8}})?\.svg",
                 f"raw.githubusercontent.com/andreiverdes/crisp/main/web/{name}", sk)
     open(skill, "w").write(sk)
-    print(name, len(svg), "bytes; SKILL.md updated (README uses web/hero-banner.png)")
+    print(name, len(svg), "bytes; SKILL.md updated (README uses web/github-banner.png)")
