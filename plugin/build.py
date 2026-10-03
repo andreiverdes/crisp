@@ -27,6 +27,7 @@ def main():
     (dst / "SKILL.md").write_text(s)
 
     (OUT / ".claude-plugin").mkdir(exist_ok=True)
+    shutil.copy(ROOT / "art" / "icon.png", OUT / ".claude-plugin" / "icon.png")  # 1024x1024; directory reads it on first save only
     (OUT / ".claude-plugin" / "plugin.json").write_text(json.dumps({
         "name": "crisp",
         "displayName": "CRISP",
