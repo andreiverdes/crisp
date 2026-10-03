@@ -72,4 +72,4 @@ Drop-in system prompts in `skills/crisp/prompts/`: `crisp.md` (80 words, inject 
 
 ## Third-party and provenance
 
-HorizonUI (Apache-2.0, HorizonLoop SRL) is vendored for the website; its NOTICE, licence, and font licences are in `third_party/`. `shared/` holds the benchmark fixtures, rubric, raw request logs, and both teams' results, including the second team's prompts and harness; provenance in `third_party/README.md`.
+The website self-hosts Outfit, Caveat, and JetBrains Mono (SIL OFL 1.1; licences in `third_party/fonts/`). `shared/` holds the benchmark fixtures, rubric, raw request logs, and both teams' results, including the second team's prompts and harness; provenance in `third_party/README.md`.

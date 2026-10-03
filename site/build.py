@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
-"""Inline data.json + vendor CSS/JS into one self-contained crisp.html that opens from file://."""
-import json, pathlib, re
+"""web/benchmark/index.src.html + site/data.json -> web/benchmark/index.html (data inlined, logo symbol, og version)."""
+import hashlib, json, pathlib, re
 
-HERE = pathlib.Path(__file__).resolve().parent
-html = (HERE / "index.html").read_text()
-data = json.dumps(json.load(open(HERE / "data.json")), separators=(",", ":")).replace("</", "<\\/")
-css = (HERE / "vendor" / "horizon.css").read_text()
-react = (HERE / "vendor" / "react.js").read_text()
-horizon = (HERE / "vendor" / "horizon.js").read_text()
-for blob in (react, horizon):
-    assert "</script" not in blob
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+WEB = ROOT / "web"
+logo = (WEB / "logo.svg").read_text()
+viewbox = re.search(r'viewBox="([^"]+)"', logo).group(1)
+mark = re.sub(r"\s+", " ", re.search(r"(<g .*</g>)", logo, re.S).group(1))
+og_v = hashlib.sha1((WEB / "og-image.png").read_bytes()).hexdigest()[:8]
+data = json.dumps(json.load(open(ROOT / "site" / "data.json")), separators=(",", ":")).replace("</", "<\\/")
 
-html = html.replace('<link rel="stylesheet" href="vendor/horizon.css">', f"<style>\n{css}\n</style>")
-html = html.replace('<script src="vendor/react.js"></script>', f'<script id="crisp-data" type="application/json">{data}</script>\n<script>\n{react}\n</script>')
-html = html.replace('<script src="vendor/horizon.js"></script>', f"<script>\n{horizon}\n</script>")
-assert "vendor/" not in html and "crisp-data" in html
-out = HERE.parent / "web" / "benchmark" / "index.html"
-out.write_text(html)
-print(f"{out}: {out.stat().st_size // 1024} KB")
+src = (WEB / "benchmark" / "index.src.html").read_text()
+out = src.replace("{{MARK_VIEWBOX}}", viewbox).replace("{{MARK}}", mark).replace("{{OG_V}}", og_v).replace("{{DATA}}", data)
+assert "{{" not in out.replace(data, "")
+dst = WEB / "benchmark" / "index.html"
+dst.write_text(out)
+print(f"{dst.relative_to(ROOT)}: {len(out) // 1024} KB")

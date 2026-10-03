@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRISP benchmark · vs baseline, vs ASD-STE100, Anthropic vs OpenAI</title>
+<meta name="description" content="Blind pairwise benchmark of the CRISP writing protocol: 47% fewer tokens and 21 of 30 wins against no prompt, 30% fewer tokens than ASD-STE100, and a head-to-head between two independent builds.">
+<meta property="og:title" content="CRISP benchmark">
+<meta property="og:description" content="47% fewer tokens, 21/30 blind pairings won, 97% of facts kept. Every answer and judge note included.">
+<meta property="og:image" content="https://andreiverdes.github.io/crisp/og-image.png?v={{OG_V}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://andreiverdes.github.io/crisp/og-image.png?v={{OG_V}}">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="preload" href="../fonts/Outfit-400-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mark" viewBox="{{MARK_VIEWBOX}}">{{MARK}}</symbol>
+  <symbol id="gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></symbol>
+</svg>
+
+<nav class="nav"><div class="wrap">
+  <a class="brand" href="../"><svg><use href="#mark"/></svg>CRISP</a>
+  <div class="links">
+    <a href="../#stands">What it stands for</a>
+    <a href="../#rules">Rules</a>
+    <a href="../#install">Install</a>
+    <a href="./" style="color:var(--fg)">Benchmark</a>
+    <a class="gh" href="https://github.com/andreiverdes/crisp"><svg width="18" height="18"><use href="#gh"/></svg>GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" style="padding-bottom:0"><div class="wrap" style="display:block">
+  <p class="eyebrow">tested, not assumed</p>
+  <h1 style="font-size:64px;margin-bottom:18px">The <span class="hl">benchmark</span>, every answer <span class="ul">included.</span></h1>
+  <p class="lede">10 prompts across five scenarios, 3 samples each, blind-judged against the same model with no instructions. Required facts per prompt were fixed before the run. Pick a comparison:</p>
+  <div class="tabs" role="tablist" aria-label="Comparison">
+    <button role="tab" aria-selected="true" data-tab="baseline">CRISP vs baseline</button>
+    <button role="tab" aria-selected="false" data-tab="ste">CRISP vs ASD-STE100</button>
+    <button role="tab" aria-selected="false" data-tab="teams">Anthropic vs OpenAI</button>
+  </div>
+</div></header>
+
+<main class="wrap" id="app"></main>
+
+<section><div class="wrap">
+  <div class="cta-row">
+    <a class="pill" href="https://github.com/andreiverdes/crisp/tree/main/shared"><svg><use href="#gh"/></svg>raw data, fixtures &amp; rubric <span aria-hidden="true">→</span></a>
+    <div class="signoff">Don't trust us.<br>Rerun it.</div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span>Words: whitespace split · Tokens: tiktoken o200k_base on response text · Judges share a vendor with their generator except the head-to-head</span>
+  <span><a href="../">Home</a> · <a href="https://github.com/andreiverdes/crisp">GitHub</a> · MIT</span>
+</div></footer>
+
+<script id="crisp-data" type="application/json">{{DATA}}</script>
+<script>
+(() => {
+const D = JSON.parse(document.getElementById("crisp-data").textContent);
+const L = { sonnet: D.lanes[0], sonnetV2: D.lanes[1], ant: D.lanes[2], oai: D.lanes[3] };
+const FIX = ["s1a","s1b","s2a","s2b","s3a","s3b","s4a","s4b","s5a","s5b"];
+const SCEN = { s1: "Technical Q&A", s2: "Debugging", s3: "Spec / plan", s4: "Status update", s5: "Comparison" };
+const DIMS = ["correctness","clarity","ambiguity","scanability","relevance","conversational","completeness"];
+const V = (n) => `var(--${n})`;
+const C = { base: V("subtle"), crisp: V("green"), crispify: V("blue"), ste: V("red"), ant: V("blue"), oai: V("orange"), win: V("green"), tie: V("line-2"), loss: V("red") };
+const sum = (a) => a.reduce((x, y) => x + y, 0);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = (n) => n >= 1000 ? (n / 1000).toFixed(1) + "k" : String(Math.round(n));
+const pct = (n, d = 0) => (n < 0 ? "−" : "+") + Math.abs(n).toFixed(d) + "%";
+const CHECK = '<svg viewBox="0 0 12 12"><path d="M2.5 6.3l2.2 2.2L9.5 3.7" fill="none" stroke="#0b1a10" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const BANG = '<svg viewBox="0 0 12 12"><path d="M6 2.5v4.2M6 9.2v.1" fill="none" stroke="#1a0f05" stroke-width="2.2" stroke-linecap="round"/></svg>';
+
+/* ---------- charts (plain SVG) ---------- */
+function bars(cats, series, { H = 250, unit = "", ymax, W = 1180 } = {}) {
+  const pl = 54, pb = 40, pt = 10, iw = W - pl - 8, ih = H - pt - pb;
+  const raw = ymax || Math.max(...series.flatMap((s) => s.values)) * 1.08; const step = [1, 2, 2.5, 5, 10].map((m) => m * 10 ** Math.floor(Math.log10(raw / 4))).find((st) => st * 4 >= raw); const max = ymax || step * 4;
+  const gw = iw / cats.length, bw = Math.min(34, (gw * 0.7) / series.length);
+  const Y = (v) => pt + ih - (v / max) * ih;
+  let g = "";
+  for (let i = 0; i <= 4; i++) { const v = (max * i) / 4, y = Y(v); g += `<line x1="${pl}" x2="${W - 8}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${pl - 8}" y="${y + 4}" text-anchor="end" class="mono" style="font-size:13px">${fmt(v)}${unit}</text>`; }
+  cats.forEach((c, ci) => {
+    const x0 = pl + ci * gw + (gw - bw * series.length) / 2;
+    series.forEach((s, si) => { const v = s.values[ci]; g += `<rect x="${x0 + si * bw}" y="${Y(v)}" width="${bw - 3}" height="${Math.max(1, Y(0) - Y(v))}" rx="4" fill="${s.color}"/>`; });
+    g += `<text x="${pl + ci * gw + gw / 2}" y="${H - pb + 19}" text-anchor="middle" class="mono fg" style="font-size:14px">${esc(c.label)}</text>`;
+    if (c.sub) g += `<text x="${pl + ci * gw + gw / 2}" y="${H - pb + 33}" text-anchor="middle" style="font-size:12.5px;fill:var(--subtle)">${esc(c.sub)}</text>`;
+  });
+  return `<div class="scroll-x"><svg class="chart wide-chart" viewBox="0 0 ${W} ${H}" role="img">${g}</svg></div>`;
+}
+function legend(items) { return `<div class="legend">${items.map(([l, c]) => `<span style="--sw:${c}">${esc(l)}</span>`).join("")}</div>`; }
+function donut(parts, center) {
+  const S = 156, sw = 28, r = (S - sw) / 2, circ = 2 * Math.PI * r, tot = sum(parts.map((p) => p.v)); let off = 0, arcs = "";
+  parts.forEach((p) => { const len = (circ * p.v) / tot; arcs += `<circle cx="${S / 2}" cy="${S / 2}" r="${r}" fill="none" stroke="${p.color}" stroke-width="${sw}" stroke-dasharray="${len} ${circ - len}" stroke-dashoffset="${-off}" transform="rotate(-90 ${S / 2} ${S / 2})"/>`; off += len; });
+  return `<div class="donut"><svg width="${S}" height="${S}" viewBox="0 0 ${S} ${S}" style="flex:none">${arcs}<text x="${S / 2}" y="${S / 2 + 8}" text-anchor="middle" style="font:900 28px var(--display);fill:var(--fg)">${esc(center)}</text></svg>
+    <table>${parts.map((p) => `<tr><td><i style="background:${p.color}"></i>${esc(p.label)}</td><td class="n">${p.text ?? p.v}</td><td class="n" style="color:var(--subtle)">${((100 * p.v) / tot).toFixed(0)}%</td></tr>`).join("")}</table></div>`;
+}
+function dumbbell(series) {
+  const vals = series.flatMap((s) => s.from.concat(s.to)), lo = Math.min(3.5, Math.floor(Math.min(...vals) * 2) / 2 - 0.15), hi = 5.08;
+  const W = 520, lw = 120, rh = 36, X = (v) => lw + ((v - lo) / (hi - lo)) * (W - lw - 12); let g = "";
+  const ticks = []; for (let v = Math.ceil(lo * 2) / 2; v <= 5.0001; v += 0.5) ticks.push(v);
+  ticks.forEach((t) => { g += `<line x1="${X(t)}" x2="${X(t)}" y1="0" y2="${DIMS.length * rh}" stroke="var(--line)"/><text x="${X(t)}" y="${DIMS.length * rh + 15}" text-anchor="middle" class="mono" style="font-size:12px">${t.toFixed(1)}</text>`; });
+  DIMS.forEach((d, i) => { const y = i * rh + rh / 2; g += `<text x="0" y="${y + 5}" class="fg" style="font-weight:600;font-size:15px">${d}</text>`;
+    series.forEach((s, k) => { const dy = series.length > 1 ? (k ? 6 : -6) : 0, a = s.from[i], b = s.to[i];
+      g += `<line x1="${X(a)}" x2="${X(b)}" y1="${y + dy}" y2="${y + dy}" stroke="${s.color}" stroke-width="3" opacity=".55"/><circle cx="${X(a)}" cy="${y + dy}" r="4.5" fill="var(--card)" stroke="${s.color}" stroke-width="2"/><circle cx="${X(b)}" cy="${y + dy}" r="6" fill="${s.color}"/>`; }); });
+  return `<svg class="chart" viewBox="0 0 ${W} ${DIMS.length * rh + 22}" role="img">${g}</svg>`;
+}
+function wtlRows(rows, labels = ["CRISP preferred", "Tie", "Baseline preferred"], colors = [C.win, C.tie, C.loss]) {
+  const W = 520, lw = 128, rh = 36, bw = W - lw - 62; let g = "";
+  rows.forEach((r, i) => { const y = i * rh, n = r.w + r.t + r.l; let x = lw;
+    g += `<text x="0" y="${y + rh / 2 + 5}" class="fg" style="font-weight:600;font-size:15px">${esc(r.label)}</text>`;
+    [[r.w, colors[0]], [r.t, colors[1]], [r.l, colors[2]]].forEach(([v, c]) => { const w = (bw * v) / n; if (v) g += `<rect x="${x}" y="${y + 6}" width="${Math.max(0, w - 2)}" height="${rh - 13}" rx="4" fill="${c}"/>`; x += w; });
+    g += `<text x="${lw + bw + 10}" y="${y + rh / 2 + 5}" class="mono fg" style="font-size:14px">${r.w}·${r.t}·${r.l}</text>`; });
+  return `<svg class="chart" viewBox="0 0 ${W} ${rows.length * rh}" role="img">${g}</svg>` + legend(labels.map((l, i) => [l, colors[i]]));
+}
+const card = (title, desc, body, cls = "") => `<div class="card ${cls}"><h3>${title}</h3>${desc ? `<p class="d">${desc}</p>` : ""}${body}</div>`;
+const statStrip = (items) => `<div class="statsrow"><div class="stats">${items.map(([v, l, cls]) => `<div class="stat ${cls || ""}"><b>${v}</b><span>${l}</span></div>`).join("")}</div></div>`;
+const why = (items) => `<ul class="why">${items.map(([b, t, warn]) => `<li><span class="dot ${warn ? "warn" : ""}">${warn ? BANG : CHECK}</span><span><b>${b}</b> ${t}</span></li>`).join("")}</ul>`;
+const verdict = (eyebrow, title, items, sticky) => `<div class="verdict"><div><p class="eyebrow">${eyebrow}</p><h2>${title}</h2>${why(items)}</div><div class="aside" style="min-height:0"><div class="sticky" style="font-size:32px">${sticky}<svg viewBox="0 0 200 22" preserveAspectRatio="none"><path d="M4 8C50 3 110 13 196 5M14 18C70 13 120 20 170 15" fill="none" stroke="#151515" stroke-width="4" stroke-linecap="round"/></svg></div></div></div>`;
+const section = (eyebrow, title, body) => `<section style="padding:44px 0 0"><p class="eyebrow">${eyebrow}</p><h2 style="font-size:38px">${title}</h2>${body}</section>`;
+
+/* ---------- data explorer ---------- */
+function explorer(id, cols, { fixtures = FIX, extra } = {}) {
+  return `<div class="card wide" data-explorer="${id}" style="margin-top:18px">
+    <h3>Read every answer</h3><p class="d">Verbatim model output and the blind judge's note. Pick a prompt and a sample.</p>
+    <div class="picker">${fixtures.map((f, i) => `<button data-f="${f}" aria-pressed="${i === (fixtures.indexOf("s2a") >= 0 ? fixtures.indexOf("s2a") : 0)}">${f}</button>`).join("")}<span class="sep"></span>${[0, 1, 2].map((i) => `<button data-s="${i}" aria-pressed="${i === 0}">sample ${i + 1}</button>`).join("")}<span class="scen"></span></div>
+    <div class="qbox"></div><div class="facts"></div><div class="cols"></div></div>`;
+}
+const EXPLORERS = {};
+function mountExplorer(root, id, cols, renderJudge, opts = {}) {
+  const el = root.querySelector(`[data-explorer="${id}"]`); if (!el) return;
+  let f = el.querySelector("[data-f][aria-pressed=true]").dataset.f, s = 0;
+  const draw = () => {
+    const fx = D.fixtures[f];
+    el.querySelector(".scen").textContent = SCEN[f.slice(0, 2)];
+    el.querySelector(".qbox").textContent = fx.prompt;
+    el.querySelector(".facts").innerHTML = fx.facts.map((x) => `<span><b>${x.id}</b>${esc(x.text.length > 60 ? x.text.slice(0, 58) + "…" : x.text)}</span>`).join("");
+    el.querySelector(".cols").innerHTML = cols.map((c) => { const smp = c.get(f, s); if (!smp) return ""; const j = renderJudge ? renderJudge(c, f, s, smp) : "";
+      return `<div class="col"><div class="head"><b style="color:${c.color}">${esc(c.label)}</b><span>${smp.words} w · ${smp.tokens} tok</span></div><div class="txt">${esc(smp.text)}</div>${j}</div>`; }).join("");
+  };
+  el.querySelectorAll("[data-f]").forEach((b) => b.onclick = () => { f = b.dataset.f; el.querySelectorAll("[data-f]").forEach((x) => x.setAttribute("aria-pressed", x === b)); draw(); });
+  el.querySelectorAll("[data-s]").forEach((b) => b.onclick = () => { s = +b.dataset.s; el.querySelectorAll("[data-s]").forEach((x) => x.setAttribute("aria-pressed", x === b)); draw(); });
+  draw();
+}
+const judgeVsBase = (c, f, s, smp) => { const j = smp.judge; if (!j) return "";
+  const p = j.preferred === "arm" ? `<span class="pill-s g">judge preferred this</span>` : j.preferred === "tie" ? `<span class="pill-s n">tie</span>` : `<span class="pill-s r">judge preferred baseline</span>`;
+  const lost = j.factsLost.length ? `<span class="pill-s o">lost ${j.factsLost.join(", ")}</span>` : "";
+  return `<div class="judge">${p}${lost}<div style="margin-top:6px">${esc(j.notes)}</div></div>`; };
+const sample = (lane, arm) => (f, s) => arm === "baseline" ? lane.baselineSamples[f][s] : lane[arm].perFixture.find((p) => p.id === f).samples[s];
+
+/* ---------- TAB 1: CRISP vs baseline ---------- */
+function tabBaseline() {
+  const s = L.sonnet.crisp, cf = L.sonnet.crispify, g = L.ant.crisp;
+  const scen = Object.keys(SCEN).map((k) => { const ps = s.perFixture.filter((p) => p.id.startsWith(k)); return { label: SCEN[k], w: sum(ps.map((p) => p.w)), t: sum(ps.map((p) => p.t)), l: sum(ps.map((p) => p.l)) }; });
+  return verdict("CRISP vs no prompt at all", `CRISP wins <span class="blue">${s.wins} of 30</span> blind pairings.`, [
+      ["Shorter without being worse.", `Tokens ${pct(-s.tokPct)}. Relevance ${s.dims.relevance.base} → ${s.dims.relevance.arm}, clarity ${s.dims.clarity.base} → ${s.dims.clarity.arm}, conversational ${s.dims.conversational.base} → ${s.dims.conversational.arm}. Correctness holds at ${s.dims.correctness.arm}.`],
+      ["The facts stay.", `${s.factsKept.toFixed(0)}% of required facts kept. Every lost fact is listed below.`],
+      ["Rewriting is nearly free.", `"Crispify this" on an existing answer keeps ${cf.factsKept.toFixed(0)}% of facts, saves ${cf.tokPct.toFixed(0)}%, and won ${cf.wins} of 30.`],
+      ["The cost is known.", `Completeness ${s.dims.completeness.base} → ${s.dims.completeness.arm}: compressing drops some optional detail. The shipped prompt's keep-list exists because of it.`, true],
+    ], "Same question.<br>Half the tokens.<br>More wins.")
+  + statStrip([[pct(-s.tokPct), "tokens vs baseline", "g"], [`${s.wins}/30`, "blind pairings won", "b"], [`${s.factsKept.toFixed(0)}%`, "facts kept", ""], [`${cf.wins}/30`, "wins as a rewrite", "b"]])
+  + section("where the tokens go", "Tokens per answer, every prompt", `<div class="grid2">
+      ${card("Baseline vs CRISP", `Claude Sonnet 5.5, mean of 3 samples per prompt. Average answer ${fmt(s.baseTok)} → ${fmt(s.armTok)} tokens.`, bars(s.perFixture.map((p) => ({ label: p.id, sub: SCEN[p.id.slice(0, 2)].split(" ")[0] })), [{ color: C.base, values: s.perFixture.map((p) => p.baseTok) }, { color: C.crisp, values: s.perFixture.map((p) => p.armTok) }]) + legend([["Baseline (no system prompt)", C.base], ["CRISP", C.crisp]]), "wide")}
+      ${card("Blind verdicts", "Judge (Claude Opus 5.5) sees both answers in random order and picks the one an engineer would rather receive.", donut([{ label: "CRISP preferred", v: s.wins, color: C.win }, { label: "Tie", v: s.ties, color: C.tie }, { label: "Baseline preferred", v: s.losses, color: C.loss }], `${s.wins}/30`))}
+      ${card("Required facts", `Share of each prompt's must-state facts that the answer states. Baseline: ${s.baseFacts.toFixed(0)}%.`, donut([{ label: "Kept", v: s.factsKept, color: C.crisp, text: s.factsKept.toFixed(0) + "%" }, { label: "Lost", v: 100 - s.factsKept, color: C.loss, text: (100 - s.factsKept).toFixed(0) + "%" }], s.factsKept.toFixed(0) + "%"))}
+      ${card("Judge scores, baseline → CRISP", "Hollow: baseline mean. Filled: CRISP mean. 1–5, 30 pairs.", dumbbell([{ color: C.crisp, from: DIMS.map((d) => s.dims[d].base), to: DIMS.map((d) => s.dims[d].arm) }]))}
+      ${card("Verdicts by scenario", "Wins · ties · losses for CRISP.", wtlRows(scen))}
+      ${card("What compression lost", "Facts the baseline had and CRISP dropped (prompt:fact · times).", `<table class="lost">${s.mostLost.map(([k, n]) => { const [fid, fct] = k.split(":"); const fx = D.fixtures[fid].facts.find((x) => x.id === fct); return `<tr><td>${k} · ${n}×</td><td>${esc(fx ? fx.text : "")}</td></tr>`; }).join("")}</table>`)}
+      ${card("Second lane: an already-terse model", `GPT-6 Luna writes ${g.baseWords}-word answers with no prompt, so there is less to cut. CRISP still trims ${g.tokPct.toFixed(0)}%, goes ${g.wins}–${g.ties}–${g.losses}, and raises correctness ${g.dims.correctness.base} → ${g.dims.correctness.arm}.`, `<div class="hb">${[["Claude Sonnet 5.5", s.baseTok, s.armTok, s.tokPct], ["GPT-6 Luna", g.baseTok, g.armTok, g.tokPct]].map(([n, b, a, pc]) => `<div class="hb-blk"><b>${n}</b><div class="hb-row"><div class="hb-t"><i style="width:${(100 * b) / s.baseTok}%;background:var(--subtle)"></i></div><span>${fmt(b)}</span></div><div class="hb-row"><div class="hb-t"><i style="width:${(100 * a) / s.baseTok}%;background:var(--green)"></i></div><span style="color:var(--green)">${fmt(a)} · ${pct(-pc)}</span></div></div>`).join("")}</div>${legend([["Baseline tokens", C.base], ["With CRISP", C.crisp]])}`)}
+    </div>`)
+  + explorer("base", null);
+}
+
+/* ---------- TAB 2: STE ---------- */
+function tabSTE() {
+  const st = D.ste, tb = sum(st.map((r) => r.baseTok)), ts = sum(st.map((r) => r.steTok)), tc = sum(st.map((r) => r.crispTok));
+  const hs = D.headtohead && D.headtohead.ste, wins = hs ? hs.filter((r) => r.winner === "crisp").length : 0;
+  const dimAvg = (n) => DIMS.map((d) => sum(hs.map((r) => r.scores[n][d])) / hs.length);
+  return verdict("CRISP vs ASD-STE100", `CRISP uses <span class="blue">${(100 * (1 - tc / ts)).toFixed(0)}% fewer tokens</span> than STE.`, [
+      ["STE edits grammar; CRISP edits content.", `On the same five answers, STE grows the text by ${(100 * (ts / tb - 1)).toFixed(0)}% and CRISP shrinks it by ${(100 * (1 - tc / tb)).toFixed(0)}%.`],
+      ["STE was built for non-native readers of maintenance manuals.", "Its 20/25-word caps, no -ing forms, no modals and closed dictionary buy translatability, not density."],
+      ["STE has no rule against blabbering.", `"This is the mutable default argument problem in Python" is a perfect STE sentence. CRISP deletes it.`],
+      [`The judge agreed ${wins} of ${hs ? hs.length : 0} times.`, "Direct blind pairing of the two rewrites, Claude Opus 5.5 as judge."],
+    ], "Grammar rules<br>don't cut words.<br>Relevance does.")
+  + statStrip([[`${fmt(tb)}`, "baseline tokens", ""], [`+${(100 * (ts / tb - 1)).toFixed(0)}%`, "with STE rules", ""], [`−${(100 * (1 - tc / tb)).toFixed(0)}%`, "with CRISP", "g"], [`${wins}/${hs ? hs.length : 0}`, "judge picked CRISP", "b"]])
+  + section("same answers, two rewrites", "Tokens per answer", `<div class="grid2">
+      ${card("Baseline · STE · CRISP", "Five Claude Sonnet 5.5 baselines, each rewritten by the same model under STE rules and under CRISP.", bars(st.map((r) => ({ label: r.id, sub: r.title.split(" ")[0] })), [{ color: C.base, values: st.map((r) => r.baseTok) }, { color: C.ste, values: st.map((r) => r.steTok) }, { color: C.crisp, values: st.map((r) => r.crispTok) }]) + legend([["Baseline", C.base], ["ASD-STE100 rewrite", C.ste], ["CRISP rewrite", C.crisp]]), "wide")}
+      ${hs ? card("Judge scores, STE → CRISP", "Hollow: STE rewrite. Filled: CRISP rewrite. Same baseline, blind pair.", dumbbell([{ color: C.crisp, from: dimAvg("ste"), to: dimAvg("crisp") }])) : ""}
+      ${hs ? card("Blind verdicts", "Which rewrite a competent engineer would rather receive.", donut([{ label: "CRISP preferred", v: wins, color: C.win }, { label: "Tie", v: hs.filter((r) => r.winner === "tie").length, color: C.tie }, { label: "STE preferred", v: hs.filter((r) => r.winner === "ste").length, color: C.loss }], `${wins}/${hs.length}`)) : ""}
+    </div>`)
+  + explorer("ste", null, { fixtures: st.map((r) => r.id) })
+  + `<p class="caveat">STE applied by a model from a rule summary (caps, imperative, no -ing/modals, keep articles, one word one meaning), not a certified STE checker. n = 5.</p>`;
+}
+
+/* ---------- TAB 3: teams ---------- */
+function tabTeams() {
+  const a = L.ant.crisp, o = L.oai.crisp, ac = L.ant.crispify, oc = L.oai.crispify;
+  const ht = (D.headtohead && D.headtohead.team) || [], aw = ht.filter((r) => r.winner === "anthropic").length, ow = ht.filter((r) => r.winner === "openai").length, tw = ht.filter((r) => r.winner === "tie").length;
+  const dimAvg = (n) => DIMS.map((d) => sum(ht.map((r) => r.scores[n][d])) / ht.length);
+  const scen = Object.keys(SCEN).map((k) => { const rs = ht.filter((r) => r.id.startsWith(k)); return { label: SCEN[k], w: rs.filter((r) => r.winner === "anthropic").length, t: rs.filter((r) => r.winner === "tie").length, l: rs.filter((r) => r.winner === "openai").length }; });
+  const row = (l, av, ov, better) => `<div class="row"><span>${l}</span><b class="${better ? "better" : ""}">${av}</b></div>`;
+  const side = (who, win, rows) => `<div class="side ${win ? "win" : ""}"><div class="who">${who}${win ? `<span class="tag">winner ✓</span>` : ""}</div>${rows}</div>`;
+  return verdict("two teams, one spec", `<span class="blue">Anthropic</span> wins, ${aw}–${tw}–${ow} head-to-head.`, [
+      ["Same fixtures, harness, baseline and judge.", "Two independent agent teams built CRISP from the same brief; a shared harness ran both 80-word prompts on gpt-6-luna."],
+      ["Head-to-head, blind.", `Each team's answer to the same prompt and sample, judged against each other by Claude Opus 5.5, which neither team generated with: Anthropic ${aw}, OpenAI ${ow}, ${tw} ties.`],
+      ["Against the baseline too.", `${a.wins}–${a.ties}–${a.losses} vs ${o.wins}–${o.ties}–${o.losses}; fewer tokens (${pct(-a.tokPct)} vs ${pct(-o.tokPct)}) and more facts kept (${a.factsKept.toFixed(0)}% vs ${o.factsKept.toFixed(0)}%).`],
+      ["Why: the keep-list.", `Anthropic's prompt names what never to cut (code, corrections, risks, uncertainty). Completeness: ${a.dims.completeness.arm} vs ${o.dims.completeness.arm}.`],
+      ["Grain of salt.", "Thirty pairings per comparison; a gap under four is noise. The direction is consistent across all measures.", true],
+    ], "Same brief.<br>Same harness.<br>Different keep-list.")
+  + `<div class="vs" style="margin-top:28px">
+      ${side("Anthropic", aw > ow, row("Head-to-head wins", `${aw}/${ht.length}`, "", aw > ow) + row("Wins vs baseline", `${a.wins}/30`, "", a.wins > o.wins) + row("Tokens vs baseline", pct(-a.tokPct), "", a.tokPct > o.tokPct) + row("Facts kept", a.factsKept.toFixed(0) + "%", "", a.factsKept > o.factsKept) + row("Rewrite losses", `${ac.losses}/30`, "", ac.losses < oc.losses) + row("Prompt size", `${D.prompts.crispTokens} tok`, "", false))}
+      <div class="mid">vs</div>
+      ${side("OpenAI", ow > aw, row("Head-to-head wins", `${ow}/${ht.length}`, "", ow > aw) + row("Wins vs baseline", `${o.wins}/30`, "", o.wins > a.wins) + row("Tokens vs baseline", pct(-o.tokPct), "", o.tokPct > a.tokPct) + row("Facts kept", o.factsKept.toFixed(0) + "%", "", o.factsKept > a.factsKept) + row("Rewrite losses", `${oc.losses}/30`, "", oc.losses < ac.losses) + row("Prompt size", `${D.prompts.openaiCrispTokens} tok`, "", D.prompts.openaiCrispTokens < D.prompts.crispTokens))}
+    </div>`
+  + section("the numbers", "Head-to-head and against the baseline", `<div class="grid2">
+      ${card("Head-to-head verdicts", "Anthropic's answer vs OpenAI's, same prompt and sample, blind.", donut([{ label: "Anthropic preferred", v: aw, color: C.ant }, { label: "Tie", v: tw, color: C.tie }, { label: "OpenAI preferred", v: ow, color: C.oai }], `${aw}–${ow}`))}
+      ${card("Head-to-head by scenario", "Anthropic · tie · OpenAI.", wtlRows(scen, ["Anthropic", "Tie", "OpenAI"], [C.ant, C.tie, C.oai]))}
+      ${card("Tokens per answer, shared lane", `gpt-6-luna, baseline averages ${a.baseWords} words.`, bars(FIX.map((f) => ({ label: f, sub: SCEN[f.slice(0, 2)].split(" ")[0] })), [{ color: C.base, values: a.perFixture.map((p) => p.baseTok) }, { color: C.ant, values: a.perFixture.map((p) => p.armTok) }, { color: C.oai, values: o.perFixture.map((p) => p.armTok) }]) + legend([["Baseline", C.base], ["Anthropic /crisp", C.ant], ["OpenAI /crisp", C.oai]]), "wide")}
+      ${card("Judge scores vs baseline", "Hollow: baseline. Filled: each team's CRISP arm. gpt-6.1-sol, 30 pairs each.", dumbbell([{ color: C.ant, from: DIMS.map((d) => a.dims[d].base), to: DIMS.map((d) => a.dims[d].arm) }, { color: C.oai, from: DIMS.map((d) => o.dims[d].base), to: DIMS.map((d) => o.dims[d].arm) }]) + legend([["Anthropic", C.ant], ["OpenAI", C.oai]]))}
+      ${ht.length ? card("Judge scores, head-to-head", "Hollow: OpenAI's answer. Filled: Anthropic's. Same pair, Claude Opus 5.5.", dumbbell([{ color: C.ant, from: dimAvg("openai"), to: dimAvg("anthropic") }])) : ""}
+      <div class="card prompts"><h3>Anthropic /crisp</h3><p class="d">${D.prompts.crispTokens} tokens</p><pre>${esc(D.prompts.crisp)}</pre></div>
+      <div class="card prompts"><h3>OpenAI /crisp</h3><p class="d">${D.prompts.openaiCrispTokens} tokens</p><pre>${esc(D.prompts.openaiCrisp)}</pre></div>
+    </div>`)
+  + explorer("teams", null);
+}
+
+/* ---------- mount ---------- */
+const app = document.getElementById("app");
+const render = {
+  baseline: () => { app.innerHTML = `<div class="panel">${tabBaseline()}</div>`;
+    mountExplorer(app, "base", [
+      { label: "BASELINE", color: C.base, get: sample(L.sonnet, "baseline") },
+      { label: "CRISP", color: C.crisp, get: sample(L.sonnet, "crisp") },
+      { label: "CRISPIFY", color: C.crispify, get: sample(L.sonnet, "crispify") }], judgeVsBase); },
+  ste: () => { app.innerHTML = `<div class="panel">${tabSTE()}</div>`;
+    const byId = Object.fromEntries(D.ste.map((r) => [r.id, r])), hs = Object.fromEntries(((D.headtohead && D.headtohead.ste) || []).map((r) => [r.id, r]));
+    const el = app.querySelector('[data-explorer="ste"]'); el.querySelectorAll("[data-s]").forEach((b) => b.remove()); el.querySelector(".sep").remove();
+    mountExplorer(app, "ste", [
+      { label: "BASELINE", color: C.base, get: (f) => ({ text: byId[f].baseText, words: byId[f].baseWords, tokens: byId[f].baseTok }) },
+      { label: "ASD-STE100", color: C.ste, get: (f) => ({ text: byId[f].steText, words: byId[f].steWords, tokens: byId[f].steTok }) },
+      { label: "CRISP", color: C.crisp, get: (f) => ({ text: byId[f].crispText, words: byId[f].crispWords, tokens: byId[f].crispTok }) }],
+      (c, f) => { if (c.label !== "CRISP" || !hs[f]) return ""; const w = hs[f].winner; return `<div class="judge">${w === "crisp" ? `<span class="pill-s g">judge preferred CRISP</span>` : w === "tie" ? `<span class="pill-s n">tie</span>` : `<span class="pill-s r">judge preferred STE</span>`}<div style="margin-top:6px">${esc(hs[f].notes)}</div></div>`; }); },
+  teams: () => { app.innerHTML = `<div class="panel">${tabTeams()}</div>`;
+    const ht = (D.headtohead && D.headtohead.team) || [];
+    mountExplorer(app, "teams", [
+      { label: "BASELINE", color: C.base, get: sample(L.ant, "baseline") },
+      { label: "ANTHROPIC", color: C.ant, get: sample(L.ant, "crisp") },
+      { label: "OPENAI", color: C.oai, get: sample(L.oai, "crisp") }],
+      (c, f, s) => { if (c.label !== "ANTHROPIC") return ""; const r = ht.find((x) => x.id === f && x.sample === s); if (!r) return ""; const w = r.winner;
+        return `<div class="judge">${w === "anthropic" ? `<span class="pill-s g">head-to-head: Anthropic</span>` : w === "tie" ? `<span class="pill-s n">head-to-head: tie</span>` : `<span class="pill-s o">head-to-head: OpenAI</span>`}<div style="margin-top:6px">${esc(r.notes)}</div></div>`; }); },
+};
+const tabs = document.querySelectorAll("[data-tab]");
+const show = (name) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.tab === name)); render[name](); if (location.hash.slice(1) !== name) history.replaceState(null, "", "#" + name); };
+tabs.forEach((b) => b.onclick = () => show(b.dataset.tab));
+const fromHash = () => show(render[location.hash.slice(1)] ? location.hash.slice(1) : "baseline");
+window.addEventListener("hashchange", fromHash);
+fromHash();
+})();
+</script>
+</body>
+</html>
