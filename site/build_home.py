@@ -7,9 +7,10 @@ logo = (WEB / "logo.svg").read_text()
 viewbox = re.search(r'viewBox="([^"]+)"', logo).group(1)
 mark = re.sub(r"\s+", " ", re.search(r"(<g .*</g>)", logo, re.S).group(1))
 og_v = hashlib.sha1((WEB / "og-image.png").read_bytes()).hexdigest()[:8]
+css_v = hashlib.sha1((WEB / "style.css").read_bytes()).hexdigest()[:8]
 
 src = (WEB / "index.src.html").read_text()
-out = src.replace("{{MARK_VIEWBOX}}", viewbox).replace("{{MARK}}", mark).replace("{{OG_V}}", og_v)
+out = src.replace("{{MARK_VIEWBOX}}", viewbox).replace("{{MARK}}", mark).replace("{{OG_V}}", og_v).replace("{{CSS_V}}", css_v)
 assert "{{" not in out
 (WEB / "index.html").write_text(out)
 print(f"web/index.html: {len(out) // 1024} KB, og v={og_v}")

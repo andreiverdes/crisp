@@ -300,7 +300,8 @@ footer a:hover { color: var(--fg); }
 @media (max-width: 760px) { .method { grid-template-columns: 1fr; } }
 
 /* install paths */
-.paths { display: grid; grid-template-columns: 1fr 1fr 0.8fr; gap: 18px; margin-bottom: 40px; }
+.paths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-bottom: 40px; }
+.path { min-width: 0; }
 .path { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; display: flex; flex-direction: column; }
 .path.then { background: color-mix(in oklab, var(--green) 6%, var(--card)); border-color: color-mix(in oklab, var(--green) 35%, var(--line)); }
 .ph { display: flex; gap: 14px; align-items: center; margin-bottom: 14px; }
@@ -322,7 +323,7 @@ footer a:hover { color: var(--fg); }
 .say { display: flex; flex-wrap: wrap; gap: 8px; }
 .say code { font-size: 15px; padding: 5px 12px; }
 .sub-h { font-size: 22px; font-weight: 800; margin: 0 0 14px; letter-spacing: -0.01em; }
-@media (max-width: 1080px) { .paths { grid-template-columns: 1fr 1fr; } .path.then { grid-column: span 2; } }
+@media (max-width: 1080px) { .paths { grid-template-columns: repeat(2, minmax(0, 1fr)); } .path.then { grid-column: span 2; } }
 @media (max-width: 760px) { .paths { grid-template-columns: 1fr; } .path.then { grid-column: auto; } }
 .pnote .hand { font-size: 21px; }
 /* install tabs */
@@ -332,3 +333,5 @@ footer a:hover { color: var(--fg); }
 .itabs .hand { font-size: 19px; color: var(--blue-2); margin-left: 4px; }
 .itab[hidden] { display: none; }
 .path code.copy.cmd { display: block; margin-top: 8px; padding: 10px 12px; line-height: 1.55; overflow-wrap: anywhere; }
+.path code, .way code { overflow-wrap: anywhere; }
+@media (max-width: 1080px) { .stats .ticks { display: none; } }
