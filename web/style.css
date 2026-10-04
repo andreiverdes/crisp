@@ -325,3 +325,10 @@ footer a:hover { color: var(--fg); }
 @media (max-width: 1080px) { .paths { grid-template-columns: 1fr 1fr; } .path.then { grid-column: span 2; } }
 @media (max-width: 760px) { .paths { grid-template-columns: 1fr; } .path.then { grid-column: auto; } }
 .pnote .hand { font-size: 21px; }
+/* install tabs */
+.itabs { margin: 4px 0 22px; }
+.itabs button[disabled] { cursor: default; opacity: .55; }
+.itabs button[disabled]:hover { color: var(--muted); }
+.itabs .hand { font-size: 19px; color: var(--blue-2); margin-left: 4px; }
+.itab[hidden] { display: none; }
+.path code.copy.cmd { display: block; margin-top: 8px; padding: 10px 12px; line-height: 1.55; overflow-wrap: anywhere; }

@@ -147,6 +147,13 @@
 <section id="install"><div class="wrap">
   <p class="eyebrow">get it</p>
   <h2>Install in a minute. No terminal needed.</h2>
+  <div class="tabs itabs" role="tablist" aria-label="Install for">
+    <button role="tab" aria-selected="true" data-itab="claude">Claude</button>
+    <button role="tab" aria-selected="false" data-itab="codex">Codex</button>
+    <button role="tab" aria-selected="false" disabled title="Cursor, Gemini CLI, ChatGPT: coming soon">More <span class="hand">soon</span></button>
+  </div>
+
+  <div class="itab" data-itab="claude">
   <p class="sub">Works in the Claude desktop app, claude.ai, and Claude Code. Add it once and it follows your Claude account everywhere.</p>
   <div class="paths">
     <div class="path">
@@ -191,6 +198,54 @@
       <div class="way"><b>Any other model</b><span>Paste one of the three prompts (80, 200, or 590 words) into a system prompt. <a class="blue" href="https://github.com/andreiverdes/crisp/tree/main/skills/crisp/prompts">Prompts →</a></span></div>
     </div>
   </div>
+  </div>
+
+  <div class="itab" data-itab="codex" hidden>
+  <p class="sub">Works in Codex in the ChatGPT desktop app, the Codex CLI, and the IDE extension. Codex reads skills from <code>~/.agents/skills</code>.</p>
+  <div class="paths">
+    <div class="path">
+      <div class="ph"><span class="num">A</span><div><b>Ask Codex to install it</b><span>No downloads</span></div></div>
+      <ol>
+        <li>Open Codex and start a new task.</li>
+        <li>Paste this and send it:<code class="copy cmd" data-copy="$skill-installer install the crisp skill from https://github.com/andreiverdes/crisp/tree/main/skills/crisp">$skill-installer install the crisp skill from https://github.com/andreiverdes/crisp/tree/main/skills/crisp</code></li>
+        <li>Codex adds it to your skills. If it doesn't show up, restart Codex.</li>
+      </ol>
+      <p class="pnote">Click the command to copy it.</p>
+    </div>
+    <div class="path">
+      <div class="ph"><span class="num">B</span><div><b>Drop in the folder</b><span>By hand, no terminal</span></div></div>
+      <ol>
+        <li><a class="dl" href="crisp-skill.zip" download>Download crisp-skill.zip</a> and double-click it. You get a <b>crisp</b> folder.</li>
+        <li>In Finder, choose <b>Go</b> → <b>Go to Folder…</b>, type <code class="copy" data-copy="~/.agents/skills">~/.agents/skills</code>, press Return. (Create the folder if it's missing.)</li>
+        <li>Move the <b>crisp</b> folder there, then restart Codex.</li>
+      </ol>
+      <p class="pnote">Windows: put it in <code>%USERPROFILE%\.agents\skills</code>.</p>
+    </div>
+    <div class="path then">
+      <div class="ph"><span class="num">✓</span><div><b>Then just ask</b><span>in any task</span></div></div>
+      <div class="say"><code>$crisp</code><code>crispify this</code><code>use CRISP</code></div>
+      <p class="pnote">Codex mentions skills with <code>$</code>, not <code>/</code>. It also picks CRISP up on its own when you ask for a crisper answer.</p>
+    </div>
+  </div>
+
+  <h3 class="sub-h">Prefer the terminal?</h3>
+  <div class="install">
+    <div class="term">
+      <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>Codex</span></div>
+<pre><span class="k">INSTALL</span>
+<span class="p">$</span> mkdir -p ~/.agents/skills &amp;&amp; cd ~/.agents/skills
+<span class="p">$</span> curl -sL https://andreiverdes.github.io/crisp/crisp-skill.zip -o crisp.zip
+<span class="p">$</span> unzip -q crisp.zip &amp;&amp; rm crisp.zip
+
+<span class="k">EVERY AGENT IN A REPO</span>
+<span class="p">$</span> python3 ~/.agents/skills/crisp/scripts/install.py</pre>
+    </div>
+    <div class="ways">
+      <div class="way"><b>Every agent in a repo</b><span><code>install.py</code> writes CRISP into <code>AGENTS.md</code>, which Codex reads on every task. <code>--level crisp|minimal|full</code> picks the prompt size.</span></div>
+      <div class="way"><b>Just this repo</b><span>Put the <b>crisp</b> folder in <code>.agents/skills/</code> at the repo root and commit it; everyone who opens the repo in Codex gets it.</span></div>
+    </div>
+  </div>
+  </div>
 </div></section>
 
 <section><div class="wrap">
@@ -227,6 +282,14 @@
 document.querySelectorAll("[data-copy]").forEach((el) => el.addEventListener("click", async () => {
   try { await navigator.clipboard.writeText(el.dataset.copy); el.classList.add("done"); const o = el.textContent; el.textContent = "copied ✓"; setTimeout(() => { el.textContent = o; el.classList.remove("done"); }, 1400); } catch {}
 }));
+</script>
+<script>
+(() => {
+  const tabs = document.querySelectorAll("[data-itab]:not(.itab)"), panes = document.querySelectorAll(".itab");
+  const show = (name) => { tabs.forEach((b) => b.setAttribute("aria-selected", b.dataset.itab === name)); panes.forEach((p) => p.hidden = p.dataset.itab !== name); };
+  tabs.forEach((b) => b.addEventListener("click", () => { if (!b.disabled) { show(b.dataset.itab); history.replaceState(null, "", "#install-" + b.dataset.itab); } }));
+  const m = location.hash.match(/^#install-(\w+)$/); if (m && document.querySelector(`.itab[data-itab="${m[1]}"]`)) { show(m[1]); document.getElementById("install").scrollIntoView(); }
+})();
 </script>
 </body>
 </html>
